@@ -8,9 +8,9 @@ function AboutCard() {
       <Card.Body>
         <blockquote className="blockquote mb-0">
           <p style={{ textAlign: "justify" }}>
-          Hi Everyone, I'm <span className="purple">Pankaj Kumar </span>, a passionate software engineer with over 5+ years of experience in insurance, shipping &amp; logistics domain. I have worked across all phases of <span className="purple">SDLC</span>.<br/> I have my <span className="purple">B.Tech</span> degree focused in <span className="purple">Information Technology</span> from <span className="purple">University of Pune, India</span>. I have worked with a range of different languages, frameworks, databases and I am always looking for opportunities to work on something new.
+            Hi Everyone, I'm <span className="purple">Pankaj Kumar </span>, a passionate software engineer with over 9+ years of experience in insurance, shipping &amp; logistics domain. I have worked across all phases of <span className="purple">SDLC</span>.<br /> I have my <span className="purple">B.Tech</span> degree focused in <span className="purple">Information Technology</span> from <span className="purple">University of Pune, India</span>. I have worked with a range of different languages, frameworks, databases and I am always looking for opportunities to work on something new.
 
-            
+
             <br />
             <br />
             Apart from coding, some other activities that I love to do!
@@ -30,7 +30,7 @@ function AboutCard() {
             </li>
           </ul>
 
-          <p style={{ marginBlockEnd: 0, color: "rgb(155 126 172)" }}>
+          <p style={{ marginBlockEnd: "15px", color: "rgb(155 126 172)" }}>
             "Code, not to write syntax but to solve problems."{" "}
           </p>
           <footer className="blockquote-footer">Pankaj Kumar</footer>

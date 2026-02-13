@@ -18,32 +18,32 @@ function Home2() {
               Let me <span className="purple"> Introduce </span> myself
             </h1>
             <p className="home-about-body">
-             Someone once told me programming is not about 
-             <span>
+              Someone once told me programming is not about
+              <span>
                 <b className="purple"> syntax</b>
               </span>
-             <b> ,</b> &nbsp;it's about the 
-             <span>
+              <b> ,</b> &nbsp;it's about the
+              <span>
                 <b className="purple"> logic</b>
               </span>.
               <br />
-              It has been 5+ years since then, and I have
+              It has been 9+ years since then, and I have
               <span>
                 <b className="purple"> loved </b>
               </span>
-                every bit about learning that logic.
-              <br />I am fluent in 
+              every bit about learning that logic.
+              <br />I am fluent in
               <span>
                 <b className="purple"> Java EE, Spring BOOT, Microservices, PostgreSQL, Angular 8+ etc. </b>
               </span>
               <br />
               <br />
               I love solving problems and breaking the given problem in the group of smallest possible tasks is one of my forte. &nbsp;
-             
+
               <br />
               <br />
               Whenever possible, I try my best to contribute to open source community.
-             
+
             </p>
           </Col>
           <Col md={4} className="myAvtar">
@@ -55,7 +55,7 @@ function Home2() {
         <Row>
           <Col md={12} className="home-about-social">
             <h1><span className="purple">Connect </span>with me on</h1>
-           
+
             <ul className="home-about-social-links">
               <li className="social-icons">
                 <a

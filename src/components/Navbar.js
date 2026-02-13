@@ -36,7 +36,7 @@ function NavBar() {
       className={navColour ? "sticky" : "navbar"}
     >
       <Container>
-        <Navbar.Brand href="/">
+        <Navbar.Brand as={Link} to="/" onClick={() => window.scrollTo(0, 0)}>
           <img src={logo} className="img-fluid logo" alt="brand" />
         </Navbar.Brand>
         <Navbar.Toggle
@@ -50,9 +50,16 @@ function NavBar() {
           <span></span>
         </Navbar.Toggle>
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="ml-auto" defaultActiveKey="#home">
+          <Nav className="ms-auto" defaultActiveKey="#home">
             <Nav.Item>
-              <Nav.Link as={Link} to="/" onClick={() => updateExpanded(false)}>
+              <Nav.Link
+                as={Link}
+                to="/"
+                onClick={() => {
+                  updateExpanded(false);
+                  window.scrollTo(0, 0);
+                }}
+              >
                 <AiOutlineHome style={{ marginBottom: "2px" }} /> Home
               </Nav.Link>
             </Nav.Item>
@@ -60,7 +67,10 @@ function NavBar() {
               <Nav.Link
                 as={Link}
                 to="/about"
-                onClick={() => updateExpanded(false)}
+                onClick={() => {
+                  updateExpanded(false);
+                  window.scrollTo(0, 0);
+                }}
               >
                 <AiOutlineUser style={{ marginBottom: "2px" }} /> About
               </Nav.Link>
@@ -69,7 +79,10 @@ function NavBar() {
               <Nav.Link
                 as={Link}
                 to="/project"
-                onClick={() => updateExpanded(false)}
+                onClick={() => {
+                  updateExpanded(false);
+                  window.scrollTo(0, 0);
+                }}
               >
                 <AiOutlineFundProjectionScreen
                   style={{ marginBottom: "2px" }}
@@ -80,8 +93,11 @@ function NavBar() {
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                // to="/blog"
-                onClick={() => updateExpanded(false)}
+                to="/blog"
+                onClick={() => {
+                  updateExpanded(false);
+                  window.scrollTo(0, 0);
+                }}
               >
                 <CgFileDocument style={{ marginBottom: "2px" }} /> Blog
               </Nav.Link>
