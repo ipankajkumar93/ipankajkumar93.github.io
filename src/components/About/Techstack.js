@@ -8,7 +8,6 @@ import {
   DiNodejs,
   DiMongodb,
   DiGit,
-  DiMysql,
   DiPostgresql,
   DiAws
 } from "react-icons/di";
