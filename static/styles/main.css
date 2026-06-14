@@ -138,6 +138,7 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     transition: background-color var(--transition-slow), color var(--transition-slow);
@@ -501,6 +502,7 @@ body[data-theme="dark"] .nav-items a:hover {
 
 .search-input {
     flex: 1;
+    min-width: 0;
     border: none;
     background: transparent;
     font-size: 1.125rem;
@@ -743,6 +745,8 @@ ul.blog-posts li a:hover {
 article, .post-content {
     line-height: 1.75;
     color: var(--color-text-secondary);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 article h1 {
@@ -1088,6 +1092,8 @@ table {
     border-collapse: collapse;
     margin: var(--space-lg) 0;
     font-size: 0.9375rem;
+    display: block;
+    overflow-x: auto;
 }
 
 th,
@@ -1114,6 +1120,11 @@ img {
     max-width: 100%;
     height: auto;
     border-radius: var(--radius-md);
+}
+
+iframe {
+    max-width: 100% !important;
+    display: block;
 }
 
 figure {
