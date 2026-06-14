@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} | {{ super() }}{% endblock %}
+
+{% block main %}
+<div class="section-header">
+  <h1>{{ section.title }}</h1>
+  {% if section.description %}
+  <p class="section-description">{{ section.description | markdown(inline=true) | safe }}</p>
+  {% endif %}
+</div>
+
+{% set data = load_data(path="content/projects/data.toml", format="toml") %}
+
+<section class="projects-section">
+  <h2>Featured</h2>
+  <div class="projects-grid">
+    {% for proj in data.project %}
+      {% set is_highlighted = proj | get(key="highlight", default=false) %}
+      {% if is_highlighted %}
+      <article class="project-card featured">
+        <div class="project-header">
+          <h3 class="project-name">{{ proj.name }}</h3>
+          <div class="project-stats">
+            {% if proj.stars %}
+            <span class="project-stars">{{ proj.stars }}</span>
+            {% endif %}
+            {% if proj.forks %}
+            <span class="project-forks">{{ proj.forks }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <p class="project-desc">{{ proj.description }}</p>
+        <div class="project-footer">
+          {% if proj.language %}
+          <span class="project-lang">{{ proj.language }}</span>
+          {% endif %}
+          <div class="project-links">
+            {% for link in proj.links -%}
+            <a href="{{ link.url }}" target="_blank" rel='noreferrer noopener'>{{ link.name }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </article>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <h2>More Projects</h2>
+  <div class="projects-grid compact">
+    {% for proj in data.project %}
+      {% set is_highlighted = proj | get(key="highlight", default=false) %}
+      {% if not is_highlighted %}
+      <article class="project-card">
+        <div class="project-header">
+          <h3 class="project-name">{{ proj.name }}</h3>
+          <div class="project-stats">
+            {% if proj.stars and proj.stars > 1 %}
+            <span class="project-stars">{{ proj.stars }}</span>
+            {% endif %}
+            {% if proj.forks and proj.forks > 1 %}
+            <span class="project-forks">{{ proj.forks }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <p class="project-desc">{{ proj.description }}</p>
+        <div class="project-footer">
+          {% if proj.language %}
+          <span class="project-lang">{{ proj.language }}</span>
+          {% endif %}
+          <div class="project-links">
+            {% for link in proj.links -%}
+            <a href="{{ link.url }}" target="_blank" rel='noreferrer noopener'>{{ link.name }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </article>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} | {{ super() }}{% endblock %}
+
+{% block main %}
+{%- if taxonomy.term %}
+  <h3 style="margin-bottom:0">Filtering for "{{ section.title }}"</h3>
+  <small>
+    <a href="{{ get_url(path="@/blog/_index.md") }}">Remove filter</a>
+  </small>
+{%- else %}
+<div class="section-header">
+  <h1>{{ section.title }}</h1>
+  {% if section.description %}
+  <p class="section-description">{{ section.description | markdown(inline=true) | safe }}</p>
+  {% endif %}
+</div>
+{%- endif %}
+<ul class="blog-posts">
+  {% for page in section.pages %}
+    <li>
+      <span>
+        <time datetime='{{ page.date | date(format='%+') }}' pubdate>
+          {{ page.date | date(format=config.extra.date_format) }}
+        </time>
+      </span>
+      <a href="{{ page.permalink }}">{{ page.title }}</a>{% if page.draft %}<span class="draft-tag">DRAFT</span>{% endif %}
+    </li>
+    {% else %}
+    <li>
+      No posts yet
+    </li>
+  {% endfor %}
+</ul>
+<div class="section-tags">
+  {% if section.title == "Travel" %}
+  {% set tags = get_taxonomy(kind="travel_tags") %}
+  {% elif section.title == "Read the Docs" %}
+  {% set tags = get_taxonomy(kind="rtd_tags") %}
+  {% elif section.title == "Posts" %}
+  {% set tags = get_taxonomy(kind="post_tags") %}
+  {% else %}
+  {% set tags = false %}
+  {% endif %}
+  {% if tags %}
+  {% for post in tags.items %}
+  <a href="{{ post.permalink }}" class="tag">#{{ post.name }}</a>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

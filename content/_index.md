@@ -1,0 +1,30 @@
++++
+title = "Home"
++++
+
+# 👋🏽 Hello
+
+<div class="home-container">
+
+  <div class="home-content">
+
+I'm Pankaj, but you might find me scattered across the internet as `@ipankajkumar93`. I work at [Bitwise](https://bitwiseglobal.com/) where I focus mainly on backend engineering, building and scaling high-availability applications, designing resilient architectures, and handling the infrastructure and observability that keeps systems honest.
+
+I like to [craft](https://github.com/ipankajkumar93) stuff around homelab, monitoring, networking and distributed systems.
+
+When I'm not in the tech zone, I'm probably reading about space, aircrafts and rockets, geeking out over the latest in tech, hitting the open road on [Titan](#), or hunting down good food - yes, I'm a foodie. And when I need to slow down, old Hindi songs and ghazals do the job perfectly. I've curated some of my favorites on [Gaana playlist](https://gaana.com/playlist/fall-in-love-ewl4vppbwz), if you want to share the vibe.
+
+  </div>
+
+  <div class="home-image">
+    <img src="/images/website/profile.jpg" alt="Profile Image" class="img-rounded" />
+  </div>
+
+</div>
+
+## ⭐ Featured Posts
+
+A curated collection of my top articles from over the years:
+
+* [Syntax Guide](@/posts/syntax-guide.md)
+
