@@ -51,3 +51,6 @@ npm-debug.log*
 
 # Sass cache (if compile_sass is enabled later)
 .sass-cache/
+
+# Automatically generated OG images
+static/images/og/
