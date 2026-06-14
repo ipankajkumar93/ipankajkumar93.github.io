@@ -747,8 +747,6 @@ ul.blog-posts li a:hover {
 article, .post-content {
     line-height: 1.75;
     color: var(--color-text-secondary);
-    overflow-wrap: break-word;
-    word-wrap: break-word;
 }
 
 article h1 {
@@ -1094,8 +1092,14 @@ table {
     border-collapse: collapse;
     margin: var(--space-lg) 0;
     font-size: 0.9375rem;
-    display: block;
-    overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
 }
 
 th,
