@@ -1,0 +1,43 @@
+# GitHub Projects
+# Generated on 2026-06-13 22:41:32
+# Total projects: 2
+
+[[project]]
+name = "covidTracker"
+description = "An initiative to make life easier by automating covid vaccination slots look up in India by choosing PIN codes"
+created = "May 2021"
+pushed = "Mar 2022"
+stars = 2
+forks = 5
+language = "Angular, HTML"
+links = [
+  { name = "URL", url = "https://www.trackcovid19.info/" },
+  { name = "GitHub", url = "https://github.com/ipankajkumar93/covidtracker" },
+]
+highlight = true
+
+[[project]]
+name = "website"
+description = "Personal site, made using Zola"
+created = "June 2026"
+pushed = "July 2026"
+stars = 1
+forks = 2
+language = "Python, HTML"
+links = [
+  { name = "URL", url = "https://pankajkumar.xyz" },
+  { name = "GitHub", url = "https://github.com/ipankajkumar93/ipankajkumar93.github.io" },
+]
+highlight = true
+
+[[project]]
+name = "homeLab"
+description = "HomeLab set up"
+created = "Sept 2025"
+pushed = "Sept 2025"
+stars = 2
+forks = 2
+language = "Markdown"
+links = [
+  { name = "GitHub", url = "https://github.com/ipankajkumar93/homeLab" },
+]
