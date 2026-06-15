@@ -14,6 +14,10 @@ import hashlib
 import json
 import re
 import sys
+try:
+    import tomllib
+except ImportError:
+    pass
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -339,16 +343,57 @@ class OGImageGenerator:
         self._save_cache()
         return generated, skipped_custom, skipped_cached
 
+    def process_home(self) -> tuple[int, int]:
+        """Generate the OG image for the homepage using config.toml."""
+        config_path = self.project_root / "config.toml"
+        
+        if not config_path.exists():
+            return 0, 0
+            
+        try:
+            with open(config_path, "rb") as f:
+                # Python 3.11+ comes with tomllib
+                config_data = tomllib.load(f)
+            title = config_data.get("title", "Pankaj Kumar")
+            description = config_data.get("description", "")
+        except Exception:
+            # Fallback if tomllib is missing or fails
+            content = config_path.read_text()
+            title_match = re.search(r'^title\s*=\s*"([^"]+)"', content, re.MULTILINE)
+            desc_match = re.search(r'^description\s*=\s*"([^"]+)"', content, re.MULTILINE)
+            title = title_match.group(1) if title_match else "Pankaj Kumar"
+            description = desc_match.group(1) if desc_match else ""
+            
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        output_path = self.output_dir / "home.png"
+        
+        # Check cache
+        content_hash = self._content_hash(title, description)
+        cache_key = str(output_path.relative_to(self.project_root))
+
+        if output_path.exists() and self.cache.get(cache_key) == content_hash:
+            return 0, 1
+            
+        print("  Generating: home.png")
+        self.generate_image(title, description, output_path)
+        self.cache[cache_key] = content_hash
+        self._save_cache()
+        return 1, 0
+
 
 def main():
     project_root = Path(__file__).parent.parent
 
     print("Generating OG images...")
     generator = OGImageGenerator(project_root)
+    home_gen, home_cached = generator.process_home()
     generated, skipped_custom, skipped_cached = generator.process_posts()
 
+    total_gen = generated + home_gen
+    total_cached = skipped_cached + home_cached
+
     print(
-        f"Done: {generated} generated, {skipped_custom} have custom images, {skipped_cached} cached"
+        f"Done: {total_gen} generated, {skipped_custom} have custom images, {total_cached} cached"
     )
 
 

@@ -22,6 +22,9 @@
         {% set og_image = "images/og" ~ path_trimmed ~ ".png" -%}
     {% endif -%}
     {% set twitter_card = "summary_large_image" -%}
+{% elif current_path and current_path == "/" -%}
+    {% set og_image = "images/og/home.png" -%}
+    {% set twitter_card = "summary_large_image" -%}
 {% endif -%}
 
 <meta name="title" content="{% if page and page.title %}{{ page.title }}{% else %}{{ config.title }}{% endif %}">
