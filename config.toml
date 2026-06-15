@@ -31,8 +31,8 @@ external_links_no_referrer = true
 [markdown.highlighting]
 enabled = true
 # Add "-default" suffix to theme name in case you need a darker variant
-light_theme = "github-light"
-dark_theme = "github-dark"
+light_theme = "github-light-default"
+dark_theme = "github-dark-default"
 
 [extra]
 date_format="%d %b, %Y"
