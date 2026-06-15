@@ -112,10 +112,10 @@ class OGImageGenerator:
         regular_font = self.project_root / "static" / "fonts" / "Roboto-Regular.ttf"
         
         if bold_font.exists() and regular_font.exists():
-            fonts["title_large"] = ImageFont.truetype(str(bold_font), 62)
-            fonts["title_medium"] = ImageFont.truetype(str(bold_font), 50)
-            fonts["title_small"] = ImageFont.truetype(str(bold_font), 42)
-            fonts["desc"] = ImageFont.truetype(str(regular_font), 30)
+            fonts["title_large"] = ImageFont.truetype(str(bold_font), 56)
+            fonts["title_medium"] = ImageFont.truetype(str(bold_font), 46)
+            fonts["title_small"] = ImageFont.truetype(str(bold_font), 38)
+            fonts["desc"] = ImageFont.truetype(str(regular_font), 32)
             fonts["author"] = ImageFont.truetype(str(bold_font), 28)
             fonts["domain"] = ImageFont.truetype(str(regular_font), 24)
         else:
