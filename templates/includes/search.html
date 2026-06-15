@@ -1,0 +1,186 @@
+<script>
+// ── Search ─────────────────────────────────────────────
+(function () {
+    const searchBtn = document.querySelector('.search-btn');
+    const searchModal = document.getElementById('search-modal');
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    const searchClose = document.querySelector('.search-close');
+    const searchBackdrop = document.querySelector('.search-modal-backdrop');
+
+    // Project data for client-side search (loaded from Zola data)
+    {% set data = load_data(path="content/projects/data.toml", format="toml") %}
+    const projectData = [
+        {% for proj in data.project %}
+        {
+            name: {{ proj.name | json_encode() | safe }},
+            description: {{ proj.description | json_encode() | safe }},
+            url: {% if proj.links %}{{ proj.links[0].url | json_encode() | safe }}{% else %}""{% endif %},
+            language: {{ proj.language | default(value="") | json_encode() | safe }},
+            stars: {{ proj.stars | default(value=0) }}
+        },
+        {% endfor %}
+    ];
+
+    let searchIndex = null;
+    let debounceTimer = null;
+
+    function initSearchIndex() {
+        if (searchIndex) return;
+        if (typeof elasticlunr !== 'undefined' && typeof window.searchIndex !== 'undefined') {
+            searchIndex = elasticlunr.Index.load(window.searchIndex);
+        }
+    }
+
+    function openSearch() {
+        initSearchIndex();
+        searchModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        searchInput.value = '';
+        searchResults.innerHTML = '<div class="search-empty-state">What are you looking for?</div>';
+        setTimeout(() => searchInput.focus(), 50);
+    }
+
+    function closeSearch() {
+        searchModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Categorize a URL into a section name
+    function getCategory(url) {
+        {%- if config.extra.main_menu %}
+        {%- for item in config.extra.main_menu %}
+        {%- if not item.url is matching("https?://") %}
+        if (url.includes('{{ item.url | replace(from="@", to="") | replace(from="_index.md", to="") | replace(from=".md", to="") | safe }}')) return '{{ item.name | safe }}';
+        {%- endif %}
+        {%- endfor %}
+        {%- endif %}
+        return 'Other';
+    }
+
+    // Search projects client-side
+    function searchProjects(query) {
+        const q = query.toLowerCase();
+        return projectData.filter(p =>
+            p.name.toLowerCase().includes(q) ||
+            p.description.toLowerCase().includes(q) ||
+            p.language.toLowerCase().includes(q)
+        ).map(p => ({
+            title: p.name,
+            description: p.description,
+            url: p.url,
+            category: 'Projects'
+        }));
+    }
+
+    function performSearch(query) {
+        if (!query || query.length < 2) {
+            searchResults.innerHTML = '<div class="search-empty-state">What are you looking for?</div>';
+            return;
+        }
+
+        let results = [];
+
+        // Search elasticlunr index (pages)
+        if (searchIndex) {
+            const elasticResults = searchIndex.search(query, {
+                fields: { title: { boost: 3 }, body: { boost: 1 } },
+                bool: 'OR',
+                expand: true
+            });
+
+            results = elasticResults.slice(0, 20).map(r => {
+                const item = searchIndex.documentStore.getDoc(r.ref);
+                // Extract path from full URL so it works on any domain
+                let resultUrl = r.ref;
+                try {
+                    const parsed = new URL(r.ref);
+                    resultUrl = parsed.pathname;
+                } catch(e) { /* already a relative path */ }
+                return {
+                    title: item.title,
+                    description: item.body ? item.body.substring(0, 150) + '…' : '',
+                    url: resultUrl,
+                    category: getCategory(r.ref)
+                };
+            });
+        }
+
+        // Search projects
+        const projectResults = searchProjects(query).slice(0, 10);
+        // Merge, avoiding duplicates
+        const existingUrls = new Set(results.map(r => r.url));
+        projectResults.forEach(p => {
+            if (!existingUrls.has(p.url)) {
+                results.push(p);
+            }
+        });
+
+        if (results.length === 0) {
+            searchResults.innerHTML = '<div class="search-empty-state">No results found for "' + query.replace(/</g, '&lt;') + '"</div>';
+            return;
+        }
+
+        // Group by category
+        const grouped = {};
+        const categoryOrder = [
+            {%- if config.extra.main_menu %}
+            {%- for item in config.extra.main_menu %}
+            '{{ item.name | safe }}',
+            {%- endfor %}
+            {%- endif %}
+            'Other'
+        ];
+        results.forEach(r => {
+            if (!grouped[r.category]) grouped[r.category] = [];
+            grouped[r.category].push(r);
+        });
+
+        // Render
+        let html = '';
+        categoryOrder.forEach(cat => {
+            if (!grouped[cat]) return;
+            html += '<div class="search-group">';
+            html += '<h3 class="search-group-title">' + cat + ' <span class="search-group-count">(' + grouped[cat].length + ')</span></h3>';
+            grouped[cat].forEach(item => {
+                html += '<a href="' + item.url + '" target="_blank" rel="noopener noreferrer" class="search-result-item">';
+                html += '<span class="search-result-title">' + item.title + '</span>';
+                if (item.description) {
+                    html += '<span class="search-result-desc">' + item.description.replace(/</g, '&lt;').substring(0, 120) + '</span>';
+                }
+                html += '</a>';
+            });
+            html += '</div>';
+        });
+
+        searchResults.innerHTML = html;
+    }
+
+    // Event listeners
+    searchBtn.addEventListener('click', openSearch);
+    searchClose.addEventListener('click', closeSearch);
+    searchBackdrop.addEventListener('click', closeSearch);
+
+    searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => performSearch(this.value.trim()), 200);
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function (e) {
+        // Ctrl+K or Cmd+K to open search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            if (searchModal.classList.contains('active')) {
+                closeSearch();
+            } else {
+                openSearch();
+            }
+        }
+        // Escape to close
+        if (e.key === 'Escape' && searchModal.classList.contains('active')) {
+            closeSearch();
+        }
+    });
+})();
+</script>
