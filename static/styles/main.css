@@ -761,11 +761,12 @@ article, .post-content {
         margin-right: auto;
     }
 
-    .table-responsive-wrapper {
-        max-width: 860px;
-        margin-left: auto;
-        margin-right: auto;
-    }
+}
+
+.table-responsive-wrapper {
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 article h1 {
