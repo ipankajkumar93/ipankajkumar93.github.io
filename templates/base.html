@@ -250,6 +250,20 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
+            // Responsive Tables
+            const tables = document.querySelectorAll('table');
+            tables.forEach(table => {
+                const wrapper = document.createElement('div');
+                wrapper.style.overflowX = 'auto';
+                wrapper.style.width = '100%';
+                wrapper.style.marginBottom = 'var(--space-lg)';
+                wrapper.style.WebkitOverflowScrolling = 'touch';
+                
+                table.style.marginBottom = '0';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            });
+
             // Code Block Copy Button
             const codeBlocks = document.querySelectorAll('pre');
             codeBlocks.forEach(block => {
