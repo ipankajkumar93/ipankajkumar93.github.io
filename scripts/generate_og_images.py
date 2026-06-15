@@ -38,7 +38,7 @@ CONFIG = {
     "domain_color": (161, 161, 170), # Zinc 400
 }
 
-CACHE_VERSION = 25
+CACHE_VERSION = 1
 
 
 class OGImageGenerator:
