@@ -749,9 +749,29 @@ article, .post-content {
     color: var(--color-text-secondary);
 }
 
+@media screen and (min-width: 769px) {
+    .post-content.restricted-width {
+        max-width: 860px;
+        margin: 0 auto;
+    }
+    
+    .tags.restricted-width {
+        max-width: 860px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .table-responsive-wrapper {
+        max-width: 860px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
 article h1 {
     font-size: 2.5rem;
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    text-align: center;
 }
 
 .meta {
@@ -1097,7 +1117,7 @@ table {
 th,
 td {
     padding: var(--space-sm) var(--space-md);
-    text-align: left;
+    text-align: center !important;
     border-bottom: 1px solid var(--color-border);
 }
 

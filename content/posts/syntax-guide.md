@@ -1,5 +1,5 @@
 +++
-title = "Markdown Syntax & Shortcodes Guide"
+title = "Markdown Syntax & Shortcodes Guide Markdown Syntax & Shortcodes Guide "
 date = 2026-06-13
 type = "post" # Other types are also possible like "rtd", "travel", etc.
 slug = "post-syntax-guide" # Overrides the URL path for this page (e.g. /posts/syntax-guide/)

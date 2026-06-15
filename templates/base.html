@@ -254,6 +254,7 @@
             const tables = document.querySelectorAll('table');
             tables.forEach(table => {
                 const wrapper = document.createElement('div');
+                wrapper.className = 'table-responsive-wrapper';
                 wrapper.style.overflowX = 'auto';
                 wrapper.style.width = '100%';
                 wrapper.style.marginBottom = 'var(--space-lg)';
