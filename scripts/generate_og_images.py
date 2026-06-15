@@ -15,6 +15,7 @@ import json
 import re
 import sys
 import tomllib
+from datetime import datetime
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
@@ -139,9 +140,9 @@ class OGImageGenerator:
         with open(self.cache_file, "w") as f:
             json.dump(self.cache, f, indent=2)
 
-    def _content_hash(self, title: str, description: str, category: str = None) -> str:
+    def _content_hash(self, title: str, description: str, category: str = None, date_str: str = "", read_time: int = 0) -> str:
         """Generate hash for caching."""
-        content = f"{CACHE_VERSION}:{title}:{description}:{category}"
+        content = f"{CACHE_VERSION}:{title}:{description}:{category}:{date_str}:{read_time}"
         return hashlib.sha256(content.encode()).hexdigest()[:16]
 
     def _parse_frontmatter(self, content: str) -> dict | None:
@@ -270,15 +271,37 @@ class OGImageGenerator:
         except Exception:
             return None
 
-    def generate_image(self, title: str, description: str, output_path: Path, category: str = None):
+    def generate_image(self, title: str, description: str, output_path: Path, category: str = None, date_str: str = "", read_time: int = 0):
         """Generate the OG image."""
         img = self._create_glow_background()
         draw = ImageDraw.Draw(img, "RGBA")
 
-        # Draw larger black card
-        pad = 40  # Reduced padding to make the card much larger
-        card_rect = [pad, pad, self.width - pad, self.height - pad]
-        draw.rounded_rectangle(card_rect, radius=24, fill=CONFIG["card_bg"], outline=CONFIG["card_border"], width=2)
+        # Draw larger black card with a subtle bottom gradient
+        pad = 40
+        card_w = self.width - 2 * pad
+        card_h = self.height - 2 * pad
+        
+        card_img = Image.new("RGBA", (card_w, card_h), (0, 0, 0, 0))
+        card_draw = ImageDraw.Draw(card_img)
+        card_draw.rounded_rectangle([0, 0, card_w, card_h], radius=24, fill=CONFIG["card_bg"])
+        
+        gradient = Image.new("RGBA", (card_w, card_h), (0, 0, 0, 0))
+        grad_draw = ImageDraw.Draw(gradient)
+        grad_draw.ellipse([-card_w * 0.2, card_h * 0.5, card_w * 1.2, card_h * 1.5], fill=(0, 0, 0, 150))
+        gradient = gradient.filter(ImageFilter.GaussianBlur(80))
+        
+        card_img = Image.alpha_composite(card_img, gradient)
+        
+        mask = Image.new("L", (card_w, card_h), 0)
+        mask_draw = ImageDraw.Draw(mask)
+        mask_draw.rounded_rectangle([0, 0, card_w, card_h], radius=24, fill=255)
+        
+        final_card = Image.new("RGBA", (card_w, card_h), (0, 0, 0, 0))
+        final_card.paste(card_img, (0, 0), mask=mask)
+        final_draw = ImageDraw.Draw(final_card)
+        final_draw.rounded_rectangle([0, 0, card_w, card_h], radius=24, outline=CONFIG["card_border"], width=2)
+        
+        img.paste(final_card, (pad, pad), final_card)
 
         # Avatar & Author Header
         y = pad + 48
@@ -303,6 +326,40 @@ class OGImageGenerator:
         else:
             draw.text((x, y), CONFIG["author"], fill=CONFIG["author_color"], font=self.fonts["author"])
             y += 50
+
+        # Top Right: Date and Read Time
+        info_font = self.fonts["domain"]
+        if date_str or read_time > 0:
+            date_text = ""
+            read_text = ""
+            
+            if date_str:
+                try:
+                    d = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+                    date_text = d.strftime("%b %d, %Y")
+                except Exception:
+                    date_text = date_str
+            
+            if read_time > 0:
+                read_text = f"{read_time} min read"
+                
+            lines = [t for t in [date_text, read_text] if t]
+            
+            if lines:
+                gap = 8
+                bboxes = [draw.textbbox((0, 0), line, font=info_font) for line in lines]
+                heights = [bbox[3] - bbox[1] for bbox in bboxes]
+                total_height = sum(heights) + gap * (len(lines) - 1)
+                
+                avatar_center_y = pad + 48 + (avatar_size / 2)
+                current_y = avatar_center_y - (total_height / 2)
+                
+                for info_line, bbox, h in zip(lines, bboxes, heights):
+                    w = bbox[2] - bbox[0]
+                    info_x = self.width - pad - 64 - w
+                    info_y = current_y - bbox[1]
+                    draw.text((info_x, info_y), info_line, fill=(113, 113, 122), font=info_font) # Zinc 500
+                    current_y += h + gap
 
         # Draw Title
         title_font = self._get_title_font(title)
@@ -333,37 +390,46 @@ class OGImageGenerator:
                     draw.text((x, y), line, fill=CONFIG["desc_color"], font=desc_font)
                 y += self._text_height(line, desc_font) + 10
 
-        # Draw decorative top-right accent and optional category
-        pill_width = 56
-        pill_height = 4
-        
-        # Statically anchor pill to the right margin of the bounding box
-        pill_x_end = self.width - pad - 64
-        pill_x_start = pill_x_end - pill_width
-        
-        # Align vertically with the avatar's horizontal center axis
-        avatar_y = pad + 48
-        avatar_size = 96
-        avatar_center_y = avatar_y + (avatar_size / 2)
-        pill_y = avatar_center_y - (pill_height / 2)
-        
-        if category:
+        # Bottom Right: Category and Pill
+        if category and category != "home":
+            pill_width = 56
+            pill_height = 4
+            pill_x_end = self.width - pad - 64
+            pill_x_start = pill_x_end - pill_width
+            pill_y = self.height - pad - 64
+            
             cat_font = self.fonts["domain"]
             cat_text = category.lower()
             cat_bbox = draw.textbbox((0, 0), cat_text, font=cat_font)
             cat_w = cat_bbox[2] - cat_bbox[0]
             cat_visual_center = cat_bbox[1] + (cat_bbox[3] - cat_bbox[1]) / 2
-            pill_center_y = pill_y + (pill_height / 2)
             
             cat_x = pill_x_start - cat_w - 16
-            cat_y = pill_center_y - cat_visual_center
-            draw.text((cat_x, cat_y), cat_text, fill=(113, 113, 122), font=cat_font) # Zinc 500
-
-        draw.rounded_rectangle(
-            [pill_x_start, pill_y, pill_x_end, pill_y + pill_height],
-            radius=2,
-            fill=CONFIG["glow_color_1"] + (200,)
-        )
+            cat_y = pill_y - cat_visual_center
+            
+            draw.text((cat_x, cat_y), cat_text, fill=(113, 113, 122), font=cat_font)
+            
+            # Draw gradient pill
+            pill_img = Image.new("RGBA", (pill_width, pill_height), (0, 0, 0, 0))
+            pill_draw = ImageDraw.Draw(pill_img)
+            
+            c1 = CONFIG["glow_color_1"] + (255,)
+            c2 = CONFIG["glow_color_2"] + (255,)
+            for px in range(pill_width):
+                ratio = px / max(1, pill_width - 1)
+                r = int(c1[0] * (1 - ratio) + c2[0] * ratio)
+                g = int(c1[1] * (1 - ratio) + c2[1] * ratio)
+                b = int(c1[2] * (1 - ratio) + c2[2] * ratio)
+                a = int(c1[3] * (1 - ratio) + c2[3] * ratio)
+                pill_draw.line([(px, 0), (px, pill_height)], fill=(r, g, b, a))
+                
+            pill_mask = Image.new("L", (pill_width, pill_height), 0)
+            ImageDraw.Draw(pill_mask).rounded_rectangle([0, 0, pill_width, pill_height], radius=2, fill=255)
+            
+            pill_final = Image.new("RGBA", (pill_width, pill_height), (0, 0, 0, 0))
+            pill_final.paste(pill_img, (0, 0), mask=pill_mask)
+            
+            img.paste(pill_final, (int(pill_x_start), int(pill_y - pill_height/2)), pill_final)
 
         # Homepage specific bottom-center footer
         if category == "home":
@@ -374,7 +440,6 @@ class OGImageGenerator:
             
             footer_x = (self.width - footer_w) / 2
             
-            # The gap from bottom equals the gap the pill has from the right (64px)
             target_bottom_y = self.height - pad - 64
             text_visual_bottom = footer_bbox[3]
             footer_y = target_bottom_y - text_visual_bottom
@@ -416,6 +481,13 @@ class OGImageGenerator:
 
                 title = fm.get("title", "")
                 description = fm.get("description", "")
+                date_str = fm.get("date", "")
+                
+                # Extract body for read time
+                match = re.match(r"^\+\+\+\s*\n(.*?)\n\+\+\+", content, re.DOTALL)
+                body = content[match.end():] if match else content
+                word_count = len(re.findall(r'\w+', body))
+                read_time = max(1, round(word_count / 200))
                 
                 # Zola uses the slug from frontmatter if it exists, otherwise it defaults to the filename
                 slug = fm.get("slug")
@@ -427,7 +499,7 @@ class OGImageGenerator:
                 output_path = self.output_dir / rel_path.parent / f"{slug}.png"
 
                 # Check cache
-                content_hash = self._content_hash(title, description, category)
+                content_hash = self._content_hash(title, description, category, date_str, read_time)
                 cache_key = str(output_path.relative_to(self.project_root))
 
                 if output_path.exists() and self.cache.get(cache_key) == content_hash:
@@ -436,7 +508,7 @@ class OGImageGenerator:
 
                 # Generate image
                 print(f"  Generating: {rel_path.parent}/{slug}.png")
-                self.generate_image(title, description, output_path, category)
+                self.generate_image(title, description, output_path, category, date_str, read_time)
                 self.cache[cache_key] = content_hash
                 generated += 1
 
@@ -452,14 +524,14 @@ class OGImageGenerator:
         output_path = self.output_dir / "home.png"
         
         # Check cache
-        content_hash = self._content_hash(title, description, "home")
+        content_hash = self._content_hash(title, description, "home", "", 0)
         cache_key = str(output_path.relative_to(self.project_root))
 
         if output_path.exists() and self.cache.get(cache_key) == content_hash:
             return 0, 1
             
         print("  Generating: home.png")
-        self.generate_image(title, description, output_path, "home")
+        self.generate_image(title, description, output_path, "home", "", 0)
         self.cache[cache_key] = content_hash
         self._save_cache()
         return 1, 0
