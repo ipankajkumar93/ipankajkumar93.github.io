@@ -29,9 +29,7 @@
                 </i>
         </div>
         <div class="reading-time">
-            {% set word_count = page.content | split(pat=" ") | length %}
-            {% set reading_time = (word_count / 250) | round %}
-            <i>{{ reading_time }} minutes ({{ word_count }} words)</i>
+            <i>{{ page.reading_time }} minutes ({{ page.word_count }} words)</i>
         </div>
         {%- endif %}
       </div>  
