@@ -20,8 +20,8 @@
     <link rel="preload" href="{{ get_url(path="fonts/geist_5.woff2", trailing_slash=false) | safe }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ get_url(path="fonts/instrument_4.woff2", trailing_slash=false) | safe }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ get_url(path="fonts/jetbrains_6.woff2", trailing_slash=false) | safe }}" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="{{ get_url(path="styles/fonts.css", trailing_slash=false) | safe }}">
-    <link rel="stylesheet" href="{{ get_url(path="styles/main.css", trailing_slash=false) | safe }}">
+    <link rel="stylesheet" href="{{ get_url(path="styles/fonts.css", trailing_slash=false, cachebust=true) | safe }}">
+    <link rel="stylesheet" href="{{ get_url(path="styles/main.css", trailing_slash=false, cachebust=true) | safe }}">
     <script>
         (function () {
             var stored = localStorage.getItem('theme');
