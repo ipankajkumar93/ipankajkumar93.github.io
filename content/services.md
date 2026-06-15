@@ -4,6 +4,6 @@ description = "Tools I built for myself and use often, hosted publicly. If they'
 template = "page-header.html"
 +++
 
-| Service URL | GitHub |
-| --- | --- |
-| [sample.service.name](https://pankajkumar.xyz/) | [ipankajkumar93/repoName](https://github.com/ipankajkumar93/repoName) |
+| Service URL | Name | GitHub |
+| --- | --- | --- |
+| [sample.service.name](https://pankajkumar.xyz/) | Sample Service |[ipankajkumar93/repoName](https://github.com/ipankajkumar93/repoName) |
