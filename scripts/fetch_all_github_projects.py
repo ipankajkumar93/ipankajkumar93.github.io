@@ -1,4 +1,4 @@
-#!/usr/bin/env uv run
+#!/usr/bin/env -S uv run --script
 # /// script
 # dependencies = ["requests"]
 # ///
@@ -17,7 +17,9 @@ Example:
 import json
 import sys
 import time
+import tomllib
 from datetime import datetime
+from pathlib import Path
 import requests
 
 def fetch_all_repos(username: str) -> list:
@@ -163,11 +165,24 @@ def generate_toml_entry(repo: dict) -> str:
     
     return '\n'.join(lines)
 
+def get_default_username() -> str:
+    """Extract default GitHub username from config.toml."""
+    try:
+        config_path = Path(__file__).parent.parent / "config.toml"
+        with open(config_path, "rb") as f:
+            config = tomllib.load(f)
+            github_url = config.get("extra", {}).get("github", "")
+            if github_url:
+                return github_url.strip("/").split("/")[-1]
+    except Exception as e:
+        print(f"Warning: Could not parse config.toml for github username: {e}", file=sys.stderr)
+    return "ipankajkumar93"
+
 def main():
     """Main function to process repositories."""
     
     # Get username from command line or default
-    username = sys.argv[1] if len(sys.argv) > 1 else "ipankajkumar93"
+    username = sys.argv[1] if len(sys.argv) > 1 else get_default_username()
     
     # Fetch all repositories
     repos = fetch_all_repos(username)

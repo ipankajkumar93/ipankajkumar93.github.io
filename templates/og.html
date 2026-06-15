@@ -22,6 +22,9 @@
         {% set og_image = "images/og" ~ path_trimmed ~ ".png" -%}
     {% endif -%}
     {% set twitter_card = "summary_large_image" -%}
+{% elif current_path and current_path == "/" -%}
+    {% set og_image = "images/og/home.png" -%}
+    {% set twitter_card = "summary_large_image" -%}
 {% endif -%}
 
 <meta name="title" content="{% if page and page.title %}{{ page.title }}{% else %}{{ config.title }}{% endif %}">
@@ -57,11 +60,11 @@
     <meta name="twitter:image" content="{{ config.base_url ~ og_image }}">
 {% endif -%}
 
-<meta name="twitter:site" content="@ipankajkumar93">
+<meta name="twitter:site" content="@{{ config.extra.twitter | split(pat='/') | last }}">
 
 {% if og_type == "article" -%}
     <meta name="twitter:label1" content="Written by">
-    <meta name="twitter:data1" content="Pankaj Kumar">
+    <meta name="twitter:data1" content="{{ config.title }}">
 
     {% if page.taxonomies -%}
         {% set all_tags = [] -%}
@@ -75,4 +78,4 @@
     {% endif -%}
 {% endif -%}
 
-<meta name="twitter:creator" content="@ipankajkumar93">
+<meta name="twitter:creator" content="@{{ config.extra.twitter | split(pat='/') | last }}">
