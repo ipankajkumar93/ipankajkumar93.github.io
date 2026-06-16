@@ -298,8 +298,16 @@ class OGImageGenerator:
         
         final_card = Image.new("RGBA", (card_w, card_h), (0, 0, 0, 0))
         final_card.paste(card_img, (0, 0), mask=mask)
-        final_draw = ImageDraw.Draw(final_card)
-        final_draw.rounded_rectangle([0, 0, card_w, card_h], radius=24, outline=CONFIG["card_border"], width=2)
+        # Removed the dark grey line (CONFIG["card_border"]) around the inner card
+        
+        # Add a pronounced glowing effect behind the card edge
+        card_glow = Image.new("RGBA", (self.width, self.height), (0, 0, 0, 0))
+        glow_draw = ImageDraw.Draw(card_glow)
+        glow_draw.rounded_rectangle([pad, pad, pad + card_w, pad + card_h], radius=24, outline=CONFIG["glow_color_1"] + (255,), width=24)
+        card_glow = card_glow.filter(ImageFilter.GaussianBlur(24))
+        
+        img = Image.alpha_composite(img, card_glow)
+        draw = ImageDraw.Draw(img, "RGBA")
         
         img.paste(final_card, (pad, pad), final_card)
 
