@@ -2106,8 +2106,10 @@ body[data-theme="dark"] .draft-banner {
         justify-content: center;
         margin: 0 0 var(--space-sm) 0;
     }
-    .pagination-btn {
-        flex: 1;
+    /* Target 'Prev' button (2nd child) to separate it from 'Next' */
+    .pagination > *:nth-child(2) {
+        /* width of one number button (36px) + one extra flex gap */
+        margin-right: calc(36px + var(--space-xs));
     }
 }
 
