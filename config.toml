@@ -2,7 +2,7 @@
 base_url = "https://pankajkumar.xyz/"
 title = "Pankaj Kumar"
 description = "Code explorations, engineering thoughts, and life in between."
-generate_feeds = false
+generate_feeds = true
 feed_filenames = ["atom.xml"] # default template
 
 # Whether to automatically compile all Sass files in the sass directory
