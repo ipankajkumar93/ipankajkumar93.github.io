@@ -128,7 +128,7 @@ html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 body {
@@ -141,7 +141,7 @@ body {
     padding: 0;
     min-height: 100vh;
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
     display: flex;
     flex-direction: column;
     transition: background-color var(--transition-slow), color var(--transition-slow);
@@ -269,8 +269,8 @@ a:hover {
 
 /* Underline style for content links */
 article a:not(.tag):not(.zola-anchor),
-main p a,
-main li a {
+main p a:not(.tag),
+main li a:not(.tag) {
     text-decoration: underline;
     text-decoration-color: var(--color-accent-muted);
     text-underline-offset: 3px;
@@ -278,8 +278,8 @@ main li a {
 }
 
 article a:not(.tag):not(.zola-anchor):hover,
-main p a:hover,
-main li a:hover {
+main p a:not(.tag):hover,
+main li a:not(.tag):hover {
     text-decoration-color: var(--color-link-hover);
 }
 
@@ -923,12 +923,13 @@ code {
 pre {
     position: relative;
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    /* overflow: hidden removed to allow sticky copy button */
     margin: var(--space-xl) 0;
     box-shadow:
         0 4px 6px -1px rgba(0, 0, 0, 0.1),
         0 2px 4px -1px rgba(0, 0, 0, 0.06);
     color-scheme: light !important;
+    display: grid;
 }
 
 :root[data-theme="dark"] pre {
@@ -937,6 +938,7 @@ pre {
 
 /* Code inside pre */
 pre code {
+    grid-area: 1 / 1;
     display: block;
     padding: var(--space-lg) var(--space-xl);
     font-size: 0.875rem;
@@ -991,9 +993,14 @@ pre .line-number {
 
 /* Copy Code Button */
 .copy-code-btn {
-    position: absolute;
+    grid-area: 1 / 1;
+    position: sticky;
     top: var(--space-sm);
-    right: var(--space-sm);
+    justify-self: end;
+    align-self: start;
+    margin-top: var(--space-sm);
+    margin-right: var(--space-sm);
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
