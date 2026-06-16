@@ -22,8 +22,17 @@
         {% set og_image = "images/og" ~ path_trimmed ~ ".png" -%}
     {% endif -%}
     {% set twitter_card = "summary_large_image" -%}
-{% elif current_path and current_path == "/" -%}
-    {% set og_image = "images/og/home.png" -%}
+{% elif section -%}
+    {% set og_type = "website" -%}
+    {% set og_title = section.title | default(value=config.title) -%}
+    {% set og_description = section.description | default(value=config.description) -%}
+    {% set og_url = section.permalink -%}
+    {% set path_trimmed = current_path | trim_end_matches(pat="/") -%}
+    {% if path_trimmed == "" -%}
+        {% set og_image = "images/og/home.png" -%}
+    {% else -%}
+        {% set og_image = "images/og" ~ path_trimmed ~ ".png" -%}
+    {% endif -%}
     {% set twitter_card = "summary_large_image" -%}
 {% endif -%}
 

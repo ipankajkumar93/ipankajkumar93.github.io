@@ -271,8 +271,47 @@ class OGImageGenerator:
         except Exception:
             return None
 
-    def generate_image(self, title: str, description: str, output_path: Path, category: str = None, date_str: str = "", read_time: int = 0):
+    def _draw_category_pill(self, img: Image.Image, draw: ImageDraw.ImageDraw, cat_text: str, pill_x_end: int, pill_y: int):
+        pill_width = 56
+        pill_height = 4
+        pill_x_start = pill_x_end - pill_width
+        
+        cat_font = self.fonts["domain"]
+        cat_bbox = draw.textbbox((0, 0), cat_text, font=cat_font)
+        cat_w = cat_bbox[2] - cat_bbox[0]
+        cat_visual_center = cat_bbox[1] + (cat_bbox[3] - cat_bbox[1]) / 2
+        
+        cat_x = pill_x_start - cat_w - 16
+        cat_y = pill_y - cat_visual_center
+        
+        draw.text((cat_x, cat_y), cat_text, fill=(113, 113, 122), font=cat_font)
+        
+        pill_img = Image.new("RGBA", (pill_width, pill_height), (0, 0, 0, 0))
+        pill_draw = ImageDraw.Draw(pill_img)
+        
+        c1 = CONFIG["glow_color_1"] + (255,)
+        c2 = CONFIG["glow_color_2"] + (255,)
+        for px in range(pill_width):
+            ratio = px / max(1, pill_width - 1)
+            r = int(c1[0] * (1 - ratio) + c2[0] * ratio)
+            g = int(c1[1] * (1 - ratio) + c2[1] * ratio)
+            b = int(c1[2] * (1 - ratio) + c2[2] * ratio)
+            a = int(c1[3] * (1 - ratio) + c2[3] * ratio)
+            pill_draw.line([(px, 0), (px, pill_height)], fill=(r, g, b, a))
+            
+        pill_mask = Image.new("L", (pill_width, pill_height), 0)
+        ImageDraw.Draw(pill_mask).rounded_rectangle([0, 0, pill_width, pill_height], radius=2, fill=255)
+        
+        pill_final = Image.new("RGBA", (pill_width, pill_height), (0, 0, 0, 0))
+        pill_final.paste(pill_img, (0, 0), mask=pill_mask)
+        
+        img.paste(pill_final, (int(pill_x_start), int(pill_y - pill_height/2)), pill_final)
+
+    def generate_image(self, title: str, description: str, output_path: Path, category: str = None, date_str: str = "", read_time: int = 0, is_landing_page: bool = False):
         """Generate the OG image."""
+        is_home = category == "home"
+        is_centered = is_home or is_landing_page
+
         img = self._create_glow_background()
         draw = ImageDraw.Draw(img, "RGBA")
 
@@ -336,9 +375,13 @@ class OGImageGenerator:
             draw.text((x, y), CONFIG["author"], fill=CONFIG["author_color"], font=self.fonts["author"])
             y += 50
 
-        # Top Right: Date and Read Time
+        # Top Right: Date and Read Time OR Landing Page Pill
         info_font = self.fonts["domain"]
-        if date_str or read_time > 0:
+        if is_centered and category:
+            x_end = self.width - pad - 64
+            avatar_center_y = pad + 48 + (96 / 2) # avatar_size is 96
+            self._draw_category_pill(img, draw, category.lower(), x_end, avatar_center_y)
+        elif date_str or read_time > 0:
             date_text = ""
             read_text = ""
             
@@ -375,7 +418,7 @@ class OGImageGenerator:
         title_lines = self._wrap_text(title, title_font, self.width - (2 * pad) - 128)
 
         for line in title_lines[:3]:
-            if category == "home":
+            if is_centered:
                 bbox = draw.textbbox((0, 0), line, font=title_font)
                 line_x = (self.width - (bbox[2] - bbox[0])) / 2
                 draw.text((line_x, y), line, fill=CONFIG["title_color"], font=title_font)
@@ -391,7 +434,7 @@ class OGImageGenerator:
             desc_lines = self._wrap_text(description, desc_font, self.width - (2 * pad) - 128)
 
             for line in desc_lines[:3]:  # Limit description to 3 lines
-                if category == "home":
+                if is_centered:
                     bbox = draw.textbbox((0, 0), line, font=desc_font)
                     line_x = (self.width - (bbox[2] - bbox[0])) / 2
                     draw.text((line_x, y), line, fill=CONFIG["desc_color"], font=desc_font)
@@ -400,48 +443,13 @@ class OGImageGenerator:
                 y += self._text_height(line, desc_font) + 10
 
         # Bottom Right: Category and Pill
-        if category and category != "home":
-            pill_width = 56
-            pill_height = 4
+        if category and not is_home and not is_landing_page:
             pill_x_end = self.width - pad - 64
-            pill_x_start = pill_x_end - pill_width
             pill_y = self.height - pad - 64
-            
-            cat_font = self.fonts["domain"]
-            cat_text = category.lower()
-            cat_bbox = draw.textbbox((0, 0), cat_text, font=cat_font)
-            cat_w = cat_bbox[2] - cat_bbox[0]
-            cat_visual_center = cat_bbox[1] + (cat_bbox[3] - cat_bbox[1]) / 2
-            
-            cat_x = pill_x_start - cat_w - 16
-            cat_y = pill_y - cat_visual_center
-            
-            draw.text((cat_x, cat_y), cat_text, fill=(113, 113, 122), font=cat_font)
-            
-            # Draw gradient pill
-            pill_img = Image.new("RGBA", (pill_width, pill_height), (0, 0, 0, 0))
-            pill_draw = ImageDraw.Draw(pill_img)
-            
-            c1 = CONFIG["glow_color_1"] + (255,)
-            c2 = CONFIG["glow_color_2"] + (255,)
-            for px in range(pill_width):
-                ratio = px / max(1, pill_width - 1)
-                r = int(c1[0] * (1 - ratio) + c2[0] * ratio)
-                g = int(c1[1] * (1 - ratio) + c2[1] * ratio)
-                b = int(c1[2] * (1 - ratio) + c2[2] * ratio)
-                a = int(c1[3] * (1 - ratio) + c2[3] * ratio)
-                pill_draw.line([(px, 0), (px, pill_height)], fill=(r, g, b, a))
-                
-            pill_mask = Image.new("L", (pill_width, pill_height), 0)
-            ImageDraw.Draw(pill_mask).rounded_rectangle([0, 0, pill_width, pill_height], radius=2, fill=255)
-            
-            pill_final = Image.new("RGBA", (pill_width, pill_height), (0, 0, 0, 0))
-            pill_final.paste(pill_img, (0, 0), mask=pill_mask)
-            
-            img.paste(pill_final, (int(pill_x_start), int(pill_y - pill_height/2)), pill_final)
+            self._draw_category_pill(img, draw, category.lower(), pill_x_end, pill_y)
 
-        # Homepage specific bottom-center footer
-        if category == "home":
+        # Homepage/Landing page specific bottom-center footer
+        if is_centered:
             footer_text = self.footer_items
             footer_font = self.fonts["domain"]
             footer_bbox = draw.textbbox((0, 0), footer_text, font=footer_font)
@@ -545,6 +553,59 @@ class OGImageGenerator:
         self._save_cache()
         return 1, 0
 
+    def process_landing_pages(self) -> tuple[int, int]:
+        """Generate OG images for landing pages."""
+        generated = 0
+        skipped = 0
+
+        pages = []
+        content_dir = self.project_root / "content"
+        
+        for md_file in content_dir.glob("*.md"):
+            if md_file.name == "_index.md":
+                continue
+            pages.append((md_file.stem, md_file))
+            
+        for subdir in content_dir.iterdir():
+            if subdir.is_dir():
+                md_file = subdir / "_index.md"
+                if md_file.exists():
+                    pages.append((subdir.name, md_file))
+
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        for cat_name, md_file in pages:
+            if not md_file.exists():
+                continue
+
+            content = md_file.read_text()
+            fm = self._parse_frontmatter(content)
+            if not fm:
+                continue
+
+            title = fm.get("title", cat_name.capitalize())
+            description = fm.get("description", "")
+
+            if "." in description:
+                description = description.split(".")[0] + "."
+
+            output_path = self.output_dir / f"{cat_name}.png"
+
+            content_hash = self._content_hash(title, description, cat_name, "", 0)
+            cache_key = str(output_path.relative_to(self.project_root))
+
+            if output_path.exists() and self.cache.get(cache_key) == content_hash:
+                skipped += 1
+                continue
+
+            print(f"  Generating: {cat_name}.png")
+            self.generate_image(title, description, output_path, cat_name, "", 0, is_landing_page=True)
+            self.cache[cache_key] = content_hash
+            generated += 1
+
+        self._save_cache()
+        return generated, skipped
+
 
 def main():
     project_root = Path(__file__).parent.parent
@@ -552,10 +613,11 @@ def main():
     print("Generating OG images...")
     generator = OGImageGenerator(project_root)
     home_gen, home_cached = generator.process_home()
+    lp_gen, lp_cached = generator.process_landing_pages()
     generated, skipped_custom, skipped_cached = generator.process_posts()
 
-    total_gen = generated + home_gen
-    total_cached = skipped_cached + home_cached
+    total_gen = generated + home_gen + lp_gen
+    total_cached = skipped_cached + home_cached + lp_cached
 
     print(
         f"Done: {total_gen} generated, {skipped_custom} have custom images, {total_cached} cached"
