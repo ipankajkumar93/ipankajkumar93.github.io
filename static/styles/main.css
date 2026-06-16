@@ -269,8 +269,8 @@ a:hover {
 
 /* Underline style for content links */
 article a:not(.tag):not(.zola-anchor),
-main p a,
-main li a {
+main p a:not(.tag),
+main li a:not(.tag) {
     text-decoration: underline;
     text-decoration-color: var(--color-accent-muted);
     text-underline-offset: 3px;
@@ -278,8 +278,8 @@ main li a {
 }
 
 article a:not(.tag):not(.zola-anchor):hover,
-main p a:hover,
-main li a:hover {
+main p a:not(.tag):hover,
+main li a:not(.tag):hover {
     text-decoration-color: var(--color-link-hover);
 }
 
