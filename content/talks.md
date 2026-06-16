@@ -1,6 +1,6 @@
 +++
 title = "Talks"
-description = "A collection of talks and presentations I've given at various meetups and conferences."
+description = "Things I've spoken about - at meetups, conferences, and the occasional room full of skeptics."
 template = "page-header.html"
 +++
 ## 2026
