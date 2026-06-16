@@ -162,5 +162,89 @@ document.addEventListener('DOMContentLoaded', function () {
 
         block.appendChild(button);
     });
+
+    // AJAX Pagination
+    function initAjaxPagination() {
+        const container = document.getElementById('pagination-container');
+        if (!container) return;
+
+        container.addEventListener('click', function(e) {
+            // Find closest link
+            const link = e.target.closest('a');
+            
+            // If there's no link, or it's disabled, or it's NOT inside the pagination nav, ignore it
+            if (!link || !link.href || link.classList.contains('disabled') || !link.closest('.pagination')) return;
+
+            // Only intercept internal pagination links
+            const url = new URL(link.href);
+            if (url.origin !== window.location.origin) return;
+
+            e.preventDefault();
+            loadPage(url.href);
+        });
+    }
+
+    async function loadPage(url, isPopState = false) {
+        const container = document.getElementById('pagination-container');
+        if (!container) return;
+
+        container.classList.add('loading');
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const text = await response.text();
+            
+            // Parse the new HTML
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            
+            const newContainer = doc.getElementById('pagination-container');
+            if (newContainer) {
+                container.innerHTML = newContainer.innerHTML;
+                
+                // Update history if not triggered by back/forward button
+                if (!isPopState) {
+                    window.history.pushState({ path: url }, '', url);
+                }
+                
+                // Re-initialize feather icons
+                if (typeof feather !== 'undefined') feather.replace();
+                
+                // Scroll to top of container
+                const headerOffset = 80;
+                const elementPosition = container.parentElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        } catch (error) {
+            console.error('Pagination fetch error:', error);
+            // Fallback to standard navigation on error
+            window.location.href = url;
+        } finally {
+            container.classList.remove('loading');
+        }
+    }
+
+    // Handle back/forward buttons
+    window.addEventListener('popstate', function(e) {
+        if (e.state && e.state.path) {
+            loadPage(e.state.path, true);
+        } else {
+            loadPage(window.location.href, true);
+        }
+    });
+
+    // Initialize initial state in history
+    if (document.getElementById('pagination-container')) {
+        window.history.replaceState({ path: window.location.href }, '', window.location.href);
+        initAjaxPagination();
+    }
+
     if (typeof feather !== 'undefined') feather.replace();
 });

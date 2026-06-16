@@ -4,4 +4,5 @@ description = "A curated collection of distilled notes on things I've learned, o
 sort_by = "date"
 insert_anchor_links = "right"
 generate_feeds = true
+paginate_by = 10
 +++
