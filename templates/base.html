@@ -12,9 +12,9 @@
     {% include "og.html" %}
     {%- if config.generate_feeds %}
     {% block rss -%}
-    <link rel="alternate" type={% if config.feed_filename=="atom.xml" %}"application/atom+xml"{% else
+    <link rel="alternate" type={% if config.feed_filenames[0]=="atom.xml" %}"application/atom+xml"{% else
         %}"application/rss+xml"{% endif %} title="{{ config.title }}"
-        href="{{ get_url(path=config.feed_filename) | safe }}">
+        href="{{ get_url(path=config.feed_filenames[0]) | safe }}">
     {%- endblock -%}
     {%- endif %}
     <link rel="preload" href="{{ get_url(path="fonts/geist_5.woff2", trailing_slash=false) | safe }}" as="font" type="font/woff2" crossorigin>
