@@ -28,7 +28,7 @@ CONFIG = {
     "height": 630,
     "padding": 80,
     # Dark Mode Background with Large Dark Box
-    "bg_color": (9, 9, 11),         # Zinc 950
+    "bg_color": (25, 35, 90),       # Extra Punchy Indigo Blue
     "glow_color_1": (40, 112, 194), # Cobalt Blue
     "glow_color_2": (20, 60, 110),  # Deep Blue
     "card_bg": (15, 15, 18, 255),   # Solid dark box
