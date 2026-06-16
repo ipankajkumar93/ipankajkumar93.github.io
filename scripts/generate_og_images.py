@@ -311,7 +311,8 @@ class OGImageGenerator:
         avatar = self._get_circle_avatar(avatar_size)
         
         if avatar:
-            img.paste(avatar, (int(x), int(y)), avatar)
+            # Shift the avatar down slightly to visually center align with the text
+            img.paste(avatar, (int(x), int(y + 6)), avatar)
             
             # Center the text vertically relative to the avatar
             text_x = x + avatar_size + 24
