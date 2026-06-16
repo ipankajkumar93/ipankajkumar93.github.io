@@ -16,7 +16,7 @@ Visit at [pankajkumar.xyz](https://pankajkumar.xyz)
 zola serve --drafts
 ```
 
-### If you want to generate OG Images, before committing code, git actions does this automatically while deploying, use below command for local testing.
+#### If you want to generate OG Images, before committing code, git actions does this automatically while deploying, use below command for local testing.
 
 ```bash
 uv run scripts/generate_og_images.py
