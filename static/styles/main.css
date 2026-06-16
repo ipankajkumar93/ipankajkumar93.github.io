@@ -2026,7 +2026,7 @@ body[data-theme="dark"] .draft-banner {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--space-xs);
+    gap: 12px;
     margin-top: var(--space-2xl);
     padding-top: var(--space-lg);
     border-top: 1px solid var(--color-border);
@@ -2085,7 +2085,7 @@ body[data-theme="dark"] .draft-banner {
 .pagination-numbers {
     display: flex;
     align-items: center;
-    gap: var(--space-xs);
+    gap: 12px;
     margin: 0 var(--space-sm);
 }
 
@@ -2104,12 +2104,15 @@ body[data-theme="dark"] .draft-banner {
         order: -1;
         width: 100%;
         justify-content: center;
-        margin: 0 0 var(--space-sm) 0;
+        margin: 0;
     }
     /* Target 'Prev' button (2nd child) to separate it from 'Next' */
     .pagination > *:nth-child(2) {
-        /* width of one number button (36px) + one extra flex gap */
-        margin-right: calc(36px + var(--space-xs));
+        /* Total gap = 36px (width of page button). margin-right = 36px - 12px (flex gap) */
+        margin-right: 24px;
+    }
+    .pagination-btn {
+        padding: 0 1.25rem;
     }
 }
 
