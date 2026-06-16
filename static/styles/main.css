@@ -2020,6 +2020,110 @@ body[data-theme="dark"] .draft-banner {
 }
 
 /* --------------------------------------------------------------------------
+   Pagination
+   -------------------------------------------------------------------------- */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+    font-family: var(--font-body);
+}
+
+.pagination-btn,
+.pagination-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 var(--space-xs);
+    background-color: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    transition: all var(--transition-fast);
+}
+
+.pagination-btn {
+    padding: 0 var(--space-md);
+}
+
+.pagination-btn:hover:not(.disabled),
+.pagination-number:hover:not(.active) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+}
+
+.pagination-btn.disabled,
+.pagination-number.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: transparent;
+    color: var(--color-text-muted);
+    pointer-events: none;
+}
+
+.pagination-ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 36px;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.pagination-numbers {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin: 0 var(--space-sm);
+}
+
+.pagination-number.active {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    font-weight: 700;
+    cursor: default;
+}
+
+@media screen and (max-width: 600px) {
+    .pagination {
+        flex-wrap: wrap;
+    }
+    .pagination-numbers {
+        order: -1;
+        width: 100%;
+        justify-content: center;
+        margin: 0 0 var(--space-sm) 0;
+    }
+    .pagination-btn {
+        flex: 1;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   AJAX Pagination
+   -------------------------------------------------------------------------- */
+.pagination-container {
+    transition: opacity var(--transition-fast);
+}
+
+.pagination-container.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
    Print Styles
    -------------------------------------------------------------------------- */
 @media print {
