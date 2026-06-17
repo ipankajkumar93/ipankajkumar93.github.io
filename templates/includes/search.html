@@ -33,12 +33,26 @@
     }
 
     function openSearch() {
-        initSearchIndex();
         searchModal.classList.add('active');
         document.body.style.overflow = 'hidden';
         searchInput.value = '';
-        searchResults.innerHTML = '<div class="search-empty-state">What are you looking for?</div>';
-        setTimeout(() => searchInput.focus(), 50);
+
+        if (window.__searchLoaded && window.__searchLoaded()) {
+            // Scripts already loaded — instant search
+            initSearchIndex();
+            searchResults.innerHTML = '<div class="search-empty-state">What are you looking for?</div>';
+            setTimeout(() => searchInput.focus(), 50);
+        } else {
+            // Scripts still loading — show brief loading state
+            searchResults.innerHTML = '<div class="search-empty-state">Indexing…</div>';
+            searchInput.disabled = true;
+            window.__loadSearch(function() {
+                initSearchIndex();
+                searchInput.disabled = false;
+                searchResults.innerHTML = '<div class="search-empty-state">What are you looking for?</div>';
+                searchInput.focus();
+            });
+        }
     }
 
     function closeSearch() {
