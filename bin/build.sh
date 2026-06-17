@@ -2,7 +2,7 @@
 set -euo pipefail
 
 echo ">>> Installing uv..."
-curl -LsSf https://astral.sh/uv/0.7.12/install.sh | sh
+curl -LsSf https://astral.sh/uv/0.11.21/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
 
 echo ">>> Generating OG images..."
