@@ -88,7 +88,7 @@ def format_date(date_str: str) -> str:
     try:
         dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
         return dt.strftime("%b %Y")
-    except:
+    except Exception:
         return ""
 
 def should_include_repo(repo: dict) -> bool:

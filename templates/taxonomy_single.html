@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block main %}
-  <main>
-    {%- if taxonomy.term %}
+    {%- if taxonomy %}
+      {% if taxonomy.name == "rtd_tags" %}
+        {% set back_url = get_url(path="@/rtd/_index.md") %}
+      {% elif taxonomy.name == "travel_tags" %}
+        {% set back_url = get_url(path="@/travel/_index.md") %}
+      {% else %}
+        {% set back_url = get_url(path="@/posts/_index.md") %}
+      {% endif %}
       <h3 class="filter-heading">Filtering for "{{ term.name }}"</h3>
       <small>
-        <a href="{{ get_url(path="@/blog/_index.md") }}">Remove filter</a>
+        <a href="{{ back_url }}">Remove filter</a>
       </small>
     {%- endif %}
     <ul class="blog-posts">
@@ -13,7 +19,7 @@
         <li>
           <span>
             <i>
-              <time datetime='{{ page.date | date(format='%+') }}' pubdate>
+              <time datetime='{{ page.date | date(format='%+') }}'>
                 {{ page.date | date(format=config.extra.date_format) }}
               </time>
             </i>
@@ -26,5 +32,4 @@
         </li>
       {% endfor %}
     </ul>
-  </main>
 {% endblock %}

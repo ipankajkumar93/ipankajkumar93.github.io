@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}404{% endblock %}
+{% block title %}404 - Page Not Found{% endblock %}
 
 {% block main %}
-  <h1>404</h1>
-  <h2>Page not found 😔</h2>
+<div style="text-align: center; padding: var(--space-3xl) 0;">
+  <h1>404 😔</h1>
+  <h2>Dead end. Happens on road trips too.</h2>
+  <p>This path leads nowhere. Try a different one.</p>
+  <p><a href="{{ config.base_url | safe }}"><i data-feather="home" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"></i>Let's go Home.</a></p>
+</div>
 {% endblock %}
