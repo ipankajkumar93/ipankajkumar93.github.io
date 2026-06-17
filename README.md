@@ -7,12 +7,13 @@ Visit at [pankajkumar.xyz](https://pankajkumar.xyz)
 ## Stack
 
 - Framework: [Zola](https://www.getzola.org/)
+- Deployment - Cloudflare Pages
 - Theme:  Inspiration from [mr-karan.dev](https://mrkaran.dev) which is adapted from [zola-bearblog](https://codeberg.org/alanpearce/zola-bearblog).
 - I have enhanced it further to meet my needs with some added functionality
     - Global Search modal
     - Back to Top button
     - Navigation menu mobile responsive.
-    - Pagination
+    - AJAX Pagination
     - Other UI changes for better user experience
 
 ### Local
