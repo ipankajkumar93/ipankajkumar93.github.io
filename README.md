@@ -7,7 +7,7 @@ Visit at [pankajkumar.xyz](https://pankajkumar.xyz)
 ## Stack
 
 - Framework: [Zola](https://www.getzola.org/)
-- Deployment - Cloudlfare Pages
+- Deployment - Cloudflare Pages
 - Theme:  Inspiration from [mr-karan.dev](https://mrkaran.dev) which is adapted from [zola-bearblog](https://codeberg.org/alanpearce/zola-bearblog).
 - I have enhanced it further to meet my needs with some added functionality
     - Global Search modal
