@@ -23,7 +23,7 @@
         {%- if page.date %}
         <div class="post-date">
                 <i>
-                    <time datetime='{{ page.date | date(format='%+') }}' pubdate>
+                    <time datetime='{{ page.date | date(format='%+') }}'>
                         {{- page.date | date(format=config.extra.date_format) -}}
                     </time>
                 </i>

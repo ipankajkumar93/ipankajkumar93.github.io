@@ -3,26 +3,19 @@
 {% block title %}{{ section.title }} | {{ super() }}{% endblock %}
 
 {% block main %}
-{%- if taxonomy.term %}
-  <h3 class="filter-heading">Filtering for "{{ section.title }}"</h3>
-  <small>
-    <a href="{{ get_url(path="@/blog/_index.md") }}">Remove filter</a>
-  </small>
-{%- else %}
 <div class="section-header">
   <h1>{{ section.title }}</h1>
   {% if section.description %}
   <p class="section-description">{{ section.description | markdown(inline=true) | safe }}</p>
   {% endif %}
 </div>
-{%- endif %}
 <div id="pagination-container" class="pagination-container">
 <ul class="blog-posts">
   {% set pages = paginator.pages | default(value=section.pages) %}
   {% for page in pages %}
     <li>
       <span>
-        <time datetime='{{ page.date | date(format='%+') }}' pubdate>
+        <time datetime='{{ page.date | date(format='%+') }}'>
           {{ page.date | date(format=config.extra.date_format) }}
         </time>
       </span>

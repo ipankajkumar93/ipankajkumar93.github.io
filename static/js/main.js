@@ -3,7 +3,6 @@ feather.replace();
 const themeToggle = document.querySelector('.theme-toggle');
 const activeTheme = document.documentElement.getAttribute('data-theme') || 'dark';
 
-document.body.setAttribute('data-theme', activeTheme);
 if (activeTheme === 'dark') {
     themeToggle.innerHTML = '<i data-feather="sun"></i>';
     feather.replace();
@@ -15,7 +14,7 @@ themeToggle.addEventListener('click', function () {
     // Add the transition class
     document.body.classList.add('theme-transition');
 
-    if (document.body.getAttribute('data-theme') !== 'dark') {
+    if (document.documentElement.getAttribute('data-theme') !== 'dark') {
         theme = 'dark';
         themeToggle.innerHTML = '<i data-feather="sun"></i>';
     } else {
@@ -23,7 +22,6 @@ themeToggle.addEventListener('click', function () {
     }
     feather.replace();
     document.documentElement.setAttribute('data-theme', theme);
-    document.body.setAttribute('data-theme', theme);
     document.documentElement.style.colorScheme = theme;
     localStorage.setItem('theme', theme);
 
@@ -76,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function closeLightbox() {
         lightboxModal.classList.remove('active');
-        document.body.style.overflow = 'auto';
+        document.body.style.overflow = '';
     }
     // Mobile Menu
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -93,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function closeMobileMenu() {
         navItems.classList.remove('active');
         mobileBackdrop.classList.remove('active');
-        document.body.style.overflow = 'auto';
+        document.body.style.overflow = '';
     }
 
     if(mobileMenuBtn) {

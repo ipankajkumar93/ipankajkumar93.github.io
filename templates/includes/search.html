@@ -143,8 +143,10 @@
             html += '<div class="search-group">';
             html += '<h3 class="search-group-title">' + cat + ' <span class="search-group-count">(' + grouped[cat].length + ')</span></h3>';
             grouped[cat].forEach(item => {
-                html += '<a href="' + item.url + '" target="_blank" rel="noopener noreferrer" class="search-result-item">';
-                html += '<span class="search-result-title">' + item.title + '</span>';
+                var isExternal = item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'));
+                var targetAttr = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+                html += '<a href="' + item.url + '"' + targetAttr + ' class="search-result-item">';
+                html += '<span class="search-result-title">' + item.title.replace(/</g, '&lt;') + '</span>';
                 if (item.description) {
                     html += '<span class="search-result-desc">' + item.description.replace(/</g, '&lt;').substring(0, 120) + '</span>';
                 }

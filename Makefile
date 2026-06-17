@@ -19,16 +19,10 @@ og-images:
 build: og-images
 	$(ZOLA) build
 
-# Git commit and push
-push:
-	git add --all
-	git commit -m "Automated push"
-	git push origin develop
-
 # Update project metadata from GitHub (Currently disabled)
 # projects:
 # 	@echo "Fetching latest project metadata from GitHub..."
 # 	@uv run scripts/fetch_all_github_projects.py ipankajkumar93 > content/projects/data.toml
 # 	@echo "Successfully updated content/projects/data.toml"
 
-.PHONY: all preview build push og-images
+.PHONY: all preview build og-images

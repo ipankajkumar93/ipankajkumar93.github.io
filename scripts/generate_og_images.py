@@ -93,24 +93,22 @@ class OGImageGenerator:
             self.cat_map = {"posts": "Post", "rtd": "RTD", "travel": "Travel"}
 
     def _get_footer_items(self) -> str:
-        """Parse config.toml to get menu items, excluding Home and Contact, in lowercase."""
+        """Get menu items from already-loaded site config, excluding Home and Contact, in lowercase."""
         try:
-            with open(self.project_root / "config.toml", "rb") as f:
-                config = tomllib.load(f)
-                menu = config.get("extra", {}).get("main_menu", [])
-                items = [m.get("name", "").lower() for m in menu]
-                items = [i for i in items if i and i not in ("home", "contact")]
-                return "   •   ".join(items)
+            menu = self.site_config.get("extra", {}).get("main_menu", [])
+            items = [m.get("name", "").lower() for m in menu]
+            items = [i for i in items if i and i not in ("home", "contact")]
+            return "   •   ".join(items)
         except Exception as e:
-            print(f"Warning: Could not parse config for footer items: {e}")
+            print(f"Warning: Could not parse footer items: {e}")
             return "posts   •   projects   •   services   •   talks   •   rtd   •   travel"
 
     def _load_fonts(self):
         """Load fonts with fallbacks."""
         fonts = {}
         
-        bold_font = self.project_root / "static" / "fonts" / "Roboto-Bold.ttf"
-        regular_font = self.project_root / "static" / "fonts" / "Roboto-Regular.ttf"
+        bold_font = self.project_root / "scripts" / "fonts" / "Roboto-Bold.ttf"
+        regular_font = self.project_root / "scripts" / "fonts" / "Roboto-Regular.ttf"
         
         if bold_font.exists() and regular_font.exists():
             fonts["title_large"] = ImageFont.truetype(str(bold_font), 56)
@@ -150,38 +148,15 @@ class OGImageGenerator:
         match = re.match(r"^\+\+\+\s*\n(.*?)\n\+\+\+", content, re.DOTALL)
         if not match:
             return None
-
-        frontmatter = {}
-        fm_content = match.group(1)
-
-        # Simple TOML parsing for what we need
-        for line in fm_content.split("\n"):
-            line = line.strip()
-            if "=" in line and not line.startswith("["):
-                key, value = line.split("=", 1)
-                key = key.strip()
-                
-                # Strip out inline TOML comments
-                if "#" in value:
-                    # Only split if the # is outside quotes (simple heuristic for this basic parser)
-                    # For a robust parser we'd use a real toml library, but this works for standard usage
-                    value = value.split("#", 1)[0]
-                    
-                value = value.strip().strip('"').strip("'")
-                frontmatter[key] = value
-
-        # Check for og_preview_img in [extra] section
-        if "[extra]" in fm_content:
-            extra_match = re.search(r"\[extra\](.*?)(?=\[|$)", fm_content, re.DOTALL)
-            if extra_match:
-                for line in extra_match.group(1).split("\n"):
-                    line = line.strip()
-                    if line.startswith("og_preview_img"):
-                        frontmatter["og_preview_img"] = (
-                            line.split("=", 1)[1].strip().strip('"').strip("'")
-                        )
-
-        return frontmatter
+        try:
+            fm = tomllib.loads(match.group(1))
+            # Flatten [extra] section keys into top-level for backwards compatibility
+            if "extra" in fm:
+                for k, v in fm["extra"].items():
+                    fm[k] = v
+            return fm
+        except Exception:
+            return None
 
     def _wrap_text(self, text: str, font, max_width: int) -> list[str]:
         """Wrap text to fit within max_width."""
@@ -496,9 +471,11 @@ class OGImageGenerator:
                     skipped_custom += 1
                     continue
 
-                title = fm.get("title", "")
-                description = fm.get("description", "")
-                date_str = fm.get("date", "")
+                title = str(fm.get("title", ""))
+                description = str(fm.get("description", ""))
+                date_val = fm.get("date", "")
+                # tomllib parses bare TOML dates as datetime.date objects
+                date_str = date_val.isoformat() if hasattr(date_val, 'isoformat') else str(date_val)
                 
                 # Extract body for read time
                 match = re.match(r"^\+\+\+\s*\n(.*?)\n\+\+\+", content, re.DOTALL)
