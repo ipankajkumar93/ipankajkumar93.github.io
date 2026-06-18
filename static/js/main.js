@@ -202,6 +202,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (newContainer) {
                 container.innerHTML = newContainer.innerHTML;
                 
+                // Update page title from fetched page
+                if (doc.title) {
+                    document.title = doc.title;
+                }
+                
                 // Update history if not triggered by back/forward button
                 if (!isPopState) {
                     window.history.pushState({ path: url }, '', url);
