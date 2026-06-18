@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
         wrapper.className = 'table-responsive-wrapper';
         wrapper.style.overflowX = 'auto';
         wrapper.style.marginBottom = 'var(--space-lg)';
-        wrapper.style.WebkitOverflowScrolling = 'touch';
+
         
         table.style.marginBottom = '0';
         table.parentNode.insertBefore(wrapper, table);
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Scroll to top of container
                 const headerOffset = 80;
                 const elementPosition = container.parentElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                const offsetPosition = elementPosition + window.scrollY - headerOffset;
                 
                 window.scrollTo({
                     top: offsetPosition,

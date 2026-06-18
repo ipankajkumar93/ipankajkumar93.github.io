@@ -5,9 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% if config.extra.favicon %}
-    <link rel="shortcut icon" type="image/png" href="{{ get_url(path=config.extra.favicon, trailing_slash=false, cachebust=true) | safe }}">
+    <link rel="icon" type="image/svg+xml" href="{{ get_url(path=config.extra.favicon, trailing_slash=false, cachebust=true) | safe }}">
     {%- endif -%}
-    <link rel="manifest" href="{{ get_url(path='site.webmanifest', trailing_slash=false) | safe }}">
+    <link rel="manifest" href="{{ get_url(path='site.webmanifest', trailing_slash=false, cachebust=true) | safe }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ get_url(path='icons/icon-180x180.png', trailing_slash=false, cachebust=true) | safe }}">
     <meta name="theme-color" content="#2870C2">
     <title>{%- block title %}{{ config.title }}{%- endblock %}</title>
     <meta name="referrer" content="no-referrer-when-downgrade">
