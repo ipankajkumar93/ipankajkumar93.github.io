@@ -8,7 +8,15 @@
 {% set article_modified_time = "" -%}
 
 {% if page -%}
-    {% set og_type = "article" -%}
+    {% set is_article = false -%}
+    {% if page.components and ("posts" in page.components or "travel" in page.components or "rtd" in page.components) -%}
+        {% set is_article = true -%}
+    {% endif -%}
+    {% if is_article -%}
+        {% set og_type = "article" -%}
+    {% else -%}
+        {% set og_type = "website" -%}
+    {% endif -%}
     {% set og_title = page.title -%}
     {% set og_description = page.description -%}
     {% set og_url = page.permalink -%}

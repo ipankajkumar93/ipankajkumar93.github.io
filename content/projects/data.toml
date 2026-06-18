@@ -6,10 +6,10 @@
 name = "covidTracker"
 description = "An initiative to make life easier by automating covid vaccination slots look up in India by choosing PIN codes"
 created = "May 2021"
-pushed = "Mar 2022"
+pushed = "Mar 2023"
 stars = 2
-forks = 5
-language = "Angular, HTML"
+forks = 2
+language = "TypeScript, HTML, JavaScript"
 links = [
   { name = "URL", url = "https://www.trackcovid19.info/" },
   { name = "GitHub", url = "https://github.com/ipankajkumar93/covidtracker" },
@@ -19,11 +19,11 @@ highlight = true
 [[project]]
 name = "website"
 description = "Personal site, made using Zola"
-created = "June 2026"
-pushed = "July 2026"
-stars = 1
-forks = 2
-language = "Python, HTML"
+created = "Jun 2021"
+pushed = "Jun 2026"
+stars = 2
+forks = 0
+language = "HTML, Python, JavaScript, Shell"
 links = [
   { name = "URL", url = "https://pankajkumar.xyz" },
   { name = "GitHub", url = "https://github.com/ipankajkumar93/website" },

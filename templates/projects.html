@@ -55,10 +55,10 @@
         <div class="project-header">
           <h3 class="project-name">{{ proj.name }}</h3>
           <div class="project-stats">
-            {% if proj.stars and proj.stars > 1 %}
+            {% if proj.stars %}
             <span class="project-stars">{{ proj.stars }}</span>
             {% endif %}
-            {% if proj.forks and proj.forks > 1 %}
+            {% if proj.forks %}
             <span class="project-forks">{{ proj.forks }}</span>
             {% endif %}
           </div>
