@@ -36,7 +36,7 @@ dark_theme = "github-dark-default"
 
 [extra]
 date_format="%d %b, %Y"
-favicon = "/favicon.png"
+favicon = "/favicon.svg"
 email = "ipankaj.singh10+website@gmail.com"
 github = "https://github.com/ipankajkumar93"
 linkedin = "https://linkedin.com/in/ipankajkumar93"
