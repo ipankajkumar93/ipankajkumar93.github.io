@@ -36,23 +36,38 @@
     {% set twitter_card = "summary_large_image" -%}
 {% endif -%}
 
+{# ── Standard HTML Meta ─────────────────────────────────── #}
 <meta name="title" content="{% if page and page.title %}{{ page.title }}{% else %}{{ config.title }}{% endif %}">
+<meta name="description" content="{{ og_description }}">
+<meta name="author" content="{{ config.title }}">
+<link rel="canonical" href="{{ og_url | safe }}">
+
+{# ── Open Graph (Facebook, Instagram, LinkedIn, WhatsApp) ─ #}
 <meta property="og:site_name" content="{{ config.title }}">
 <meta property="og:type" content="{{ og_type }}">
 <meta property="og:title" content="{{ og_title }}">
 <meta property="og:description" content="{{ og_description }}">
 <meta property="og:url" content="{{ og_url | safe }}">
+<meta property="og:locale" content="{{ lang | default(value='en_US') | replace(from='-', to='_') }}">
 
 {% if og_image -%}
-    <meta property="og:image" content="{{ config.base_url ~ og_image }}">
+    <meta property="og:image" content="{{ config.base_url ~ og_image | safe }}">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{ og_title }}">
 {% endif -%}
 
 {% if og_type == "article" -%}
     <meta property="article:published_time" content="{{ article_published_time }}">
     <meta property="article:modified_time" content="{{ article_modified_time }}">
-
+    <meta property="article:author" content="{{ config.base_url | safe }}">
     {% if page.taxonomies -%}
         {% for taxonomy_name, terms in page.taxonomies -%}
+            {% if taxonomy_name is matching("_tags$") -%}
+                {% set section_name = taxonomy_name | trim_end_matches(pat="_tags") | capitalize -%}
+                <meta property="article:section" content="{{ section_name }}">
+            {% endif -%}
             {% for tag in terms -%}
                 <meta property="article:tag" content="{{ tag }}">
             {% endfor -%}
@@ -60,16 +75,18 @@
     {% endif -%}
 {% endif -%}
 
+{# ── Twitter / X Cards ──────────────────────────────────── #}
 <meta name="twitter:card" content="{{ twitter_card }}">
 <meta name="twitter:title" content="{{ og_title }}">
 <meta name="twitter:description" content="{{ og_description }}">
 <meta name="twitter:url" content="{{ og_url | safe }}">
+<meta name="twitter:site" content="@{{ config.extra.twitter | split(pat='/') | last }}">
+<meta name="twitter:creator" content="@{{ config.extra.twitter | split(pat='/') | last }}">
 
 {% if og_image -%}
-    <meta name="twitter:image" content="{{ config.base_url ~ og_image }}">
+    <meta name="twitter:image" content="{{ config.base_url ~ og_image | safe }}">
+    <meta name="twitter:image:alt" content="{{ og_title }}">
 {% endif -%}
-
-<meta name="twitter:site" content="@{{ config.extra.twitter | split(pat='/') | last }}">
 
 {% if og_type == "article" -%}
     <meta name="twitter:label1" content="Written by">
@@ -82,12 +99,7 @@
         {% endfor -%}
         {% if all_tags | length > 0 -%}
             <meta name="twitter:label2" content="Filed under">
-            <meta name="twitter:data2" content="{{ all_tags | join(sep=",") }}">
+            <meta name="twitter:data2" content="{{ all_tags | join(sep=', ') }}">
         {% endif -%}
     {% endif -%}
 {% endif -%}
-
-<meta name="twitter:creator" content="@{{ config.extra.twitter | split(pat='/') | last }}">
-
-<meta name="description" content="{{ og_description }}">
-<link rel="canonical" href="{{ og_url | safe }}">

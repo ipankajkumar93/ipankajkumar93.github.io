@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
 {% block main %}
-    <small>
-      <div>
+    <div class="taxonomy-tags">
         {% for post in terms %}
           <a href="{{ post.permalink }}">#{{ post.name }}</a>&nbsp;
         {% endfor %}
-      </div>
-    </small>
+    </div>
 {% endblock %}
