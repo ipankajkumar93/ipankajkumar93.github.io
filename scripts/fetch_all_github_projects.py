@@ -72,6 +72,33 @@ def fetch_all_repos(username: str) -> list:
     
     return repos
 
+def fetch_languages(repo: dict) -> list:
+    """
+    Fetch all languages for a repository, sorted by bytes (descending).
+
+    Args:
+        repo: Repository data from GitHub API
+
+    Returns:
+        List of language names (excluding "Other")
+    """
+    url = repo.get("languages_url", "")
+    if not url:
+        return []
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        languages = response.json()  # e.g. {"TypeScript": 45000, "HTML": 12000}
+        # Sort by bytes descending, filter out "Other"
+        sorted_langs = sorted(languages.items(), key=lambda x: x[1], reverse=True)
+        return [name for name, _ in sorted_langs if name != "Other"]
+    except Exception as e:
+        print(f"  Warning: Could not fetch languages for {repo.get('name')}: {e}", file=sys.stderr)
+        # Fall back to primary language
+        primary = repo.get("language", "")
+        return [primary] if primary else []
+
 def format_date(date_str: str) -> str:
     """
     Format ISO date string to Month Year format.
@@ -142,15 +169,16 @@ def generate_toml_entry(repo: dict) -> str:
     if pushed_date:
         lines.append(f'pushed = "{pushed_date}"')
     
-    # Add star count if significant
+    # Add star and fork counts
     stars = repo.get("stargazers_count", 0)
-    if stars > 10:
-        lines.append(f'stars = {stars}')
+    forks = repo.get("forks_count", 0)
+    lines.append(f'stars = {stars}')
+    lines.append(f'forks = {forks}')
     
-    # Add language if present
-    language = repo.get("language", "")
-    if language:
-        lines.append(f'language = "{language}"')
+    # Add languages if present
+    languages = repo.get("_languages", [])
+    if languages:
+        lines.append(f'language = "{", ".join(languages)}"')
     
     lines.append('links = [')
     
@@ -199,15 +227,27 @@ def main():
     
     print(f"Found {len(repos)} total repos, including {len(filtered_repos)} non-fork repos", file=sys.stderr)
     
-    # Generate TOML output
-    print("# GitHub Projects")
-    print(f"# Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"# Total projects: {len(filtered_repos)}")
-    print("")
-    
+    # Fetch all languages for each repo
     for repo in filtered_repos:
-        print(generate_toml_entry(repo))
-        print()
+        repo["_languages"] = fetch_languages(repo)
+        time.sleep(0.3)  # Rate limiting
+    
+    # Generate TOML output to new_data.toml
+    script_dir = Path(__file__).resolve().parent
+    project_root = script_dir.parent
+    output_path = project_root / "content" / "projects" / "new_data.toml"
+
+    with open(output_path, "w") as f:
+        f.write("# GitHub Projects\n")
+        f.write(f"# Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"# Total projects: {len(filtered_repos)}\n")
+        f.write("\n")
+
+        for repo in filtered_repos:
+            f.write(generate_toml_entry(repo))
+            f.write("\n\n")
+
+    print(f"Wrote {len(filtered_repos)} projects to {output_path}", file=sys.stderr)
 
 if __name__ == "__main__":
     main()

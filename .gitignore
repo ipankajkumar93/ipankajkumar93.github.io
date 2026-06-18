@@ -54,3 +54,6 @@ npm-debug.log*
 
 # Automatically generated OG images
 static/images/og/
+
+# Temporary generated project data
+content/projects/new_data.toml
