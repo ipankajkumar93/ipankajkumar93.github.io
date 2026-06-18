@@ -163,10 +163,6 @@ This is an info admonition.
 This is an warning admonition.
 {% end %}
 
-{% admonition(kind="question") %}
-This is an question admonition.
-{% end %}
-
 {% admonition(kind="tip") %}
 This is an tip admonition.
 {% end %}
