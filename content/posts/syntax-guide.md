@@ -151,13 +151,23 @@ For better page-load performance, you can use a thumbnail image that links out t
 
 Admonitions are custom Zola shortcodes used to highlight important information, warnings, or notes.
 
-{% admonition(kind="Note") %}
-This is a standard note admonition. Use it to provide supplementary context or tips.
+{% admonition(kind="note") %}
+This is a standard note admonition. 
 {% end %}
 
-{% admonition(kind="Info") %}
-This is an info admonition. Use it to highlight critical information that the reader must not miss!
+{% admonition(kind="info") %}
+This is an info admonition. 
 {% end %}
+
+{% admonition(kind="warning") %}
+This is an warning admonition.
+{% end %}
+
+{% admonition(kind="tip") %}
+This is an tip admonition.
+{% end %}
+
+
 
 ---
 
