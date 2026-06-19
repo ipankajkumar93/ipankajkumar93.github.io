@@ -45,7 +45,16 @@
         })();
     </script>
     <script src="{{ get_url(path='js/feather.min.js', trailing_slash=false, cachebust=true) | safe }}"></script>
-    <script defer src="https://um.pankajkumar.xyz/script.js" data-website-id="ada632ca-2811-47a4-ab84-82c2edc0280f"></script>
+    <script>
+        // Only load Umami analytics on production
+        if (location.hostname === 'pankajkumar.xyz' || location.hostname === 'www.pankajkumar.xyz') {
+            var s = document.createElement('script');
+            s.defer = true;
+            s.src = 'https://um.pankajkumar.xyz/script.js';
+            s.dataset.websiteId = 'ada632ca-2811-47a4-ab84-82c2edc0280f';
+            document.head.appendChild(s);
+        }
+    </script>
 </head>
 
 <body>
