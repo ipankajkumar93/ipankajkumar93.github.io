@@ -55,11 +55,11 @@ themeToggle.addEventListener('click', function (e) {
         document.documentElement.animate(
             {
                 clipPath: clipPath,
-                filter: ['blur(8px)', 'blur(0px)'],
+                filter: ['blur(5px)', 'blur(0px)'],
                 opacity: [0.8, 1]
             },
             {
-                duration: 800,
+                duration: 600,
                 easing: 'ease-in-out',
                 pseudoElement: '::view-transition-new(root)',
             }
