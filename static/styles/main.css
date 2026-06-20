@@ -145,7 +145,6 @@ body {
     overflow-x: clip;
     display: flex;
     flex-direction: column;
-    transition: background-color var(--transition-slow), color var(--transition-slow);
 }
 
 /* Noise texture overlay */
@@ -1642,9 +1641,24 @@ main {
     animation: fadeInUp 0.5s ease-out;
 }
 
-/* Theme transition */
+/* Theme transition fallback */
 .theme-transition {
     transition: background-color var(--transition-slow), color var(--transition-slow);
+}
+
+/* View Transitions for Theme Toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+    z-index: 1;
+}
+
+::view-transition-new(root) {
+    z-index: 2;
 }
 
 /* --------------------------------------------------------------------------
