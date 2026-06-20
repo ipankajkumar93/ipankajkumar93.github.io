@@ -8,63 +8,27 @@ if (activeTheme === 'dark') {
     feather.replace();
 }
 
-themeToggle.addEventListener('click', function (e) {
-    let theme = document.documentElement.getAttribute('data-theme') !== 'dark' ? 'dark' : 'light';
+themeToggle.addEventListener('click', function () {
+    let theme = 'light';
 
-    const toggleTheme = () => {
-        if (theme === 'dark') {
-            themeToggle.innerHTML = '<i data-feather="sun"></i>';
-        } else {
-            themeToggle.innerHTML = '<i data-feather="moon"></i>';
-        }
-        if (typeof feather !== 'undefined') feather.replace();
-        document.documentElement.setAttribute('data-theme', theme);
-        document.documentElement.style.colorScheme = theme;
-        localStorage.setItem('theme', theme);
-    };
+    // Add the transition class
+    document.body.classList.add('theme-transition');
 
-    if (!document.startViewTransition) {
-        // Fallback for browsers that don't support View Transitions API
-        document.body.classList.add('theme-transition');
-        toggleTheme();
-        setTimeout(() => {
-            document.body.classList.remove('theme-transition');
-        }, 500);
-        return;
+    if (document.documentElement.getAttribute('data-theme') !== 'dark') {
+        theme = 'dark';
+        themeToggle.innerHTML = '<i data-feather="sun"></i>';
+    } else {
+        themeToggle.innerHTML = '<i data-feather="moon"></i>';
     }
+    feather.replace();
+    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.style.colorScheme = theme;
+    localStorage.setItem('theme', theme);
 
-    // Use center of the button for the animation origin
-    const rect = themeToggle.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-
-    // Calculate maximum radius to cover the entire screen from the click point
-    const endRadius = Math.hypot(
-        Math.max(x, innerWidth - x),
-        Math.max(y, innerHeight - y)
-    );
-
-    const transition = document.startViewTransition(toggleTheme);
-
-    transition.ready.then(() => {
-        const clipPath = [
-            `circle(0px at ${x}px ${y}px)`,
-            `circle(${endRadius}px at ${x}px ${y}px)`
-        ];
-
-        document.documentElement.animate(
-            {
-                clipPath: clipPath,
-                filter: ['blur(5px)', 'blur(0px)'],
-                opacity: [0.8, 1]
-            },
-            {
-                duration: 600,
-                easing: 'ease-in-out',
-                pseudoElement: '::view-transition-new(root)',
-            }
-        );
-    });
+    // Remove the transition class after 0.5s
+    setTimeout(() => {
+        document.body.classList.remove('theme-transition');
+    }, 500);
 });
 
 // Lightbox functionality
