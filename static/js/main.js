@@ -33,10 +33,10 @@ themeToggle.addEventListener('click', function (e) {
         return;
     }
 
-    // Get click position, or fallback to center of the button
+    // Use center of the button for the animation origin
     const rect = themeToggle.getBoundingClientRect();
-    const x = e.clientX || rect.left + rect.width / 2;
-    const y = e.clientY || rect.top + rect.height / 2;
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
 
     // Calculate maximum radius to cover the entire screen from the click point
     const endRadius = Math.hypot(
