@@ -31,7 +31,6 @@ themeToggle.addEventListener('click', function () {
     }, 500);
 });
 
-
 // Lightbox functionality
 document.addEventListener('DOMContentLoaded', function () {
     // Create lightbox modal element
@@ -249,28 +248,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.history.replaceState({ path: window.location.href }, '', window.location.href);
         initAjaxPagination();
     }
-
-    // Remove sticky hover on mobile devices after 0.5s of touching
-    document.addEventListener('touchstart', function(e) {
-        const target = e.target.closest('a, button, .theme-toggle, .search-btn, .search-close, .nav-items a');
-        if (target) {
-            if (target._hoverTimeout) clearTimeout(target._hoverTimeout);
-            if (target._pointerTimeout) clearTimeout(target._pointerTimeout);
-            
-            target._hoverTimeout = setTimeout(() => {
-                const originalPointerEvents = target.style.pointerEvents;
-                target.style.pointerEvents = 'none';
-                
-                // Force browser reflow to apply the pointer-events change immediately
-                void target.offsetWidth;
-                target.blur();
-                
-                target._pointerTimeout = setTimeout(() => {
-                    target.style.pointerEvents = originalPointerEvents;
-                }, 100);
-            }, 500);
-        }
-    }, { passive: true, capture: true });
 
     if (typeof feather !== 'undefined') feather.replace();
 });
