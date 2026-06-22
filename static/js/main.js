@@ -31,6 +31,7 @@ themeToggle.addEventListener('click', function () {
     }, 500);
 });
 
+
 // Lightbox functionality
 document.addEventListener('DOMContentLoaded', function () {
     // Create lightbox modal element
