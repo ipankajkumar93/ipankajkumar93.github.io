@@ -339,17 +339,15 @@ nav {
     text-decoration: none;
 }
 
- @media (hover: hover) {
-    .nav-items a:hover {
-        color: var(--color-accent-hover);
-        background-color: var(--color-border);
-        border-color: var(--color-accent);
-    }
+.nav-items a:hover {
+    color: var(--color-accent-hover);
+    background-color: var(--color-border);
+    border-color: var(--color-accent);
+}
 
-    :root[data-theme="dark"] .nav-items a:hover {
-        color: var(--color-link);
-        background-color: var(--color-bg-subtle);
-    }
+:root[data-theme="dark"] .nav-items a:hover {
+    color: var(--color-link);
+    background-color: var(--color-bg-subtle);
 }
 
 /* Search Button */
@@ -369,13 +367,11 @@ nav {
     margin-left: var(--space-xs);
 }
 
-@media (hover: hover) {
-    .search-btn:hover {
-        border-color: var(--color-accent);
-        color: var(--color-accent);
-        background-color: var(--color-accent-subtle);
-        transform: translateY(-1px);
-    }
+.search-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background-color: var(--color-accent-subtle);
+    transform: translateY(-1px);
 }
 
 .search-btn i,
@@ -423,13 +419,11 @@ nav {
     flex-shrink: 0;
 }
 
-@media (hover: hover) {
-    .theme-toggle:hover {
-        border-color: var(--color-accent);
-        color: var(--color-accent);
-        background-color: var(--color-accent-subtle);
-        transform: translateY(-1px);
-    }
+.theme-toggle:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background-color: var(--color-accent-subtle);
+    transform: translateY(-1px);
 }
 
 .theme-toggle i,
@@ -543,12 +537,10 @@ nav {
     transition: all var(--transition-fast);
 }
 
-@media (hover: hover) {
-    .search-close:hover {
-        background: var(--color-bg-elevated);
-        color: var(--color-text);
-        border-color: var(--color-accent);
-    }
+.search-close:hover {
+    background: var(--color-bg-elevated);
+    color: var(--color-text);
+    border-color: var(--color-accent);
 }
 
 .search-close svg {

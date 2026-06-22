@@ -250,5 +250,15 @@ document.addEventListener('DOMContentLoaded', function () {
         initAjaxPagination();
     }
 
+    // Remove sticky hover on mobile devices after 0.5s of touching
+    document.addEventListener('touchend', function(e) {
+        const target = e.target.closest('a, button, .theme-toggle, .search-btn, .search-close');
+        if (target) {
+            setTimeout(() => {
+                target.blur();
+            }, 500);
+        }
+    });
+
     if (typeof feather !== 'undefined') feather.replace();
 });

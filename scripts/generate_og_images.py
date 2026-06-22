@@ -219,7 +219,7 @@ class OGImageGenerator:
 
     def _get_circle_avatar(self, size: int) -> Image.Image | None:
         """Load and crop the profile avatar into a circle."""
-        avatar_path = self.project_root / "static" / "images" / "website" / "profile.jpg"
+        avatar_path = self.project_root / "static" / "images" / "website" / "profile.png"
         if not avatar_path.exists():
             return None
             
