@@ -25,6 +25,16 @@
     let searchIndex = null;
     let debounceTimer = null;
 
+    // Escape all 5 HTML special characters to prevent XSS
+    function sanitize(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     function initSearchIndex() {
         if (searchIndex) return;
         if (typeof elasticlunr !== 'undefined' && typeof window.searchIndex !== 'undefined') {
@@ -33,17 +43,16 @@
     }
 
     function openSearch() {
+        // Set content before showing the modal to avoid a blank flash
+        searchResults.innerHTML = '<div class="search-empty-state">What are you looking for?</div>';
+        searchInput.value = '';
         searchModal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        searchInput.value = '';
 
         if (window.__searchLoaded && window.__searchLoaded()) {
-            // Scripts already loaded — instant search
             initSearchIndex();
-            searchResults.innerHTML = '<div class="search-empty-state">What are you looking for?</div>';
             setTimeout(() => searchInput.focus(), 50);
         } else {
-            // Scripts still loading — show brief loading state
             searchResults.innerHTML = '<div class="search-empty-state">Indexing…</div>';
             searchInput.disabled = true;
             window.__loadSearch(function() {
@@ -155,14 +164,14 @@
         categoryOrder.forEach(cat => {
             if (!grouped[cat]) return;
             html += '<div class="search-group">';
-            html += '<h3 class="search-group-title">' + cat + ' <span class="search-group-count">(' + grouped[cat].length + ')</span></h3>';
+            html += '<h3 class="search-group-title">' + sanitize(cat) + ' <span class="search-group-count">(' + grouped[cat].length + ')</span></h3>';
             grouped[cat].forEach(item => {
                 var isExternal = item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'));
                 var targetAttr = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
-                html += '<a href="' + item.url + '"' + targetAttr + ' class="search-result-item">';
-                html += '<span class="search-result-title">' + item.title.replace(/</g, '&lt;') + '</span>';
+                html += '<a href="' + sanitize(item.url) + '"' + targetAttr + ' class="search-result-item">';
+                html += '<span class="search-result-title">' + sanitize(item.title) + '</span>';
                 if (item.description) {
-                    html += '<span class="search-result-desc">' + item.description.replace(/</g, '&lt;').substring(0, 120) + '</span>';
+                    html += '<span class="search-result-desc">' + sanitize(item.description).substring(0, 120) + '</span>';
                 }
                 html += '</a>';
             });
@@ -196,6 +205,32 @@
         // Escape to close
         if (e.key === 'Escape' && searchModal.classList.contains('active')) {
             closeSearch();
+        }
+    });
+
+    // Focus trap: keep Tab/Shift+Tab inside the modal while it is open
+    searchModal.addEventListener('keydown', function (e) {
+        if (!searchModal.classList.contains('active') || e.key !== 'Tab') return;
+
+        const focusable = Array.from(
+            searchModal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')
+        ).filter(el => !el.closest('[aria-hidden="true"]'));
+
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+            if (document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            }
+        } else {
+            if (document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
         }
     });
 })();

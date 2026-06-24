@@ -1,71 +1,70 @@
-// Theme Toggle
-feather.replace();
-const themeToggle = document.querySelector('.theme-toggle');
-const activeTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-
-if (activeTheme === 'dark') {
-    themeToggle.innerHTML = '<i data-feather="sun"></i>';
-    feather.replace();
+// ── Helpers ────────────────────────────────────────────────────────────────
+function replaceFeather() {
+    if (typeof feather !== 'undefined') feather.replace();
 }
 
-themeToggle.addEventListener('click', function () {
-    let theme = 'light';
+// ── Theme Toggle ────────────────────────────────────────────────────────────
+// Runs early (outside DOMContentLoaded) so the icon matches the current theme
+// without waiting for the full DOM to parse.
+const themeToggle = document.querySelector('.theme-toggle');
 
-    // Add the transition class
-    document.body.classList.add('theme-transition');
+if (themeToggle) {
+    const activeTheme = document.documentElement.getAttribute('data-theme') || 'dark';
 
-    if (document.documentElement.getAttribute('data-theme') !== 'dark') {
-        theme = 'dark';
+    if (activeTheme === 'dark') {
         themeToggle.innerHTML = '<i data-feather="sun"></i>';
-    } else {
-        themeToggle.innerHTML = '<i data-feather="moon"></i>';
     }
-    feather.replace();
-    document.documentElement.setAttribute('data-theme', theme);
-    document.documentElement.style.colorScheme = theme;
-    localStorage.setItem('theme', theme);
 
-    // Remove the transition class after 0.5s
-    setTimeout(() => {
-        document.body.classList.remove('theme-transition');
-    }, 500);
-});
+    themeToggle.addEventListener('click', function () {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const theme = isDark ? 'light' : 'dark';
 
-// Lightbox functionality
+        // Opt-in transition only during toggle
+        document.body.classList.add('theme-transition');
+        themeToggle.innerHTML = isDark
+            ? '<i data-feather="moon"></i>'
+            : '<i data-feather="sun"></i>';
+
+        replaceFeather();
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.style.colorScheme = theme;
+        localStorage.setItem('theme', theme);
+
+        setTimeout(() => document.body.classList.remove('theme-transition'), 500);
+    });
+}
+
+// ── DOM-dependent functionality ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
-    // Create lightbox modal element
+
+    // Replace feather icons once after the full DOM is ready
+    replaceFeather();
+
+    // ── Lightbox ────────────────────────────────────────────────────────────
     const lightboxModal = document.createElement('div');
     lightboxModal.className = 'lightbox-modal';
     lightboxModal.innerHTML = '<span class="lightbox-close">&times;</span><img src="" alt="">';
     document.body.appendChild(lightboxModal);
 
     const lightboxImg = lightboxModal.querySelector('img');
-    const closeBtn = lightboxModal.querySelector('.lightbox-close');
+    const lightboxCloseBtn = lightboxModal.querySelector('.lightbox-close');
 
-    // Find all images wrapped in links with class 'lightbox-thumbnail'
-    const thumbnails = document.querySelectorAll('a.lightbox-thumbnail');
-
-    thumbnails.forEach(link => {
+    document.querySelectorAll('a.lightbox-thumbnail').forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
-            const imgSrc = this.getAttribute('href');
-            const imgAlt = this.querySelector('img')?.getAttribute('alt') || '';
-
-            lightboxImg.src = imgSrc;
-            lightboxImg.alt = imgAlt;
+            lightboxImg.src = this.getAttribute('href');
+            lightboxImg.alt = this.querySelector('img')?.getAttribute('alt') || '';
             lightboxModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         });
     });
 
-    // Close lightbox when clicking on background or close button
     lightboxModal.addEventListener('click', function (e) {
-        if (e.target === lightboxModal || e.target === closeBtn) {
+        if (e.target === lightboxModal || e.target === lightboxCloseBtn) {
             closeLightbox();
         }
     });
 
-    // Close lightbox with Escape key
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && lightboxModal.classList.contains('active')) {
             closeLightbox();
@@ -76,7 +75,8 @@ document.addEventListener('DOMContentLoaded', function () {
         lightboxModal.classList.remove('active');
         document.body.style.overflow = '';
     }
-    // Mobile Menu
+
+    // ── Mobile Menu ─────────────────────────────────────────────────────────
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const mobileCloseBtn = document.querySelector('.mobile-close-btn');
     const navItems = document.querySelector('.nav-items');
@@ -94,43 +94,45 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = '';
     }
 
-    if(mobileMenuBtn) {
+    if (mobileMenuBtn) {
         mobileMenuBtn.addEventListener('click', openMobileMenu);
         mobileCloseBtn.addEventListener('click', closeMobileMenu);
         mobileBackdrop.addEventListener('click', closeMobileMenu);
     }
 
-    // Back to Top
+    // ── Back to Top ─────────────────────────────────────────────────────────
     const backToTop = document.getElementById('back-to-top');
-    window.addEventListener('scroll', function () {
-        if (window.scrollY > 100) {
-            backToTop.classList.add('visible');
-        } else {
-            backToTop.classList.remove('visible');
-        }
-    });
-    backToTop.addEventListener('click', function () {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
 
-    // Responsive Tables
-    const tables = document.querySelectorAll('table');
-    tables.forEach(table => {
+    if (backToTop) {
+        // RAF-throttled scroll listener — avoids layout thrashing
+        let scrollTicking = false;
+        window.addEventListener('scroll', function () {
+            if (!scrollTicking) {
+                requestAnimationFrame(function () {
+                    backToTop.classList.toggle('visible', window.scrollY > 100);
+                    scrollTicking = false;
+                });
+                scrollTicking = true;
+            }
+        }, { passive: true });
+
+        backToTop.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // ── Responsive Tables ───────────────────────────────────────────────────
+    // Inline styles removed — the CSS class handles overflow and margin.
+    document.querySelectorAll('table').forEach(table => {
         const wrapper = document.createElement('div');
         wrapper.className = 'table-responsive-wrapper';
-        wrapper.style.overflowX = 'auto';
-        wrapper.style.marginBottom = 'var(--space-lg)';
-
-        
         table.style.marginBottom = '0';
         table.parentNode.insertBefore(wrapper, table);
         wrapper.appendChild(table);
     });
 
-    // Code Block Copy Button
-    const codeBlocks = document.querySelectorAll('pre');
-    codeBlocks.forEach(block => {
-        // Ignore if it's already processed or doesn't have a code tag
+    // ── Code Block Copy Button ──────────────────────────────────────────────
+    document.querySelectorAll('pre').forEach(block => {
         if (block.querySelector('.copy-code-btn') || !block.querySelector('code')) return;
 
         const button = document.createElement('button');
@@ -146,12 +148,12 @@ document.addEventListener('DOMContentLoaded', function () {
             navigator.clipboard.writeText(code.textContent.trimEnd()).then(() => {
                 button.innerHTML = '<i data-feather="check"></i>';
                 button.classList.add('copied');
-                if (typeof feather !== 'undefined') feather.replace();
-                
+                replaceFeather();
+
                 setTimeout(() => {
                     button.innerHTML = '<i data-feather="copy"></i>';
                     button.classList.remove('copied');
-                    if (typeof feather !== 'undefined') feather.replace();
+                    replaceFeather();
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
@@ -160,20 +162,75 @@ document.addEventListener('DOMContentLoaded', function () {
 
         block.appendChild(button);
     });
+    // Replace all copy icons in one pass after every button is in the DOM
+    replaceFeather();
 
-    // AJAX Pagination
+    // ── AJAX Pagination ─────────────────────────────────────────────────────
+    let currentPageController = null;
+
+    async function loadPage(url, isPopState = false) {
+        const container = document.getElementById('pagination-container');
+        if (!container) return;
+
+        // Cancel any in-flight request to prevent race conditions
+        if (currentPageController) {
+            currentPageController.abort();
+        }
+        currentPageController = new AbortController();
+
+        container.classList.add('loading');
+
+        try {
+            const response = await fetch(url, { signal: currentPageController.signal });
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const text = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+
+            const newContainer = doc.getElementById('pagination-container');
+            if (newContainer) {
+                container.innerHTML = newContainer.innerHTML;
+
+                if (doc.title) {
+                    document.title = doc.title;
+                }
+
+                if (!isPopState) {
+                    window.history.pushState({ path: url }, '', url);
+                }
+
+                replaceFeather();
+
+                // Scroll to top of container
+                const headerOffset = 80;
+                const elementPosition = container.parentElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.scrollY - headerOffset;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+
+                // Track AJAX page view in Umami analytics
+                if (typeof umami !== 'undefined') {
+                    umami.track({ url: new URL(url).pathname, title: document.title });
+                }
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') return; // Intentional cancellation — do nothing
+            console.error('Pagination fetch error:', error);
+            window.location.href = url; // Fallback to full navigation
+        } finally {
+            container.classList.remove('loading');
+            currentPageController = null;
+        }
+    }
+
     function initAjaxPagination() {
         const container = document.getElementById('pagination-container');
         if (!container) return;
 
-        container.addEventListener('click', function(e) {
-            // Find closest link
+        container.addEventListener('click', function (e) {
             const link = e.target.closest('a');
-            
-            // If there's no link, or it's disabled, or it's NOT inside the pagination nav, ignore it
             if (!link || !link.href || link.classList.contains('disabled') || !link.closest('.pagination')) return;
 
-            // Only intercept internal pagination links
             const url = new URL(link.href);
             if (url.origin !== window.location.origin) return;
 
@@ -182,60 +239,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    async function loadPage(url, isPopState = false) {
-        const container = document.getElementById('pagination-container');
-        if (!container) return;
-
-        container.classList.add('loading');
-
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Network response was not ok');
-            
-            const text = await response.text();
-            
-            // Parse the new HTML
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(text, 'text/html');
-            
-            const newContainer = doc.getElementById('pagination-container');
-            if (newContainer) {
-                container.innerHTML = newContainer.innerHTML;
-                
-                // Update page title from fetched page
-                if (doc.title) {
-                    document.title = doc.title;
-                }
-                
-                // Update history if not triggered by back/forward button
-                if (!isPopState) {
-                    window.history.pushState({ path: url }, '', url);
-                }
-                
-                // Re-initialize feather icons
-                if (typeof feather !== 'undefined') feather.replace();
-                
-                // Scroll to top of container
-                const headerOffset = 80;
-                const elementPosition = container.parentElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.scrollY - headerOffset;
-                
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        } catch (error) {
-            console.error('Pagination fetch error:', error);
-            // Fallback to standard navigation on error
-            window.location.href = url;
-        } finally {
-            container.classList.remove('loading');
-        }
-    }
-
     // Handle back/forward buttons
-    window.addEventListener('popstate', function(e) {
+    window.addEventListener('popstate', function (e) {
         if (e.state && e.state.path) {
             loadPage(e.state.path, true);
         } else {
@@ -243,11 +248,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Initialize initial state in history
+    // Initialize pagination if the container exists
     if (document.getElementById('pagination-container')) {
         window.history.replaceState({ path: window.location.href }, '', window.location.href);
         initAjaxPagination();
     }
-
-    if (typeof feather !== 'undefined') feather.replace();
 });

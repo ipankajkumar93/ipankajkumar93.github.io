@@ -41,7 +41,10 @@
             }
             document.documentElement.setAttribute('data-theme', theme);
             document.documentElement.style.colorScheme = theme;
-            localStorage.setItem('theme', theme);
+            // Only write to localStorage if the value has changed (avoids redundant writes)
+            if (stored !== theme) {
+                localStorage.setItem('theme', theme);
+            }
         })();
     </script>
     <script src="{{ get_url(path='js/feather.min.js', trailing_slash=false, cachebust=true) | safe }}"></script>
@@ -59,7 +62,7 @@
 
 <body>
     <header>
-        <a href="{{ config.base_url | safe }}" class="title">
+        <a href="{{ config.base_url | safe }}" class="title" aria-label="Go to homepage">
             <h2 class="name">{{ config.title }}</h2>
         </a>
         <nav>
@@ -168,7 +171,9 @@
                     callbacks = [];
                 }
             }
-            // Load in order: elasticlunr first, then search index
+            // Load in order: elasticlunr first, then search index.
+            // remaining starts at 2; onLoad() must be called twice (once per script)
+            // to decrement 2→1→0 and trigger the callbacks.
             var s1 = document.createElement('script');
             s1.src = searchScripts[0];
             s1.onload = function() {
@@ -176,7 +181,7 @@
                 s2.src = searchScripts[1];
                 s2.onload = onLoad;
                 document.body.appendChild(s2);
-                onLoad();
+                onLoad(); // decrement for s1 (2→1); s2.onload will fire the final decrement (1→0)
             };
             document.body.appendChild(s1);
         }
