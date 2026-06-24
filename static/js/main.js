@@ -249,14 +249,32 @@ document.addEventListener('DOMContentLoaded', function () {
             const link = e.target.closest('a');
             if (!link || !link.href) return;
 
+            // Let browser handle special link types natively
             if (link.target === '_blank' || link.hasAttribute('download') || link.rel === 'external') return;
 
             const url = new URL(link.href);
+
+            // Only intercept same-origin HTTP(S) navigations
             if (url.origin !== window.location.origin) return;
             if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
-            // Let browser handle hash links on the same page
+            // Let browser handle hash-only navigation on the same page
             if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return;
+
+            // Let browser handle non-HTML assets natively
+            const nonHtmlExts = ['pdf', 'zip', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'ico', 'svg', 'txt', 'json', 'woff', 'woff2'];
+            const ext = url.pathname.includes('.') ? url.pathname.split('.').pop().toLowerCase() : null;
+            if (ext && nonHtmlExts.includes(ext)) return;
+
+            // Open Atom/RSS feeds in a new tab instead of navigating
+            if (ext === 'xml') {
+                e.preventDefault();
+                window.open(url.href, '_blank');
+                return;
+            }
+
+            // Skip navigation if already on this page (no hash, no query change)
+            if (url.href === window.location.href) return;
 
             e.preventDefault();
 
@@ -272,11 +290,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Handle back/forward buttons
         window.addEventListener('popstate', function (e) {
-            if (e.state && e.state.path) {
-                loadPage(e.state.path, true);
-            } else {
-                loadPage(window.location.href, true);
-            }
+            loadPage(e.state?.path ?? window.location.href, true);
         });
 
         window.history.replaceState({ path: window.location.href }, '', window.location.href);
