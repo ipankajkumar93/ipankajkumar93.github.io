@@ -1014,6 +1014,7 @@ pre .line-number {
     align-self: start;
     margin-top: var(--space-sm);
     margin-right: var(--space-sm);
+    margin-bottom: var(--space-sm);
     z-index: 10;
     display: flex;
     align-items: center;
