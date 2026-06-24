@@ -233,11 +233,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     window.scrollTo({ top: 0, behavior: 'auto' });
                 }
-
-                // Umami Analytics Tracking
-                if (typeof umami !== 'undefined' && umami.track) {
-                    umami.track(props => ({ ...props, url: new URL(url).pathname }));
-                }
             }
         } catch (error) {
             if (error.name === 'AbortError') return; // Intentional cancellation
