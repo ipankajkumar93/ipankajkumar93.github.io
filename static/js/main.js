@@ -258,6 +258,18 @@ document.addEventListener('DOMContentLoaded', function () {
             // Let browser handle hash links on the same page
             if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return;
 
+            // Bypass SPA for non-HTML files
+            const ext = url.pathname.split('.').pop().toLowerCase();
+            const nonHtmlExts = ['xml', 'pdf', 'zip', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'txt', 'json'];
+            if (url.pathname.includes('.') && nonHtmlExts.includes(ext)) {
+                // User requested Atom feeds to open in a new tab
+                if (ext === 'xml') {
+                    e.preventDefault();
+                    window.open(url.href, '_blank');
+                }
+                return; // Let browser handle it normally (or we just handled it above)
+            }
+
             e.preventDefault();
 
             // Close mobile menu if open
