@@ -37,10 +37,7 @@ if (themeToggle) {
 // ── DOM-dependent functionality ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
 
-    // Replace feather icons once after the full DOM is ready
-    replaceFeather();
-
-    // ── Lightbox ────────────────────────────────────────────────────────────
+    // ── Lightbox Modal Setup ────────────────────────────────────────────────
     const lightboxModal = document.createElement('div');
     lightboxModal.className = 'lightbox-modal';
     lightboxModal.innerHTML = '<span class="lightbox-close">&times;</span><img src="" alt="">';
@@ -49,15 +46,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const lightboxImg = lightboxModal.querySelector('img');
     const lightboxCloseBtn = lightboxModal.querySelector('.lightbox-close');
 
-    document.querySelectorAll('a.lightbox-thumbnail').forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            lightboxImg.src = this.getAttribute('href');
-            lightboxImg.alt = this.querySelector('img')?.getAttribute('alt') || '';
-            lightboxModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-    });
+    function closeLightbox() {
+        lightboxModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 
     lightboxModal.addEventListener('click', function (e) {
         if (e.target === lightboxModal || e.target === lightboxCloseBtn) {
@@ -71,10 +63,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    function closeLightbox() {
-        lightboxModal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
+    // Event delegation for lightbox links
+    document.body.addEventListener('click', function (e) {
+        const link = e.target.closest('a.lightbox-thumbnail');
+        if (link) {
+            e.preventDefault();
+            lightboxImg.src = link.getAttribute('href');
+            lightboxImg.alt = link.querySelector('img')?.getAttribute('alt') || '';
+            lightboxModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    });
 
     // ── Mobile Menu ─────────────────────────────────────────────────────────
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -121,132 +120,172 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ── Responsive Tables ───────────────────────────────────────────────────
-    // Inline styles removed — the CSS class handles overflow and margin.
-    document.querySelectorAll('table').forEach(table => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'table-responsive-wrapper';
-        table.style.marginBottom = '0';
-        table.parentNode.insertBefore(wrapper, table);
-        wrapper.appendChild(table);
-    });
+    // ── Re-initializable Content ────────────────────────────────────────────
+    function initContent() {
+        replaceFeather();
 
-    // ── Code Block Copy Button ──────────────────────────────────────────────
-    document.querySelectorAll('pre').forEach(block => {
-        if (block.querySelector('.copy-code-btn') || !block.querySelector('code')) return;
-
-        const button = document.createElement('button');
-        button.className = 'copy-code-btn';
-        button.setAttribute('aria-label', 'Copy to clipboard');
-        button.setAttribute('title', 'Copy to clipboard');
-        button.innerHTML = '<i data-feather="copy"></i>';
-
-        button.addEventListener('click', () => {
-            const code = block.querySelector('code');
-            if (!code) return;
-
-            navigator.clipboard.writeText(code.textContent.trimEnd()).then(() => {
-                button.innerHTML = '<i data-feather="check"></i>';
-                button.classList.add('copied');
-                replaceFeather();
-
-                setTimeout(() => {
-                    button.innerHTML = '<i data-feather="copy"></i>';
-                    button.classList.remove('copied');
-                    replaceFeather();
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
+        // ── Responsive Tables ───────────────────────────────────────────────────
+        document.querySelectorAll('main table').forEach(table => {
+            if (table.parentNode.classList.contains('table-responsive-wrapper')) return;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'table-responsive-wrapper';
+            table.style.marginBottom = '0';
+            table.parentNode.insertBefore(wrapper, table);
+            wrapper.appendChild(table);
         });
 
-        block.appendChild(button);
-    });
-    // Replace all copy icons in one pass after every button is in the DOM
-    replaceFeather();
+        // ── Code Block Copy Button ──────────────────────────────────────────────
+        document.querySelectorAll('main pre').forEach(block => {
+            if (block.querySelector('.copy-code-btn') || !block.querySelector('code')) return;
 
-    // ── AJAX Pagination ─────────────────────────────────────────────────────
+            const button = document.createElement('button');
+            button.className = 'copy-code-btn';
+            button.setAttribute('aria-label', 'Copy to clipboard');
+            button.setAttribute('title', 'Copy to clipboard');
+            button.innerHTML = '<i data-feather="copy"></i>';
+
+            button.addEventListener('click', () => {
+                const code = block.querySelector('code');
+                if (!code) return;
+
+                navigator.clipboard.writeText(code.textContent.trimEnd()).then(() => {
+                    button.innerHTML = '<i data-feather="check"></i>';
+                    button.classList.add('copied');
+                    replaceFeather();
+
+                    setTimeout(() => {
+                        button.innerHTML = '<i data-feather="copy"></i>';
+                        button.classList.remove('copied');
+                        replaceFeather();
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            });
+
+            block.appendChild(button);
+        });
+
+        replaceFeather();
+    }
+
+    initContent();
+
+    // ── SPA Navigation ──────────────────────────────────────────────────────
     let currentPageController = null;
 
     async function loadPage(url, isPopState = false) {
-        const container = document.getElementById('pagination-container');
-        if (!container) return;
+        const mainEl = document.querySelector('main');
+        if (!mainEl) return;
 
-        // Cancel any in-flight request to prevent race conditions
         if (currentPageController) {
             currentPageController.abort();
         }
         currentPageController = new AbortController();
 
-        container.classList.add('loading');
+        mainEl.classList.add('loading');
 
         try {
-            const response = await fetch(url, { signal: currentPageController.signal });
+            const [response] = await Promise.all([
+                fetch(url, { signal: currentPageController.signal }),
+                new Promise(resolve => setTimeout(resolve, 250))
+            ]);
+            
             if (!response.ok) throw new Error('Network response was not ok');
 
             const text = await response.text();
             const parser = new DOMParser();
             const doc = parser.parseFromString(text, 'text/html');
 
-            const newContainer = doc.getElementById('pagination-container');
-            if (newContainer) {
-                container.innerHTML = newContainer.innerHTML;
+            const newMain = doc.querySelector('main');
+            if (newMain) {
+                mainEl.innerHTML = newMain.innerHTML;
 
                 if (doc.title) {
                     document.title = doc.title;
                 }
 
+                // Update meta tags and canonical links for SEO/sharing extensions
+                const metaSelector = 'meta[name]:not([name="viewport"]):not([name="theme-color"]), meta[property], link[rel="canonical"], link[rel="alternate"]';
+                
+                const headElementsToRemove = document.head.querySelectorAll(metaSelector);
+                headElementsToRemove.forEach(el => el.remove());
+
+                const newHeadElements = doc.head.querySelectorAll(metaSelector);
+                newHeadElements.forEach(el => document.head.appendChild(el.cloneNode(true)));
+
                 if (!isPopState) {
                     window.history.pushState({ path: url }, '', url);
                 }
 
-                replaceFeather();
+                initContent();
 
-                // Scroll to top of container
-                const headerOffset = 80;
-                const elementPosition = container.parentElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.scrollY - headerOffset;
-                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-               
+                // Scroll to top or to hash
+                const hash = new URL(url).hash;
+                if (hash) {
+                    const target = document.querySelector(hash);
+                    if (target) {
+                        const headerOffset = 80;
+                        const elementPosition = target.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'auto' });
+                }
+
+                // Umami Analytics Tracking
+                if (typeof umami !== 'undefined' && umami.track) {
+                    umami.track(props => ({ ...props, url: new URL(url).pathname }));
+                }
             }
         } catch (error) {
-            if (error.name === 'AbortError') return; // Intentional cancellation — do nothing
-            console.error('Pagination fetch error:', error);
+            if (error.name === 'AbortError') return; // Intentional cancellation
+            console.error('SPA fetch error:', error);
             window.location.href = url; // Fallback to full navigation
         } finally {
-            container.classList.remove('loading');
+            mainEl.classList.remove('loading');
             currentPageController = null;
         }
     }
 
-    function initAjaxPagination() {
-        const container = document.getElementById('pagination-container');
-        if (!container) return;
-
-        container.addEventListener('click', function (e) {
+    function initSpaNavigation() {
+        document.body.addEventListener('click', function (e) {
             const link = e.target.closest('a');
-            if (!link || !link.href || link.classList.contains('disabled') || !link.closest('.pagination')) return;
+            if (!link || !link.href) return;
+
+            if (link.target === '_blank' || link.hasAttribute('download') || link.rel === 'external') return;
 
             const url = new URL(link.href);
             if (url.origin !== window.location.origin) return;
+            if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+
+            // Let browser handle hash links on the same page
+            if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return;
 
             e.preventDefault();
+
+            // Close mobile menu if open
+            const navItems = document.querySelector('.nav-items');
+            if (navItems && navItems.classList.contains('active')) {
+                const closeBtn = document.querySelector('.mobile-close-btn');
+                if (closeBtn) closeBtn.click();
+            }
+
             loadPage(url.href);
         });
-    }
 
-    // Handle back/forward buttons
-    window.addEventListener('popstate', function (e) {
-        if (e.state && e.state.path) {
-            loadPage(e.state.path, true);
-        } else {
-            loadPage(window.location.href, true);
-        }
-    });
+        // Handle back/forward buttons
+        window.addEventListener('popstate', function (e) {
+            if (e.state && e.state.path) {
+                loadPage(e.state.path, true);
+            } else {
+                loadPage(window.location.href, true);
+            }
+        });
 
-    // Initialize pagination if the container exists
-    if (document.getElementById('pagination-container')) {
         window.history.replaceState({ path: window.location.href }, '', window.location.href);
-        initAjaxPagination();
     }
+
+    initSpaNavigation();
 });
