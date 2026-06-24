@@ -207,11 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const elementPosition = container.parentElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.scrollY - headerOffset;
                 window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-
-                // Track AJAX page view in Umami analytics
-                if (typeof umami !== 'undefined') {
-                    umami.track({ url: new URL(url).pathname, title: document.title });
-                }
+               
             }
         } catch (error) {
             if (error.name === 'AbortError') return; // Intentional cancellation — do nothing
