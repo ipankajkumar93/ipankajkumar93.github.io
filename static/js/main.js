@@ -218,6 +218,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     window.history.pushState({ path: url }, '', url);
                 }
 
+                // Manually track ALL page views since we disabled auto-track
+                if (typeof umami !== 'undefined') {
+                    umami.track(props => ({ 
+                        ...props, 
+                        url: window.location.pathname + window.location.search, 
+                        title: document.title 
+                    }));
+                }
+
                 initContent();
 
                 // Scroll to top or to hash
@@ -297,4 +306,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     initSpaNavigation();
+
+    // Initial page load tracking for Umami (since auto-track is false)
+    const trackInitial = () => {
+        if (typeof umami !== 'undefined') {
+            umami.track(props => ({ 
+                ...props, 
+                url: window.location.pathname + window.location.search, 
+                title: document.title 
+            }));
+        } else {
+            setTimeout(trackInitial, 300);
+        }
+    };
+    setTimeout(trackInitial, 300);
 });
