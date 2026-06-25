@@ -186,12 +186,6 @@
     searchClose.addEventListener('click', closeSearch);
     searchBackdrop.addEventListener('click', closeSearch);
 
-    searchResults.addEventListener('click', function(e) {
-        if (e.target.closest('a.search-result-item')) {
-            closeSearch();
-        }
-    });
-
     searchInput.addEventListener('input', function () {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => performSearch(this.value.trim()), 200);

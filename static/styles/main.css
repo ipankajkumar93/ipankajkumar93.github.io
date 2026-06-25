@@ -2148,15 +2148,8 @@ main {
     transition: opacity var(--transition-fast);
 }
 
-main {
-    transition: opacity 0.2s ease-in-out, transform 0.2s ease-out;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-main.loading {
-    opacity: 0;
-    transform: translateY(20px);
+.pagination-container.loading {
+    opacity: 0.5;
     pointer-events: none;
 }
 
