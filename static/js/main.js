@@ -4,8 +4,9 @@ function replaceFeather() {
 }
 
 // ── Theme Toggle ────────────────────────────────────────────────────────────
-// Runs early (outside DOMContentLoaded) so the icon matches the current theme
-// without waiting for the full DOM to parse.
+// main.js loads synchronously at the end of <body> so the DOM is fully
+// available here. The icon is updated eagerly (before DOMContentLoaded)
+// so the correct sun/moon icon renders without waiting for later init.
 const themeToggle = document.querySelector('.theme-toggle');
 
 if (themeToggle) {
@@ -122,11 +123,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ── Responsive Tables ───────────────────────────────────────────────────
-    // Inline styles removed — the CSS class handles overflow and margin.
+    // Wraps tables in a scrollable container; uses a CSS class (not inline
+    // style) to suppress the table's own bottom margin inside the wrapper.
     document.querySelectorAll('table').forEach(table => {
         const wrapper = document.createElement('div');
         wrapper.className = 'table-responsive-wrapper';
-        table.style.marginBottom = '0';
+        table.classList.add('in-wrapper');
         table.parentNode.insertBefore(wrapper, table);
         wrapper.appendChild(table);
     });
@@ -202,11 +204,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 replaceFeather();
 
-                // Scroll to top of container
-                const headerOffset = 80;
-                const elementPosition = container.parentElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.scrollY - headerOffset;
-                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                // Scroll to top of the section (just below the fixed header)
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
                
             }
         } catch (error) {

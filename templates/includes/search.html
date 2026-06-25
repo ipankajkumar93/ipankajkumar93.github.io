@@ -51,7 +51,10 @@
 
         if (window.__searchLoaded && window.__searchLoaded()) {
             initSearchIndex();
-            setTimeout(() => searchInput.focus(), 50);
+            // Focus after the modal open transition ends so the element is fully visible
+            searchModal.querySelector('.search-modal-content').addEventListener(
+                'transitionend', () => searchInput.focus(), { once: true }
+            );
         } else {
             searchResults.innerHTML = '<div class="search-empty-state">Indexing…</div>';
             searchInput.disabled = true;
