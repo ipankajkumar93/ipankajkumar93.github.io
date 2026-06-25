@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // Update meta tags and canonical links for SEO/sharing extensions
-                const metaSelector = 'meta[name]:not([name="viewport"]):not([name="theme-color"]), meta[property], link[rel="canonical"], link[rel="alternate"]';
+                const metaSelector = 'meta[name]:not([name="viewport"]):not([name="theme-color"]):not([name="referrer"]), meta[property], link[rel="canonical"]';
                 
                 const headElementsToRemove = document.head.querySelectorAll(metaSelector);
                 headElementsToRemove.forEach(el => el.remove());
