@@ -215,7 +215,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 newHeadElements.forEach(el => document.head.appendChild(el.cloneNode(true)));
 
                 if (!isPopState) {
-                    window.history.pushState({ path: url }, '', url);
+                    if (window.location.href !== url) {
+                        window.history.pushState({ path: url }, '', url);
+                    }
                 }
 
                 // Manually track ALL page views since we disabled auto-track
@@ -282,8 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // Skip navigation if already on this page (no hash, no query change)
-            if (url.href === window.location.href) return;
+
 
             e.preventDefault();
 
