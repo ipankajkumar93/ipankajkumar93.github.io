@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const [response] = await Promise.all([
                 fetch(url, { signal: currentPageController.signal }),
-                new Promise(resolve => setTimeout(resolve, 250))
+                new Promise(resolve => setTimeout(resolve, 200))
             ]);
             
             if (!response.ok) throw new Error('Network response was not ok');
