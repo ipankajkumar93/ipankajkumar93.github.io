@@ -173,6 +173,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ── SPA Navigation ──────────────────────────────────────────────────────
     let currentPageController = null;
+    let currentSpaUrl = window.location.href;
+
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+
+    function saveCurrentScroll() {
+        sessionStorage.setItem('spa_scroll_' + currentSpaUrl, window.scrollY);
+    }
 
     async function loadPage(url, isPopState = false) {
         const mainEl = document.querySelector('main');
@@ -231,15 +240,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 initContent();
 
-                // Scroll to top or to hash
+                currentSpaUrl = url;
+
+                // Scroll to top, hash, or saved position
                 const hash = new URL(url).hash;
                 if (hash) {
-                    const target = document.querySelector(hash);
+                    const target = document.getElementById(hash.substring(1));
                     if (target) {
-                        const headerOffset = 80;
+                        const headerOffset = 20;
                         const elementPosition = target.getBoundingClientRect().top;
                         const offsetPosition = elementPosition + window.scrollY - headerOffset;
                         window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
+                } else if (isPopState) {
+                    const savedScroll = sessionStorage.getItem('spa_scroll_' + url);
+                    if (savedScroll !== null) {
+                        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'auto' });
+                    } else {
+                        window.scrollTo({ top: 0, behavior: 'auto' });
                     }
                 } else {
                     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -269,8 +287,33 @@ document.addEventListener('DOMContentLoaded', function () {
             if (url.origin !== window.location.origin) return;
             if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
 
-            // Let browser handle hash-only navigation on the same page
-            if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return;
+            // Handle hash-only navigation on the same page manually for smooth scroll (offsetting the fixed header)
+            const normalizePath = p => p.replace(/\/+$/, '') || '/';
+            if (normalizePath(url.pathname) === normalizePath(window.location.pathname) && url.search === window.location.search && url.hash) {
+                e.preventDefault();
+                
+                // Close mobile menu if open
+                const navItems = document.querySelector('.nav-items');
+                if (navItems && navItems.classList.contains('active')) {
+                    const closeBtn = document.querySelector('.mobile-close-btn');
+                    if (closeBtn) closeBtn.click();
+                }
+
+                const target = document.getElementById(url.hash.substring(1));
+                if (target) {
+                    const headerOffset = 20;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.scrollY - headerOffset;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                }
+
+                if (window.location.href !== url.href) {
+                    saveCurrentScroll();
+                    window.history.pushState({ path: url.href }, '', url.href);
+                    currentSpaUrl = url.href;
+                }
+                return;
+            }
 
             // Let browser handle non-HTML assets natively
             const nonHtmlExts = ['pdf', 'zip', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'ico', 'svg', 'txt', 'json', 'woff', 'woff2'];
@@ -295,11 +338,41 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (closeBtn) closeBtn.click();
             }
 
+            saveCurrentScroll();
             loadPage(url.href);
         });
 
         // Handle back/forward buttons
         window.addEventListener('popstate', function (e) {
+            const newUrl = new URL(window.location.href);
+            const oldUrl = new URL(currentSpaUrl);
+
+            saveCurrentScroll();
+
+            // If only the hash changed, don't fetch a new page. Just scroll smoothly.
+            const normalizePath = p => p.replace(/\/+$/, '') || '/';
+            if (normalizePath(newUrl.pathname) === normalizePath(oldUrl.pathname) && newUrl.search === oldUrl.search) {
+                currentSpaUrl = window.location.href;
+                
+                if (newUrl.hash) {
+                    const target = document.getElementById(newUrl.hash.substring(1));
+                    if (target) {
+                        const headerOffset = 20;
+                        const elementPosition = target.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
+                } else {
+                    const savedScroll = sessionStorage.getItem('spa_scroll_' + window.location.href);
+                    if (savedScroll !== null) {
+                        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'smooth' });
+                    } else {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                }
+                return;
+            }
+
             loadPage(e.state?.path ?? window.location.href, true);
         });
 
