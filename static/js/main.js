@@ -200,6 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (!isPopState) {
                     window.history.pushState({ path: url }, '', url);
+                    // Umami intercepts history.pushState natively — no manual track() needed
                 }
 
                 replaceFeather();
