@@ -173,6 +173,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ── SPA Navigation ──────────────────────────────────────────────────────
     let currentPageController = null;
+    let currentSpaUrl = window.location.href;
+
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+
+    function saveCurrentScroll() {
+        sessionStorage.setItem('spa_scroll_' + currentSpaUrl, window.scrollY);
+    }
 
     async function loadPage(url, isPopState = false) {
         const mainEl = document.querySelector('main');
@@ -231,7 +240,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 initContent();
 
-                // Scroll to top or to hash
+                currentSpaUrl = url;
+
+                // Scroll to top, hash, or saved position
                 const hash = new URL(url).hash;
                 if (hash) {
                     const target = document.querySelector(hash);
@@ -240,6 +251,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         const elementPosition = target.getBoundingClientRect().top;
                         const offsetPosition = elementPosition + window.scrollY - headerOffset;
                         window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
+                } else if (isPopState) {
+                    const savedScroll = sessionStorage.getItem('spa_scroll_' + url);
+                    if (savedScroll !== null) {
+                        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'auto' });
+                    } else {
+                        window.scrollTo({ top: 0, behavior: 'auto' });
                     }
                 } else {
                     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -295,11 +313,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (closeBtn) closeBtn.click();
             }
 
+            saveCurrentScroll();
             loadPage(url.href);
         });
 
         // Handle back/forward buttons
         window.addEventListener('popstate', function (e) {
+            saveCurrentScroll();
             loadPage(e.state?.path ?? window.location.href, true);
         });
 
