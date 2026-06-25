@@ -37,7 +37,10 @@ if (themeToggle) {
 // ── DOM-dependent functionality ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ── Lightbox Modal Setup ────────────────────────────────────────────────
+    // Replace feather icons once after the full DOM is ready
+    replaceFeather();
+
+    // ── Lightbox ────────────────────────────────────────────────────────────
     const lightboxModal = document.createElement('div');
     lightboxModal.className = 'lightbox-modal';
     lightboxModal.innerHTML = '<span class="lightbox-close">&times;</span><img src="" alt="">';
@@ -46,10 +49,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const lightboxImg = lightboxModal.querySelector('img');
     const lightboxCloseBtn = lightboxModal.querySelector('.lightbox-close');
 
-    function closeLightbox() {
-        lightboxModal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
+    document.querySelectorAll('a.lightbox-thumbnail').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            lightboxImg.src = this.getAttribute('href');
+            lightboxImg.alt = this.querySelector('img')?.getAttribute('alt') || '';
+            lightboxModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
 
     lightboxModal.addEventListener('click', function (e) {
         if (e.target === lightboxModal || e.target === lightboxCloseBtn) {
@@ -63,17 +71,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Event delegation for lightbox links
-    document.body.addEventListener('click', function (e) {
-        const link = e.target.closest('a.lightbox-thumbnail');
-        if (link) {
-            e.preventDefault();
-            lightboxImg.src = link.getAttribute('href');
-            lightboxImg.alt = link.querySelector('img')?.getAttribute('alt') || '';
-            lightboxModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-    });
+    function closeLightbox() {
+        lightboxModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 
     // ── Mobile Menu ─────────────────────────────────────────────────────────
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -120,278 +121,132 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ── Re-initializable Content ────────────────────────────────────────────
-    function initContent() {
-        replaceFeather();
+    // ── Responsive Tables ───────────────────────────────────────────────────
+    // Inline styles removed — the CSS class handles overflow and margin.
+    document.querySelectorAll('table').forEach(table => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-responsive-wrapper';
+        table.style.marginBottom = '0';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+    });
 
-        // ── Responsive Tables ───────────────────────────────────────────────────
-        document.querySelectorAll('main table').forEach(table => {
-            if (table.parentNode.classList.contains('table-responsive-wrapper')) return;
-            const wrapper = document.createElement('div');
-            wrapper.className = 'table-responsive-wrapper';
-            table.style.marginBottom = '0';
-            table.parentNode.insertBefore(wrapper, table);
-            wrapper.appendChild(table);
-        });
+    // ── Code Block Copy Button ──────────────────────────────────────────────
+    document.querySelectorAll('pre').forEach(block => {
+        if (block.querySelector('.copy-code-btn') || !block.querySelector('code')) return;
 
-        // ── Code Block Copy Button ──────────────────────────────────────────────
-        document.querySelectorAll('main pre').forEach(block => {
-            if (block.querySelector('.copy-code-btn') || !block.querySelector('code')) return;
+        const button = document.createElement('button');
+        button.className = 'copy-code-btn';
+        button.setAttribute('aria-label', 'Copy to clipboard');
+        button.setAttribute('title', 'Copy to clipboard');
+        button.innerHTML = '<i data-feather="copy"></i>';
 
-            const button = document.createElement('button');
-            button.className = 'copy-code-btn';
-            button.setAttribute('aria-label', 'Copy to clipboard');
-            button.setAttribute('title', 'Copy to clipboard');
-            button.innerHTML = '<i data-feather="copy"></i>';
+        button.addEventListener('click', () => {
+            const code = block.querySelector('code');
+            if (!code) return;
 
-            button.addEventListener('click', () => {
-                const code = block.querySelector('code');
-                if (!code) return;
+            navigator.clipboard.writeText(code.textContent.trimEnd()).then(() => {
+                button.innerHTML = '<i data-feather="check"></i>';
+                button.classList.add('copied');
+                replaceFeather();
 
-                navigator.clipboard.writeText(code.textContent.trimEnd()).then(() => {
-                    button.innerHTML = '<i data-feather="check"></i>';
-                    button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerHTML = '<i data-feather="copy"></i>';
+                    button.classList.remove('copied');
                     replaceFeather();
-
-                    setTimeout(() => {
-                        button.innerHTML = '<i data-feather="copy"></i>';
-                        button.classList.remove('copied');
-                        replaceFeather();
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy text: ', err);
-                });
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
             });
-
-            block.appendChild(button);
         });
 
-        replaceFeather();
-    }
+        block.appendChild(button);
+    });
+    // Replace all copy icons in one pass after every button is in the DOM
+    replaceFeather();
 
-    initContent();
-
-    // ── SPA Navigation ──────────────────────────────────────────────────────
+    // ── AJAX Pagination ─────────────────────────────────────────────────────
     let currentPageController = null;
-    let currentSpaUrl = window.location.href;
-
-    if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-    }
-
-    function saveCurrentScroll() {
-        sessionStorage.setItem('spa_scroll_' + currentSpaUrl, window.scrollY);
-    }
 
     async function loadPage(url, isPopState = false) {
-        const mainEl = document.querySelector('main');
-        if (!mainEl) return;
+        const container = document.getElementById('pagination-container');
+        if (!container) return;
 
+        // Cancel any in-flight request to prevent race conditions
         if (currentPageController) {
             currentPageController.abort();
         }
         currentPageController = new AbortController();
 
-        mainEl.classList.add('loading');
+        container.classList.add('loading');
 
         try {
-            const [response] = await Promise.all([
-                fetch(url, { signal: currentPageController.signal }),
-                new Promise(resolve => setTimeout(resolve, 200))
-            ]);
-            
+            const response = await fetch(url, { signal: currentPageController.signal });
             if (!response.ok) throw new Error('Network response was not ok');
 
             const text = await response.text();
             const parser = new DOMParser();
             const doc = parser.parseFromString(text, 'text/html');
 
-            const newMain = doc.querySelector('main');
-            if (newMain) {
-                mainEl.innerHTML = newMain.innerHTML;
+            const newContainer = doc.getElementById('pagination-container');
+            if (newContainer) {
+                container.innerHTML = newContainer.innerHTML;
 
                 if (doc.title) {
                     document.title = doc.title;
                 }
 
-                // Update meta tags and canonical links for SEO/sharing extensions
-                const metaSelector = 'meta[name]:not([name="viewport"]):not([name="theme-color"]):not([name="referrer"]), meta[property], link[rel="canonical"]';
-                
-                const headElementsToRemove = document.head.querySelectorAll(metaSelector);
-                headElementsToRemove.forEach(el => el.remove());
-
-                const newHeadElements = doc.head.querySelectorAll(metaSelector);
-                newHeadElements.forEach(el => document.head.appendChild(el.cloneNode(true)));
-
                 if (!isPopState) {
-                    if (window.location.href !== url) {
-                        window.history.pushState({ path: url }, '', url);
-                    }
+                    window.history.pushState({ path: url }, '', url);
                 }
 
-                // Manually track ALL page views since we disabled auto-track
-                if (typeof umami !== 'undefined') {
-                    umami.track(props => ({ 
-                        ...props, 
-                        url: window.location.pathname + window.location.search, 
-                        title: document.title 
-                    }));
-                }
+                replaceFeather();
 
-                initContent();
-
-                currentSpaUrl = url;
-
-                // Scroll to top, hash, or saved position
-                const hash = new URL(url).hash;
-                if (hash) {
-                    const target = document.getElementById(hash.substring(1));
-                    if (target) {
-                        const headerOffset = 20;
-                        const elementPosition = target.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.scrollY - headerOffset;
-                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                    }
-                } else if (isPopState) {
-                    const savedScroll = sessionStorage.getItem('spa_scroll_' + url);
-                    if (savedScroll !== null) {
-                        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'auto' });
-                    } else {
-                        window.scrollTo({ top: 0, behavior: 'auto' });
-                    }
-                } else {
-                    window.scrollTo({ top: 0, behavior: 'auto' });
-                }
+                // Scroll to top of container
+                const headerOffset = 80;
+                const elementPosition = container.parentElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.scrollY - headerOffset;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+               
             }
         } catch (error) {
-            if (error.name === 'AbortError') return; // Intentional cancellation
-            console.error('SPA fetch error:', error);
+            if (error.name === 'AbortError') return; // Intentional cancellation — do nothing
+            console.error('Pagination fetch error:', error);
             window.location.href = url; // Fallback to full navigation
         } finally {
-            mainEl.classList.remove('loading');
+            container.classList.remove('loading');
             currentPageController = null;
         }
     }
 
-    function initSpaNavigation() {
-        document.body.addEventListener('click', function (e) {
-            const link = e.target.closest('a');
-            if (!link || !link.href) return;
+    function initAjaxPagination() {
+        const container = document.getElementById('pagination-container');
+        if (!container) return;
 
-            // Let browser handle special link types natively
-            if (link.target === '_blank' || link.hasAttribute('download') || link.rel === 'external') return;
+        container.addEventListener('click', function (e) {
+            const link = e.target.closest('a');
+            if (!link || !link.href || link.classList.contains('disabled') || !link.closest('.pagination')) return;
 
             const url = new URL(link.href);
-
-            // Only intercept same-origin HTTP(S) navigations
             if (url.origin !== window.location.origin) return;
-            if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
-
-            // Handle hash-only navigation on the same page manually for smooth scroll (offsetting the fixed header)
-            const normalizePath = p => p.replace(/\/+$/, '') || '/';
-            if (normalizePath(url.pathname) === normalizePath(window.location.pathname) && url.search === window.location.search && url.hash) {
-                e.preventDefault();
-                
-                // Close mobile menu if open
-                const navItems = document.querySelector('.nav-items');
-                if (navItems && navItems.classList.contains('active')) {
-                    const closeBtn = document.querySelector('.mobile-close-btn');
-                    if (closeBtn) closeBtn.click();
-                }
-
-                const target = document.getElementById(url.hash.substring(1));
-                if (target) {
-                    const headerOffset = 20;
-                    const elementPosition = target.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.scrollY - headerOffset;
-                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                }
-
-                if (window.location.href !== url.href) {
-                    saveCurrentScroll();
-                    window.history.pushState({ path: url.href }, '', url.href);
-                    currentSpaUrl = url.href;
-                }
-                return;
-            }
-
-            // Let browser handle non-HTML assets natively
-            const nonHtmlExts = ['pdf', 'zip', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'ico', 'svg', 'txt', 'json', 'woff', 'woff2'];
-            const ext = url.pathname.includes('.') ? url.pathname.split('.').pop().toLowerCase() : null;
-            if (ext && nonHtmlExts.includes(ext)) return;
-
-            // Open Atom/RSS feeds in a new tab instead of navigating
-            if (ext === 'xml') {
-                e.preventDefault();
-                window.open(url.href, '_blank');
-                return;
-            }
-
-
 
             e.preventDefault();
-
-            // Close mobile menu if open
-            const navItems = document.querySelector('.nav-items');
-            if (navItems && navItems.classList.contains('active')) {
-                const closeBtn = document.querySelector('.mobile-close-btn');
-                if (closeBtn) closeBtn.click();
-            }
-
-            saveCurrentScroll();
             loadPage(url.href);
         });
-
-        // Handle back/forward buttons
-        window.addEventListener('popstate', function (e) {
-            const newUrl = new URL(window.location.href);
-            const oldUrl = new URL(currentSpaUrl);
-
-            saveCurrentScroll();
-
-            // If only the hash changed, don't fetch a new page. Just scroll smoothly.
-            const normalizePath = p => p.replace(/\/+$/, '') || '/';
-            if (normalizePath(newUrl.pathname) === normalizePath(oldUrl.pathname) && newUrl.search === oldUrl.search) {
-                currentSpaUrl = window.location.href;
-                
-                if (newUrl.hash) {
-                    const target = document.getElementById(newUrl.hash.substring(1));
-                    if (target) {
-                        const headerOffset = 20;
-                        const elementPosition = target.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.scrollY - headerOffset;
-                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-                    }
-                } else {
-                    const savedScroll = sessionStorage.getItem('spa_scroll_' + window.location.href);
-                    if (savedScroll !== null) {
-                        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'smooth' });
-                    } else {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                }
-                return;
-            }
-
-            loadPage(e.state?.path ?? window.location.href, true);
-        });
-
-        window.history.replaceState({ path: window.location.href }, '', window.location.href);
     }
 
-    initSpaNavigation();
-
-    // Initial page load tracking for Umami (since auto-track is false)
-    const trackInitial = () => {
-        if (typeof umami !== 'undefined') {
-            umami.track(props => ({ 
-                ...props, 
-                url: window.location.pathname + window.location.search, 
-                title: document.title 
-            }));
+    // Handle back/forward buttons
+    window.addEventListener('popstate', function (e) {
+        if (e.state && e.state.path) {
+            loadPage(e.state.path, true);
         } else {
-            setTimeout(trackInitial, 300);
+            loadPage(window.location.href, true);
         }
-    };
-    setTimeout(trackInitial, 300);
+    });
+
+    // Initialize pagination if the container exists
+    if (document.getElementById('pagination-container')) {
+        window.history.replaceState({ path: window.location.href }, '', window.location.href);
+        initAjaxPagination();
+    }
 });
