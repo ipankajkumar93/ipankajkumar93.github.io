@@ -22,14 +22,14 @@
       <a href="{{ page.permalink }}">{{ page.title }}</a>{% if page.draft %}<span class="draft-tag">DRAFT</span>{% endif %}
     </li>
     {% else %}
-    <li>
-      No posts yet
+    <li class="empty-state-item">
+      <span class="empty-state">No posts yet.</span>
     </li>
   {% endfor %}
 </ul>
 
 {% if paginator %}
-<nav class="pagination">
+<nav class="pagination" aria-label="Pagination">
   <!-- First Page Button -->
   {% if paginator.current_index == 1 %}
     <span class="pagination-btn disabled">

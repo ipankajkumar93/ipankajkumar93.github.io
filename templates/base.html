@@ -63,7 +63,7 @@
 <body>
     <header>
         <a href="{{ config.base_url | safe }}" class="title" aria-label="Go to homepage">
-            <h2 class="name">{{ config.title }}</h2>
+            <span class="name">{{ config.title }}</span>
         </a>
         <nav>
             <button class="mobile-menu-btn" title="Menu" aria-label="Menu">
@@ -96,19 +96,20 @@
     </header>
 
     <!-- Search Modal -->
-    <div id="search-modal" class="search-modal" role="dialog" aria-modal="true" aria-label="Search">
+    <div id="search-modal" class="search-modal" role="dialog" aria-modal="true" aria-labelledby="search-modal-title">
         <div class="search-modal-backdrop"></div>
         <div class="search-modal-content">
             <div class="search-modal-header">
                 <div class="search-input-wrapper">
-                    <i data-feather="search" class="search-input-icon"></i>
-                    <input type="text" id="search-input" class="search-input" placeholder="Search posts, projects, etc." autocomplete="off" />
+                    <i data-feather="search" class="search-input-icon" aria-hidden="true"></i>
+                    <h2 id="search-modal-title" class="sr-only">Site Search</h2>
+                    <input type="text" id="search-input" class="search-input" placeholder="Search posts, projects, etc." autocomplete="off" aria-label="Search query" />
                 </div>
                 <button class="search-close" aria-label="Close search">
-                    <i data-feather="x"></i>
+                    <i data-feather="x" aria-hidden="true"></i>
                 </button>
             </div>
-            <div id="search-results" class="search-results">
+            <div id="search-results" class="search-results" aria-live="polite" aria-label="Search results">
                 <div class="search-empty-state">What are you looking for?</div>
             </div>
         </div>

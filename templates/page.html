@@ -37,7 +37,7 @@
     <div class="post-content{% if is_restricted %} restricted-width{% endif %}">
       {{ page.content | safe }}
     </div>
-    <p class="tags{% if is_restricted %} restricted-width{% endif %}">
+    <div class="tags{% if is_restricted %} restricted-width{% endif %}" aria-label="Tags">
       {%- if page.taxonomies %}
         {%- for name, taxon in page.taxonomies %}
           {%- for item in taxon %}
@@ -45,6 +45,6 @@
           {%- endfor %}
         {%- endfor %}
       {%- endif %}
-    </p>
+    </div>
   </article>
 {% endblock %}
