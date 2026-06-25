@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // Update meta tags and canonical links for SEO/sharing extensions
-                const metaSelector = 'meta[name]:not([name="viewport"]):not([name="theme-color"]), meta[property], link[rel="canonical"], link[rel="alternate"]';
+                const metaSelector = 'meta[name]:not([name="viewport"]):not([name="theme-color"]):not([name="referrer"]), meta[property], link[rel="canonical"]';
                 
                 const headElementsToRemove = document.head.querySelectorAll(metaSelector);
                 headElementsToRemove.forEach(el => el.remove());
@@ -215,7 +215,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 newHeadElements.forEach(el => document.head.appendChild(el.cloneNode(true)));
 
                 if (!isPopState) {
-                    window.history.pushState({ path: url }, '', url);
+                    if (window.location.href !== url) {
+                        window.history.pushState({ path: url }, '', url);
+                    }
                 }
 
                 // Manually track ALL page views since we disabled auto-track
@@ -282,8 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // Skip navigation if already on this page (no hash, no query change)
-            if (url.href === window.location.href) return;
+
 
             e.preventDefault();
 
