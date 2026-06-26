@@ -183,9 +183,9 @@ body {
     background-color: var(--color-bg);
     margin: 0;
     padding: 0;
-    /* dvh accounts for mobile browser chrome collapsing; vh fallback for older browsers */
+    /* svh (small viewport height) prevents the footer from jumping on mobile scroll */
     min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 100svh;
     width: 100%;
     /* overflow-x handled by html rule above */
     display: flex;
