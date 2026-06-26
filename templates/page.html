@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ page.title }} | {{ super() }}{% endblock %}
+{% block title %}{% if page.title %}{{ page.title }} | {% endif %}{{ super() }}{% endblock %}
 
 {% block main %}
   {% set is_restricted = false %}
@@ -47,4 +47,20 @@
       {%- endif %}
     </div>
   </article>
+
+  {% if is_restricted %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ page.title }}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ config.title }}"
+    },
+    "datePublished": "{{ page.date }}",
+    "dateModified": "{{ page.date }}"
+  }
+  </script>
+  {% endif %}
 {% endblock %}
