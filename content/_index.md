@@ -2,7 +2,7 @@
 title = "Home"
 +++
 
-# 👋🏽 Hello
+<h1 class="home-title"><span class="cli-prompt">&gt;</span> Hello, World.</h1>
 
 <div class="home-container">
 

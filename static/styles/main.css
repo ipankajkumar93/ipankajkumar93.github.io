@@ -772,6 +772,17 @@ nav {
     margin-bottom: calc(var(--space-2xl) + var(--space-lg));
 }
 
+.home-title {
+    font-size: var(--step-3);
+    font-weight: 400;
+}
+
+.cli-prompt {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-weight: 700;
+}
+
 .home-content p:last-of-type {
     margin-bottom: 0;
 }

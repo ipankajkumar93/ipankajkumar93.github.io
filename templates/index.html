@@ -17,8 +17,8 @@
   {% endfor %}
 
   {% if has_featured %}
-  <h2>⭐ Featured Posts</h2>
-  <p>A curated collection of my top articles from over the years:</p>
+  <h2><span class="cli-prompt">./</span> Featured Posts</h2>
+  <p>Handpicked from the archive:</p>
   <ul>
     {% for page in all_pages | sort(attribute="date") | reverse %}
       {% if page.extra.featured %}
