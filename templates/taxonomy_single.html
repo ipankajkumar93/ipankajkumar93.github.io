@@ -13,10 +13,12 @@
           {% endif %}
         {% endfor %}
       {% endif %}
-      <h1 class="filter-heading">Filtering for "{{ term.name }}"</h1>
-      <small>
-        <a href="{{ back_url }}">Remove filter</a>
-      </small>
+      <div class="filter-header">
+        <h1 class="filter-heading">Filtering for "<span class="text-accent">{{ term.name }}</span>"</h1>
+        <a href="{{ back_url }}" class="filter-clear" aria-label="Clear filter">
+          Clear <i data-feather="x" style="width: 14px; height: 14px;"></i>
+        </a>
+      </div>
     {%- endif %}
     <ul class="blog-posts">
       {% for page in term.pages %}
