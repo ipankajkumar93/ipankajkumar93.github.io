@@ -9,8 +9,12 @@
 
 {% if page -%}
     {% set is_article = false -%}
-    {% if page.components and ("posts" in page.components or "travel" in page.components or "rtd" in page.components) -%}
-        {% set is_article = true -%}
+    {% if page.components -%}
+        {% for section in config.extra.og_sections -%}
+            {% if section in page.components -%}
+                {% set_global is_article = true -%}
+            {% endif -%}
+        {% endfor -%}
     {% endif -%}
     {% if is_article -%}
         {% set og_type = "article" -%}

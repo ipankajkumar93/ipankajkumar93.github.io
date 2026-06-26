@@ -45,10 +45,16 @@ CACHE_VERSION = 1
 class OGImageGenerator:
     def __init__(self, project_root: Path):
         self.project_root = project_root
+        # Read og_sections from config.toml dynamically
+        config_path = project_root / "config.toml"
+        with open(config_path, "rb") as f:
+            config_data = tomllib.load(f)
+            
+        og_sections = config_data.get("extra", {}).get("og_sections", [])
+        
         self.content_dirs = [
-            project_root / "content" / "posts",
-            project_root / "content" / "rtd",
-            project_root / "content" / "travel",
+            project_root / "content" / section 
+            for section in og_sections
         ]
         self.output_dir = project_root / "static" / "images" / "og"
         self.cache_file = project_root / ".og_cache.json"
@@ -473,7 +479,10 @@ class OGImageGenerator:
 
                 title = str(fm.get("title", ""))
                 description = str(fm.get("description", ""))
-                date_val = fm.get("date", "")
+                date_val = fm.get("updated")
+                if not date_val:
+                    date_val = fm.get("date", "")
+                
                 # tomllib parses bare TOML dates as datetime.date objects
                 date_str = date_val.isoformat() if hasattr(date_val, 'isoformat') else str(date_val)
                 

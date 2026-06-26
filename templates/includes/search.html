@@ -76,7 +76,9 @@
     function getCategory(url) {
         {%- if config.extra.main_menu %}
         {%- for item in config.extra.main_menu %}
-        {%- if not item.url is matching("https?://") %}
+        {%- if item.url == "/" %}
+        if (url === '/') return '{{ item.name | safe }}';
+        {%- elif not item.url is matching("https?://") %}
         if (url.includes('{{ item.url | replace(from="@", to="") | replace(from="_index.md", to="") | replace(from=".md", to="") | safe }}')) return '{{ item.name | safe }}';
         {%- endif %}
         {%- endfor %}
@@ -86,6 +88,14 @@
 
     // Search projects client-side
     function searchProjects(query) {
+        {%- set projects_menu_name = 'Projects' %}
+        {%- if config.extra.main_menu %}
+          {%- for item in config.extra.main_menu %}
+            {%- if item.url is matching("projects") %}
+              {%- set_global projects_menu_name = item.name %}
+            {%- endif %}
+          {%- endfor %}
+        {%- endif %}
         const q = query.toLowerCase();
         return projectData.filter(p =>
             p.name.toLowerCase().includes(q) ||
@@ -95,7 +105,7 @@
             title: p.name,
             description: p.description,
             url: p.url,
-            category: 'Projects'
+            category: '{{ projects_menu_name | safe }}'
         }));
     }
 

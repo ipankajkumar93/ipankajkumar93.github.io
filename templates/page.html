@@ -5,9 +5,11 @@
 {% block main %}
   {% set is_restricted = false %}
   {% if page.components %}
-    {% if "posts" in page.components or "travel" in page.components or "rtd" in page.components %}
-      {% set is_restricted = true %}
-    {% endif %}
+    {% for section in config.extra.restricted_sections %}
+      {% if section in page.components %}
+        {% set_global is_restricted = true %}
+      {% endif %}
+    {% endfor %}
   {% endif %}
   <article>
     {%- if page.draft %}

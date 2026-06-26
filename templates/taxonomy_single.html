@@ -4,12 +4,14 @@
 
 {% block main %}
     {%- if taxonomy %}
-      {% if taxonomy.name == "rtd_tags" %}
-        {% set back_url = get_url(path="@/rtd/_index.md") %}
-      {% elif taxonomy.name == "travel_tags" %}
-        {% set back_url = get_url(path="@/travel/_index.md") %}
-      {% else %}
-        {% set back_url = get_url(path="@/posts/_index.md") %}
+      {% set tax_prefix = taxonomy.name | replace(from="_tags", to="") %}
+      {% set back_url = config.base_url %}
+      {% if config.extra.main_menu %}
+        {% for item in config.extra.main_menu %}
+          {% if tax_prefix in item.url %}
+            {% set_global back_url = get_url(path=item.url) %}
+          {% endif %}
+        {% endfor %}
       {% endif %}
       <h1 class="filter-heading">Filtering for "{{ term.name }}"</h1>
       <small>
@@ -51,11 +53,21 @@
           {%- endfor %}
           
           {%- if found_term %}
+            {%- set tax_prefix = tax.name | replace(from="_tags", to="") %}
+            {%- set tax_display_name = tax_prefix | title %}
+            {%- if config.extra.main_menu %}
+              {%- for item in config.extra.main_menu %}
+                {%- if tax_prefix in item.url %}
+                  {%- set_global tax_display_name = item.name %}
+                {%- endif %}
+              {%- endfor %}
+            {%- endif %}
+            
             {%- if not rendered_also_found %}
               <div class="also-found-header">Also found in</div>
               {%- set_global rendered_also_found = true %}
             {%- endif %}
-            <h3 class="filter-heading cross-tax-heading">{{ tax.name | replace(from="_tags", to="") | title }}</h3>
+            <h3 class="filter-heading cross-tax-heading">{{ tax_display_name | safe }}</h3>
             <ul class="blog-posts">
               {%- for page in found_term.pages %}
                 <li>
