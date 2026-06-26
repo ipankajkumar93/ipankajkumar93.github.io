@@ -1,19 +1,20 @@
 +++
-draft = false
-title = "Markdown Syntax & Shortcodes Guide"
-date = 2026-06-11
-type = "rtd" # Other types are also possible like "rtd", "travel", etc.
-slug = "rtd-syntax-guide" # Overrides the URL path for this page (e.g. /posts/syntax-guide/)
-description = "A comprehensive sample post demonstrating every unique type of markdown syntax, HTML element, and Zola shortcode supported on this website."
+draft = true
+title = "Draft Post."
+date = 2026-06-13
+updated = 2026-06-26
+type = "post" # Other types are also possible like "rtd", "travel", etc.
+slug = "draft-post" # Overrides the URL path for this page (e.g. /posts/syntax-guide/)
+description = "This is a draft post to test DRAFT functionality in Prod/Dev"
 in_search_index = true
 
 [taxonomies]
-rtd_tags = ["rtd", "markdown", "notes"]
+post_tags = ["post", "draft"]
 
 [extra]
-toc = true
-featured = false
-# og_preview_img = "/images/sample-image.jpeg"    #Uncomment this to add your own OG preview image or let the pythong script generate one for you for OG images.
+toc = true # Generates Table of Contents for the page if true
+featured = true
+# og_preview_img = "/images/sample-image.jpeg"    #Uncomment this to add your own OG preview image or let the python script generate one for you for OG images.
 +++
 
 This post serves as a reference guide to showcase all the various syntax and formatting options available when writing content for this blog.
@@ -154,13 +155,23 @@ For better page-load performance, you can use a thumbnail image that links out t
 
 Admonitions are custom Zola shortcodes used to highlight important information, warnings, or notes.
 
-{% admonition(kind="Note") %}
-This is a standard note admonition. Use it to provide supplementary context or tips.
+{% admonition(kind="note") %}
+This is a standard note admonition. 
 {% end %}
 
-{% admonition(kind="Info") %}
-This is an info admonition. Use it to highlight critical information that the reader must not miss!
+{% admonition(kind="info") %}
+This is an info admonition. 
 {% end %}
+
+{% admonition(kind="warning") %}
+This is an warning admonition.
+{% end %}
+
+{% admonition(kind="tip") %}
+This is an tip admonition.
+{% end %}
+
+
 
 ---
 

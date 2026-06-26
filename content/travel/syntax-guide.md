@@ -1,4 +1,5 @@
 +++
+draft = false
 title = "Markdown Syntax & Shortcodes Guide"
 date = 2026-06-12
 type = "travel" # Other types are also possible like "rtd", "travel", etc.
@@ -10,6 +11,7 @@ in_search_index = true
 travel_tags = ["travel", "markdown", "explore"]
 
 [extra]
+toc = true
 featured = false
 # og_preview_img = "/images/sample-image.jpeg"    #Uncomment this to add your own OG preview image or let the pythong script generate one for you for OG images.
 +++
