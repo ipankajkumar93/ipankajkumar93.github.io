@@ -34,13 +34,22 @@ enabled = true
 light_theme = "github-light-default"
 dark_theme = "github-dark-default"
 
+
 [extra]
+featured_sections = ["posts", "rtd", "travel"]
+og_sections = ["posts", "rtd", "travel"]
+# Controls which sections apply restricted-width CSS for long-form reading and Article JSON-LD schema
+restricted_sections = ["posts", "rtd", "travel"]
 date_format="%d %b, %Y"
 favicon = "/favicon.svg"
 email = "ipankaj.singh10+website@gmail.com"
 github = "https://github.com/ipankajkumar93"
 linkedin = "https://linkedin.com/in/ipankajkumar93"
 twitter = "https://x.com/ipankajkumar93"
+
+[[extra.main_menu]]
+name = "Home"
+url = "/"
 
 [[extra.main_menu]]
 name = "Posts"

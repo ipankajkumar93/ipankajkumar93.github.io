@@ -9,8 +9,12 @@
 
 {% if page -%}
     {% set is_article = false -%}
-    {% if page.components and ("posts" in page.components or "travel" in page.components or "rtd" in page.components) -%}
-        {% set is_article = true -%}
+    {% if page.components -%}
+        {% for section in config.extra.og_sections -%}
+            {% if section in page.components -%}
+                {% set_global is_article = true -%}
+            {% endif -%}
+        {% endfor -%}
     {% endif -%}
     {% if is_article -%}
         {% set og_type = "article" -%}
@@ -21,7 +25,11 @@
     {% set og_description = page.description -%}
     {% set og_url = page.permalink -%}
     {% set article_published_time = page.date -%}
-    {% set article_modified_time = page.date -%}
+    {% if page.updated -%}
+        {% set article_modified_time = page.updated -%}
+    {% else -%}
+        {% set article_modified_time = page.date -%}
+    {% endif -%}
     {# Use custom og_preview_img if set, otherwise fall back to auto-generated image #}
     {% if page.extra.og_preview_img -%}
         {% set og_image = page.extra.og_preview_img | trim_start_matches(pat="/") -%}

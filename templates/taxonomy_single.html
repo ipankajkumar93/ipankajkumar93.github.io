@@ -4,17 +4,21 @@
 
 {% block main %}
     {%- if taxonomy %}
-      {% if taxonomy.name == "rtd_tags" %}
-        {% set back_url = get_url(path="@/rtd/_index.md") %}
-      {% elif taxonomy.name == "travel_tags" %}
-        {% set back_url = get_url(path="@/travel/_index.md") %}
-      {% else %}
-        {% set back_url = get_url(path="@/posts/_index.md") %}
+      {% set tax_prefix = taxonomy.name | replace(from="_tags", to="") %}
+      {% set back_url = config.base_url %}
+      {% if config.extra.main_menu %}
+        {% for item in config.extra.main_menu %}
+          {% if tax_prefix in item.url %}
+            {% set_global back_url = get_url(path=item.url) %}
+          {% endif %}
+        {% endfor %}
       {% endif %}
-      <h1 class="filter-heading">Filtering for "{{ term.name }}"</h1>
-      <small>
-        <a href="{{ back_url }}">Remove filter</a>
-      </small>
+      <div class="filter-header">
+        <h1 class="filter-heading">Filtering for "<span class="text-accent">{{ term.name }}</span>"</h1>
+        <a href="{{ back_url }}" class="filter-clear" aria-label="Clear filter">
+          Clear <i data-feather="x"></i>
+        </a>
+      </div>
     {%- endif %}
     <ul class="blog-posts">
       {% for page in term.pages %}
@@ -26,7 +30,7 @@
               </time>
             </i>
           </span>
-          <a href="{{ page.permalink }}">{{ page.title }}</a>
+          <a href="{{ page.permalink }}">{{ page.title }}</a>{% if page.draft %}<span class="draft-tag">DRAFT</span>{% endif %}
         </li>
       {% else %}
         <li>
@@ -34,4 +38,54 @@
         </li>
       {% endfor %}
     </ul>
+
+    {%- set current_tax_name = taxonomy.name %}
+    {%- set current_term = term.name %}
+    {%- set_global rendered_also_found = false %}
+    
+    {%- for tax in config.taxonomies %}
+      {%- if tax.name != current_tax_name %}
+        {%- set other_taxonomy = get_taxonomy(kind=tax.name, fail_on_missing=false) %}
+        {%- if other_taxonomy %}
+          {%- set_global found_term = false %}
+          {%- for t in other_taxonomy.items %}
+            {%- if t.name == current_term %}
+              {%- set_global found_term = t %}
+            {%- endif %}
+          {%- endfor %}
+          
+          {%- if found_term %}
+            {%- set tax_prefix = tax.name | replace(from="_tags", to="") %}
+            {%- set tax_display_name = tax_prefix | title %}
+            {%- if config.extra.main_menu %}
+              {%- for item in config.extra.main_menu %}
+                {%- if tax_prefix in item.url %}
+                  {%- set_global tax_display_name = item.name %}
+                {%- endif %}
+              {%- endfor %}
+            {%- endif %}
+            
+            {%- if not rendered_also_found %}
+              <div class="also-found-header">Also found in</div>
+              {%- set_global rendered_also_found = true %}
+            {%- endif %}
+            <h3 class="filter-heading cross-tax-heading">{{ tax_display_name | safe }}</h3>
+            <ul class="blog-posts">
+              {%- for page in found_term.pages %}
+                <li>
+                  <span>
+                    <i>
+                      <time datetime='{{ page.date | date(format='%+') }}'>
+                        {{ page.date | date(format=config.extra.date_format) }}
+                      </time>
+                    </i>
+                  </span>
+                  <a href="{{ page.permalink }}">{{ page.title }}</a>{% if page.draft %}<span class="draft-tag">DRAFT</span>{% endif %}
+                </li>
+              {%- endfor %}
+            </ul>
+          {%- endif %}
+        {%- endif %}
+      {%- endif %}
+    {%- endfor %}
 {% endblock %}

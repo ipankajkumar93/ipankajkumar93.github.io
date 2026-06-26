@@ -21,10 +21,3 @@ When I'm not in the tech zone, I'm probably reading about space, aircrafts and r
   </div>
 
 </div>
-
-## ⭐ Featured Posts
-
-A curated collection of my top articles from over the years:
-
-* [Syntax Guide](@/posts/syntax-guide.md)
-

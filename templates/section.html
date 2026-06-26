@@ -120,12 +120,8 @@
 </div>
 
 <div class="section-tags">
-  {% if section.title == "Travel" %}
-  {% set tags = get_taxonomy(kind="travel_tags") %}
-  {% elif section.title == "Read the Docs" %}
-  {% set tags = get_taxonomy(kind="rtd_tags") %}
-  {% elif section.title == "Posts" %}
-  {% set tags = get_taxonomy(kind="post_tags") %}
+  {% if section.extra.taxonomy %}
+  {% set tags = get_taxonomy(kind=section.extra.taxonomy, fail_on_missing=false) %}
   {% else %}
   {% set tags = false %}
   {% endif %}

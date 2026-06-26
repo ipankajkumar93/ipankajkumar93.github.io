@@ -5,9 +5,11 @@
 {% block main %}
   {% set is_restricted = false %}
   {% if page.components %}
-    {% if "posts" in page.components or "travel" in page.components or "rtd" in page.components %}
-      {% set is_restricted = true %}
-    {% endif %}
+    {% for section in config.extra.restricted_sections %}
+      {% if section in page.components %}
+        {% set_global is_restricted = true %}
+      {% endif %}
+    {% endfor %}
   {% endif %}
   <article>
     {%- if page.draft %}
@@ -28,6 +30,11 @@
                     <time datetime='{{ page.date | date(format='%+') }}'>
                         {{- page.date | date(format=config.extra.date_format) -}}
                     </time>
+                    {%- if page.updated %}
+                    &nbsp;(Updated: <time datetime='{{ page.updated | date(format='%+') }}'>
+                        {{- page.updated | date(format=config.extra.date_format) -}}
+                    </time>)
+                    {%- endif %}
                 </i>
         </div>
         <div class="reading-time">
@@ -35,6 +42,26 @@
         </div>
         {%- endif %}
       </div>  
+    {%- endif %}
+
+    {%- if page.extra.toc and page.toc %}
+    <div class="toc{% if is_restricted %} restricted-width{% endif %}">
+      <div class="toc-title">Table of Contents</div>
+      <ul>
+      {%- for h1 in page.toc %}
+        <li>
+          <a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
+          {%- if h1.children %}
+            <ul>
+              {%- for h2 in h1.children %}
+                <li><a href="{{ h2.permalink | safe }}">{{ h2.title }}</a></li>
+              {%- endfor %}
+            </ul>
+          {%- endif %}
+        </li>
+      {%- endfor %}
+      </ul>
+    </div>
     {%- endif %}
     <div class="post-content{% if is_restricted %} restricted-width{% endif %}">
       {{ page.content | safe }}
@@ -61,7 +88,7 @@
       "name": "{{ config.title }}"
     },
     "datePublished": "{{ page.date }}",
-    "dateModified": "{{ page.date }}"
+    "dateModified": "{% if page.updated %}{{ page.updated }}{% else %}{{ page.date }}{% endif %}"
   }
   </script>
   {% endif %}
