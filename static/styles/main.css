@@ -967,13 +967,22 @@ article h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: color var(--transition-fast);
+}
+
+.toc-title:hover {
+    color: var(--color-link);
 }
 
 .toc-icon {
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, color var(--transition-fast);
     color: var(--color-text-muted);
     width: 22px;
     height: 22px;
+}
+
+.toc-title:hover .toc-icon {
+    color: var(--color-link);
 }
 
 .toc.is-open .toc-icon {
