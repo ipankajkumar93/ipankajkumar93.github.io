@@ -51,10 +51,12 @@
 
         if (window.__searchLoaded && window.__searchLoaded()) {
             initSearchIndex();
-            // Focus after the modal open transition ends so the element is fully visible
-            searchModal.querySelector('.search-modal-content').addEventListener(
-                'transitionend', () => searchInput.focus(), { once: true }
-            );
+            // Use double rAF to guarantee layout is flushed and element is visible
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    searchInput.focus();
+                });
+            });
         } else {
             searchResults.innerHTML = '<div class="search-empty-state">Indexing…</div>';
             searchInput.disabled = true;
