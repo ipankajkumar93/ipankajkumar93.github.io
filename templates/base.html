@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ get_url(path='icons/icon-180x180.png', trailing_slash=false, cachebust=true) | safe }}">
     <meta name="theme-color" content="#2870C2">
     <title>{%- block title %}{{ config.title }}{%- endblock %}</title>
-    <meta name="referrer" content="no-referrer-when-downgrade">
+
     {% include "og.html" %}
     {%- if config.generate_feeds %}
     {% block rss -%}
@@ -27,13 +27,13 @@
     <link rel="stylesheet" href="{{ get_url(path="styles/main.css", trailing_slash=false, cachebust=true) | safe }}">
     <script>
         (function () {
-            var stored = localStorage.getItem('theme');
-            var theme;
+            const stored = localStorage.getItem('theme');
+            let theme;
             if (stored === 'light' || stored === 'dark') {
                 theme = stored;
             } else {
                 try {
-                    var mq = window.matchMedia('(prefers-color-scheme: light)');
+                    const mq = window.matchMedia('(prefers-color-scheme: light)');
                     theme = mq.matches ? 'light' : 'dark';
                 } catch (e) {
                     theme = 'dark';
@@ -47,11 +47,11 @@
             }
         })();
     </script>
-    <script src="{{ get_url(path='js/feather.min.js', trailing_slash=false, cachebust=true) | safe }}"></script>
+    <script src="{{ get_url(path='js/feather.min.js', trailing_slash=false, cachebust=true) | safe }}" defer></script>
     <script>
         // Only load Umami analytics on production
         if (location.hostname === 'pankajkumar.xyz' || location.hostname === 'www.pankajkumar.xyz') {
-            var s = document.createElement('script');
+            const s = document.createElement('script');
             s.defer = true;
             s.src = 'https://um.pankajkumar.xyz/script.js';
             s.dataset.websiteId = 'ada632ca-2811-47a4-ab84-82c2edc0280f';
@@ -84,12 +84,12 @@
                 {%- endif %}
                 {%- endfor %}
                 {%- endif -%}
-                <button class="search-btn" aria-label="Search">
+                <button class="search-btn" aria-label="Search (Ctrl+K)">
                     <i data-feather="search"></i>
-                    <span class="search-btn-shortcut">Ctrl+K</span>
+                    <span class="search-btn-shortcut" aria-hidden="true">Ctrl+K</span>
                 </button>
             </div>
-            <button class="theme-toggle" title="Toggle Dark Mode">
+            <button class="theme-toggle" title="Toggle Dark Mode" aria-label="Switch to dark mode">
                 <i data-feather="moon"></i>
             </button>
         </nav>
@@ -103,13 +103,13 @@
                 <div class="search-input-wrapper">
                     <i data-feather="search" class="search-input-icon" aria-hidden="true"></i>
                     <h2 id="search-modal-title" class="sr-only">Site Search</h2>
-                    <input type="text" id="search-input" class="search-input" placeholder="Search posts, projects, etc." autocomplete="off" aria-label="Search query" />
+                    <input type="text" id="search-input" class="search-input" placeholder="Search posts, projects, travel…" autocomplete="off" aria-label="Search query" />
                 </div>
                 <button class="search-close" aria-label="Close search">
                     <i data-feather="x" aria-hidden="true"></i>
                 </button>
             </div>
-            <div id="search-results" class="search-results" aria-live="polite" aria-label="Search results">
+            <div id="search-results" class="search-results" aria-live="polite" aria-label="Search results" role="listbox">
                 <div class="search-empty-state">What are you looking for?</div>
             </div>
         </div>
@@ -151,19 +151,19 @@
     <script>
     // Lazy search loader — loads elasticlunr + search index without blocking page render
     (function() {
-        var searchScripts = [
+        const searchScripts = [
             "{{ get_url(path='elasticlunr.min.js', trailing_slash=false, cachebust=true) | safe }}",
             "{{ get_url(path='search_index.en.js', trailing_slash=false, cachebust=true) | safe }}"
         ];
-        var loaded = false;
-        var callbacks = [];
+        let loaded = false;
+        let callbacks = [];
 
         function loadSearchScripts(cb) {
             if (loaded) { if (cb) cb(); return; }
             if (callbacks.length > 0) { if (cb) callbacks.push(cb); return; } // already loading
             if (cb) callbacks.push(cb);
 
-            var remaining = searchScripts.length;
+            let remaining = searchScripts.length;
             function onLoad() {
                 remaining--;
                 if (remaining === 0) {
@@ -175,10 +175,10 @@
             // Load in order: elasticlunr first, then search index.
             // remaining starts at 2; onLoad() must be called twice (once per script)
             // to decrement 2→1→0 and trigger the callbacks.
-            var s1 = document.createElement('script');
+            const s1 = document.createElement('script');
             s1.src = searchScripts[0];
             s1.onload = function() {
-                var s2 = document.createElement('script');
+                const s2 = document.createElement('script');
                 s2.src = searchScripts[1];
                 s2.onload = onLoad;
                 document.body.appendChild(s2);
@@ -200,7 +200,7 @@
         }
 
         // Strategy 2: Preload on hover/focus of search button
-        var searchBtn = document.querySelector('.search-btn');
+        const searchBtn = document.querySelector('.search-btn');
         if (searchBtn) {
             searchBtn.addEventListener('mouseenter', function() { loadSearchScripts(); }, { once: true });
             searchBtn.addEventListener('focus', function() { loadSearchScripts(); }, { once: true });

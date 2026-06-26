@@ -11,6 +11,18 @@
     --font-body: 'Geist', system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
 
+    /* Modular Scale */
+    --step-0: 1rem;
+    --step-1: 1.25rem;
+    --step-2: 1.5625rem;
+    --step-3: 1.953rem;
+    --step-4: 2.441rem;
+    --step-5: 3.052rem;
+
+    --line-height-body: 1.7;
+    --line-height-heading: 1.2;
+    --line-height-code: 1.5;
+
     /* Light Mode Colors */
     --color-bg: #FAF9F7;
     --color-bg-elevated: #FFFFFF;
@@ -20,6 +32,16 @@
     --color-text-muted: #A8A29E;
     --color-border: #E7E5E4;
     --color-border-subtle: #F0EEEC;
+
+    /* Admonition Colors */
+    --color-note-bg: #EFF6FF;
+    --color-note-border: #3B82F6;
+    --color-warning-bg: #FEF2F2;
+    --color-warning-border: #EF4444;
+    --color-info-bg: #EBF3FF;
+    --color-info-border: #2870C2;
+    --color-tip-bg: #F0FDF4;
+    --color-tip-border: #22C55E;
 
     /* Accent — Cobalt Blue */
     --color-accent: #2870C2;
@@ -76,6 +98,15 @@
     --radius-md: 8px;
     --radius-lg: 12px;
     --radius-full: 9999px;
+
+    /* Z-Index Ladder */
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-backdrop: 300;
+    --z-modal: 400;
+    --z-toast: 500;
+    --z-noise: 9999;
+
     color-scheme: light;
 }
 
@@ -90,6 +121,15 @@
     --color-text-muted: #78716C;
     --color-border: #292524;
     --color-border-subtle: #1C1917;
+
+    --color-note-bg: #172554;
+    --color-note-border: #60A5FA;
+    --color-warning-bg: #450A0A;
+    --color-warning-border: #F87171;
+    --color-info-bg: #0A1E3D;
+    --color-info-border: #5A9FDE;
+    --color-tip-bg: #052E16;
+    --color-tip-border: #4ADE80;
 
     --color-accent: #5A9FDE;
     --color-accent-hover: #7AB8E8;
@@ -136,8 +176,8 @@ html {
 
 body {
     font-family: var(--font-body);
-    font-size: 1.0625rem;
-    line-height: 1.7;
+    font-size: var(--step-0);
+    line-height: var(--line-height-body);
     color: var(--color-text);
     background-color: var(--color-bg);
     margin: 0;
@@ -163,7 +203,7 @@ body::before {
     height: 100%;
     pointer-events: none;
     opacity: 0.02;
-    z-index: 9999;
+    z-index: var(--z-noise);
     /* will-change: transform promotes to compositor layer without wasting a layer for a static animation */
     will-change: transform;
     backface-visibility: hidden;
@@ -225,7 +265,7 @@ h4 {
     font-family: var(--font-display);
     font-weight: 400;
     color: var(--color-text);
-    line-height: 1.25;
+    line-height: var(--line-height-heading);
     margin-top: var(--space-2xl);
     margin-bottom: var(--space-md);
     letter-spacing: -0.02em;
@@ -234,7 +274,7 @@ h4 {
 h5,
 h6 {
     color: var(--color-text);
-    line-height: 1.25;
+    line-height: var(--line-height-heading);
     margin-top: var(--space-2xl);
     margin-bottom: var(--space-md);
     /* body-weight headings — use normal tracking, not display negative */
@@ -242,16 +282,16 @@ h6 {
 }
 
 h1 {
-    font-size: 2.75rem;
+    font-size: var(--step-4);
     margin-top: 0;
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: var(--step-3);
 }
 
 h3 {
-    font-size: 1.5rem;
+    font-size: var(--step-2);
 }
 
 .filter-heading {
@@ -259,12 +299,12 @@ h3 {
 }
 
 h4 {
-    font-size: 1.25rem;
+    font-size: var(--step-1);
 }
 
 h5,
 h6 {
-    font-size: 1.125rem;
+    font-size: var(--step-0);
     font-family: var(--font-body);
     font-weight: 600;
 }
@@ -464,7 +504,7 @@ nav {
 .search-modal {
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    z-index: var(--z-modal);
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -544,6 +584,12 @@ nav {
     color: var(--color-text);
     outline: none;
     padding: var(--space-xs) var(--space-sm);
+}
+
+.search-input:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
 }
 
 .search-input::placeholder {
@@ -809,9 +855,11 @@ article, .post-content {
 }
 
 article h1 {
-    font-size: 2.5rem;
+    font-size: var(--step-4);
     margin-bottom: var(--space-lg);
     text-align: center;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .meta {
@@ -842,7 +890,7 @@ article h1 {
 }
 
 .section-description {
-    font-size: 1.0625rem;
+    font-size: var(--step-0);
     color: var(--color-text-secondary);
     margin-bottom: 0;
 }
@@ -917,8 +965,8 @@ a.tag:hover {
 
 :root[data-theme="dark"] .tags>a:hover,
 :root[data-theme="dark"] a.tag:hover {
-    border-color: #7AB8E8;
-    color: #7AB8E8;
+    border-color: var(--color-accent-hover);
+    color: var(--color-accent-hover);
 }
 
 /* Section Tags (bottom of section pages) */
@@ -973,7 +1021,7 @@ pre code {
     display: block;
     padding: var(--space-lg) var(--space-xl);
     font-size: 0.875rem;
-    line-height: 1.7;
+    line-height: var(--line-height-code);
     white-space: pre;
     background: transparent;
     border: none;
@@ -1024,7 +1072,7 @@ pre .line-number {
     margin-top: var(--space-sm);
     margin-right: var(--space-sm);
     margin-bottom: var(--space-sm);
-    z-index: 10;
+    z-index: var(--z-dropdown);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1105,43 +1153,43 @@ blockquote p:last-child {
 }
 
 .admonition.note {
-    background-color: #EFF6FF;
-    border-color: #3B82F6;
+    background-color: var(--color-note-bg);
+    border-color: var(--color-note-border);
 }
 
 :root[data-theme="dark"] .admonition.note {
-    background-color: #172554;
-    border-color: #60A5FA;
+    background-color: var(--color-note-bg);
+    border-color: var(--color-note-border);
 }
 
 .admonition.warning {
-    background-color: #FEF2F2;
-    border-color: #EF4444;
+    background-color: var(--color-warning-bg);
+    border-color: var(--color-warning-border);
 }
 
 :root[data-theme="dark"] .admonition.warning {
-    background-color: #450A0A;
-    border-color: #F87171;
+    background-color: var(--color-warning-bg);
+    border-color: var(--color-warning-border);
 }
 
 .admonition.info {
-    background-color: #EBF3FF;
-    border-color: #2870C2;
+    background-color: var(--color-info-bg);
+    border-color: var(--color-info-border);
 }
 
 :root[data-theme="dark"] .admonition.info {
-    background-color: #0A1E3D;
-    border-color: #5A9FDE;
+    background-color: var(--color-info-bg);
+    border-color: var(--color-info-border);
 }
 
 .admonition.tip {
-    background-color: #F0FDF4;
-    border-color: #22C55E;
+    background-color: var(--color-tip-bg);
+    border-color: var(--color-tip-border);
 }
 
 :root[data-theme="dark"] .admonition.tip {
-    background-color: #052E16;
-    border-color: #4ADE80;
+    background-color: var(--color-tip-bg);
+    border-color: var(--color-tip-border);
 }
 
 /* --------------------------------------------------------------------------
@@ -1255,7 +1303,7 @@ figcaption {
 .lightbox-modal {
     display: none;
     position: fixed;
-    z-index: 9999;
+    z-index: var(--z-modal);
     top: 0;
     left: 0;
     width: 100%;
@@ -1286,12 +1334,15 @@ figcaption {
     position: absolute;
     top: var(--space-lg);
     right: var(--space-xl);
-    color: #FAFAF9;
+    color: var(--color-text);
     font-size: 2rem;
     font-weight: 300;
     cursor: pointer;
     transition: opacity var(--transition-fast);
     opacity: 0.7;
+    background: none;
+    border: none;
+    padding: 0;
 }
 
 .lightbox-close:hover {
@@ -1385,7 +1436,7 @@ figcaption {
     background-color: var(--color-accent-brand);
     padding: 3px 12px;
     border-radius: var(--radius-full);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-sm);
 }
 
 .project-header {
@@ -1495,9 +1546,10 @@ textarea {
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-input:focus,
-textarea:focus {
-    outline: none;
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
     border-color: var(--color-accent);
     box-shadow: 0 0 0 3px var(--color-accent-subtle);
 }
@@ -1518,6 +1570,7 @@ footer {
     border-top: 1px solid var(--color-border-subtle);
     color: var(--color-text-muted);
     font-size: 0.875rem;
+    font-weight: 500;
 }
 
 .footer-inner {
@@ -1715,7 +1768,7 @@ main {
     position: fixed;
     bottom: var(--space-xl);
     right: var(--space-xl);
-    z-index: 100;
+    z-index: var(--z-sticky);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1793,13 +1846,9 @@ main {
         font-size: 15px;
     }
 
-    h1 {
-        font-size: 2.25rem;
-    }
+    h1 { font-size: calc(var(--step-4) * 0.9); }
 
-    h2 {
-        font-size: 1.75rem;
-    }
+    h2 { font-size: calc(var(--step-3) * 0.9); }
 
     header {
         display: flex;
@@ -1869,14 +1918,10 @@ main {
         background: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
-        z-index: 900;
+        z-index: var(--z-backdrop);
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-
-    :root[data-theme="dark"] .mobile-menu-backdrop {
-        background: rgba(0, 0, 0, 0.7);
     }
 
     :root[data-theme="dark"] .mobile-menu-backdrop {
@@ -1896,7 +1941,7 @@ main {
         width: 280px;
         max-width: 80vw;
         background: var(--color-bg);
-        z-index: 1000;
+        z-index: var(--z-modal);
         flex-direction: column;
         align-items: flex-start;
         padding: var(--space-xl) var(--space-lg);
@@ -1969,10 +2014,6 @@ main {
         gap: var(--space-xs);
     }
 
-    .proj .links {
-        position: static;
-        margin-top: var(--space-md);
-    }
 
     .projects-grid {
         grid-template-columns: 1fr;
@@ -1989,19 +2030,16 @@ main {
 }
 
 @media screen and (max-width: 480px) {
-    h1 {
-        font-size: 1.875rem;
-    }
+    h1 { font-size: var(--step-3); }
 
+    article h1 { font-size: var(--step-2); }
 
     .theme-toggle {
         width: 36px;
         height: 36px;
     }
 
-    article h1 {
-        font-size: 1.75rem;
-    }
+    article h1 { font-size: var(--step-1); }
 }
 
 /* --------------------------------------------------------------------------
@@ -2258,6 +2296,6 @@ table.in-wrapper {
 
     pre,
     code {
-        border: 1px solid #ccc;
+        border: 1px solid var(--color-border);
     }
 }

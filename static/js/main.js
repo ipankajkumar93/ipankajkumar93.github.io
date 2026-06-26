@@ -15,16 +15,18 @@ if (themeToggle) {
     if (activeTheme === 'dark') {
         themeToggle.innerHTML = '<i data-feather="sun"></i>';
     }
+    // Sync aria-pressed to the actual theme on load (not hardcoded in HTML)
+    themeToggle.setAttribute('aria-pressed', activeTheme === 'dark' ? 'true' : 'false');
 
     themeToggle.addEventListener('click', function () {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         const theme = isDark ? 'light' : 'dark';
 
-        // Opt-in transition only during toggle
         document.body.classList.add('theme-transition');
         themeToggle.innerHTML = isDark
             ? '<i data-feather="moon"></i>'
             : '<i data-feather="sun"></i>';
+        themeToggle.setAttribute('aria-pressed', isDark ? 'false' : 'true');
 
         replaceFeather();
         document.documentElement.setAttribute('data-theme', theme);
@@ -44,7 +46,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // ── Lightbox ────────────────────────────────────────────────────────────
     const lightboxModal = document.createElement('div');
     lightboxModal.className = 'lightbox-modal';
-    lightboxModal.innerHTML = '<span class="lightbox-close">&times;</span><img src="" alt="">';
+    lightboxModal.setAttribute('role', 'dialog');
+    lightboxModal.innerHTML = '<button class="lightbox-close" aria-label="Close lightbox">&times;</button><img src="" alt="">';
     document.body.appendChild(lightboxModal);
 
     const lightboxImg = lightboxModal.querySelector('img');
@@ -139,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const button = document.createElement('button');
         button.className = 'copy-code-btn';
-        button.setAttribute('aria-label', 'Copy to clipboard');
+        button.setAttribute('aria-label', 'Copy code');
         button.setAttribute('title', 'Copy to clipboard');
         button.innerHTML = '<i data-feather="copy"></i>';
 
@@ -147,7 +150,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const code = block.querySelector('code');
             if (!code) return;
 
-            navigator.clipboard.writeText(code.textContent.trimEnd()).then(() => {
+            const textToCopy = code.textContent.trimEnd();
+
+            const showSuccess = () => {
                 button.innerHTML = '<i data-feather="check"></i>';
                 button.classList.add('copied');
                 replaceFeather();
@@ -157,9 +162,28 @@ document.addEventListener('DOMContentLoaded', function () {
                     button.classList.remove('copied');
                     replaceFeather();
                 }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(showSuccess).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                textArea.style.position = "fixed";
+                textArea.style.opacity = "0";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showSuccess();
+                } catch (err) {
+                    console.error('Fallback copy failed', err);
+                }
+                document.body.removeChild(textArea);
+            }
         });
 
         block.appendChild(button);

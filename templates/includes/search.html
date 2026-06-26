@@ -169,9 +169,9 @@
             html += '<div class="search-group">';
             html += '<h3 class="search-group-title">' + sanitize(cat) + ' <span class="search-group-count">(' + grouped[cat].length + ')</span></h3>';
             grouped[cat].forEach(item => {
-                var isExternal = item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'));
-                var targetAttr = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
-                html += '<a href="' + sanitize(item.url) + '"' + targetAttr + ' class="search-result-item">';
+                const isExternal = item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'));
+                const targetAttr = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+                html += '<a href="' + sanitize(item.url) + '"' + targetAttr + ' class="search-result-item" role="option">';
                 html += '<span class="search-result-title">' + sanitize(item.title) + '</span>';
                 if (item.description) {
                     html += '<span class="search-result-desc">' + sanitize(item.description).substring(0, 120) + '</span>';
@@ -191,7 +191,7 @@
 
     searchInput.addEventListener('input', function () {
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => performSearch(this.value.trim()), 200);
+        debounceTimer = setTimeout(() => performSearch(this.value.trim()), 250);
     });
 
     // Keyboard shortcuts
@@ -205,34 +205,61 @@
                 openSearch();
             }
         }
-        // Escape to close
+        // Escape to clear or close
         if (e.key === 'Escape' && searchModal.classList.contains('active')) {
-            closeSearch();
+            e.preventDefault();
+            if (searchInput.value) {
+                searchInput.value = '';
+                performSearch('');
+                searchInput.focus();
+            } else {
+                closeSearch();
+            }
         }
     });
 
-    // Focus trap: keep Tab/Shift+Tab inside the modal while it is open
+    // Arrow navigation and Focus trap
     searchModal.addEventListener('keydown', function (e) {
-        if (!searchModal.classList.contains('active') || e.key !== 'Tab') return;
+        if (!searchModal.classList.contains('active')) return;
 
-        const focusable = Array.from(
-            searchModal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')
-        ).filter(el => !el.closest('[aria-hidden="true"]'));
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            const results = Array.from(searchResults.querySelectorAll('.search-result-item'));
+            if (results.length === 0) return;
+            
+            e.preventDefault();
+            const active = document.activeElement;
+            const currentIndex = results.indexOf(active);
+            let nextIndex = 0;
 
-        if (focusable.length === 0) return;
-
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-
-        if (e.shiftKey) {
-            if (document.activeElement === first) {
-                e.preventDefault();
-                last.focus();
+            if (e.key === 'ArrowDown') {
+                nextIndex = currentIndex < results.length - 1 ? currentIndex + 1 : 0;
+            } else {
+                nextIndex = currentIndex > 0 ? currentIndex - 1 : results.length - 1;
             }
-        } else {
-            if (document.activeElement === last) {
-                e.preventDefault();
-                first.focus();
+            results[nextIndex].focus();
+            return;
+        }
+
+        if (e.key === 'Tab') {
+            const focusable = Array.from(
+                searchModal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')
+            ).filter(el => !el.closest('[aria-hidden="true"]'));
+
+            if (focusable.length === 0) return;
+
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === first || document.activeElement === searchModal) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
             }
         }
     });

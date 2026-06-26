@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}{{ term.name }} · {{ taxonomy.name | replace(from="_tags", to="") | title }} | {{ super() }}{% endblock %}
+
 {% block main %}
     {%- if taxonomy %}
       {% if taxonomy.name == "rtd_tags" %}
@@ -9,7 +11,7 @@
       {% else %}
         {% set back_url = get_url(path="@/posts/_index.md") %}
       {% endif %}
-      <h3 class="filter-heading">Filtering for "{{ term.name }}"</h3>
+      <h1 class="filter-heading">Filtering for "{{ term.name }}"</h1>
       <small>
         <a href="{{ back_url }}">Remove filter</a>
       </small>
