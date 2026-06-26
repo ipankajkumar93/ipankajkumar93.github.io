@@ -15,6 +15,8 @@ if (themeToggle) {
     if (activeTheme === 'dark') {
         themeToggle.innerHTML = '<i data-feather="sun"></i>';
     }
+    // Sync aria-pressed to the actual theme on load (not hardcoded in HTML)
+    themeToggle.setAttribute('aria-pressed', activeTheme === 'dark' ? 'true' : 'false');
 
     themeToggle.addEventListener('click', function () {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -140,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const button = document.createElement('button');
         button.className = 'copy-code-btn';
-        button.setAttribute('aria-label', 'Copy to clipboard');
+        button.setAttribute('aria-label', 'Copy code');
         button.setAttribute('title', 'Copy to clipboard');
         button.innerHTML = '<i data-feather="copy"></i>';
 

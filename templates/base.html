@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ get_url(path='icons/icon-180x180.png', trailing_slash=false, cachebust=true) | safe }}">
     <meta name="theme-color" content="#2870C2">
     <title>{%- block title %}{{ config.title }}{%- endblock %}</title>
-    <meta name="referrer" content="no-referrer-when-downgrade">
+
     {% include "og.html" %}
     {%- if config.generate_feeds %}
     {% block rss -%}
@@ -47,7 +47,7 @@
             }
         })();
     </script>
-    <script src="{{ get_url(path='js/feather.min.js', trailing_slash=false, cachebust=true) | safe }}"></script>
+    <script src="{{ get_url(path='js/feather.min.js', trailing_slash=false, cachebust=true) | safe }}" defer></script>
     <script>
         // Only load Umami analytics on production
         if (location.hostname === 'pankajkumar.xyz' || location.hostname === 'www.pankajkumar.xyz') {
@@ -84,12 +84,12 @@
                 {%- endif %}
                 {%- endfor %}
                 {%- endif -%}
-                <button class="search-btn" aria-label="Search">
+                <button class="search-btn" aria-label="Search (Ctrl+K)">
                     <i data-feather="search"></i>
-                    <span class="search-btn-shortcut">Ctrl+K</span>
+                    <span class="search-btn-shortcut" aria-hidden="true">Ctrl+K</span>
                 </button>
             </div>
-            <button class="theme-toggle" title="Toggle Dark Mode" aria-label="Switch to dark mode" aria-pressed="false">
+            <button class="theme-toggle" title="Toggle Dark Mode" aria-label="Switch to dark mode">
                 <i data-feather="moon"></i>
             </button>
         </nav>
@@ -103,7 +103,7 @@
                 <div class="search-input-wrapper">
                     <i data-feather="search" class="search-input-icon" aria-hidden="true"></i>
                     <h2 id="search-modal-title" class="sr-only">Site Search</h2>
-                    <input type="text" id="search-input" class="search-input" placeholder="Search posts, projects, etc." autocomplete="off" aria-label="Search query" />
+                    <input type="text" id="search-input" class="search-input" placeholder="Search posts, projects, travel…" autocomplete="off" aria-label="Search query" />
                 </div>
                 <button class="search-close" aria-label="Close search">
                     <i data-feather="x" aria-hidden="true"></i>

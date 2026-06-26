@@ -18,7 +18,9 @@
     </div>
     {%- endif %}
     {%- if not page.extra.menu %}
+      {%- if page.title %}
       <h1>{{ page.title }}</h1>
+      {%- endif %}
       <div class="meta">
         {%- if page.date %}
         <div class="post-date">
