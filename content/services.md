@@ -6,4 +6,4 @@ template = "page-header.html"
 
 | Service URL | Name | GitHub |
 | --- | --- | --- |
-| [sample.service.name](https://pankajkumar.xyz/) | Sample Service |[repoName](https://github.com/ipankajkumar93/repoName) |
+| [service.name](https://pankajkumar.xyz/) | Sample Service |[repoName](https://github.com/ipankajkumar93/repoName) |
