@@ -974,7 +974,6 @@ article h1 {
     color: var(--color-text-muted);
     width: 24px;
     height: 24px;
-    fill: currentColor;
 }
 
 .toc.is-open .toc-icon {
