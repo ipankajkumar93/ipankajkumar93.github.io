@@ -794,7 +794,7 @@ ul.blog-posts li:has(+ li:hover) {
     background-color: var(--color-border);
 }
 
-ul.blog-posts li span {
+ul.blog-posts li span:not(.draft-tag) {
     flex: 0 0 110px;
     font-size: 0.875rem;
     color: var(--color-text-muted);
