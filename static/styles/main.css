@@ -803,6 +803,14 @@ main > h2 + p {
     color: var(--color-text-secondary);
 }
 
+.featured-subtitle {
+    margin-left: var(--space-xl);
+}
+
+.featured-posts-list {
+    padding-left: var(--space-xl);
+}
+
 .home-image {
     flex-shrink: 0;
     width: 140px;
@@ -812,7 +820,7 @@ main > h2 + p {
 .img-rounded {
     width: 100%;
     border-radius: var(--radius-full);
-    border: 3px solid var(--color-border);
+    border: 2px solid var(--color-border);
     box-shadow: var(--shadow-md);
     transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
