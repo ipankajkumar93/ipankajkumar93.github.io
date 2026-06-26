@@ -46,21 +46,30 @@
 
     {%- if page.extra.toc and page.toc %}
     <div class="toc{% if is_restricted %} restricted-width{% endif %}">
-      <div class="toc-title">Table of Contents</div>
-      <ul>
-      {%- for h1 in page.toc %}
-        <li>
-          <a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
-          {%- if h1.children %}
-            <ul>
-              {%- for h2 in h1.children %}
-                <li><a href="{{ h2.permalink | safe }}">{{ h2.title }}</a></li>
-              {%- endfor %}
-            </ul>
-          {%- endif %}
-        </li>
-      {%- endfor %}
-      </ul>
+      <div class="toc-title" onclick="this.parentElement.classList.toggle('is-open')">
+        <span>Table of Contents</span>
+        <svg class="toc-icon" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </div>
+      <div class="toc-content">
+        <div class="toc-inner">
+          <ul>
+          {%- for h1 in page.toc %}
+            <li>
+              <a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
+              {%- if h1.children %}
+                <ul>
+                  {%- for h2 in h1.children %}
+                    <li><a href="{{ h2.permalink | safe }}">{{ h2.title }}</a></li>
+                  {%- endfor %}
+                </ul>
+              {%- endif %}
+            </li>
+          {%- endfor %}
+          </ul>
+        </div>
+      </div>
     </div>
     {%- endif %}
     <div class="post-content{% if is_restricted %} restricted-width{% endif %}">

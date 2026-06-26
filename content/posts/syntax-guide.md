@@ -12,9 +12,9 @@ in_search_index = true
 post_tags = ["post", "sample", "markdown"]
 
 [extra]
-toc = false # Generates Table of Contents for the page if true
+toc = true # Generates Table of Contents for the page if true
 featured = true
-# og_preview_img = "/images/sample-image.jpeg"    #Uncomment this to add your own OG preview image or let the pythong script generate one for you for OG images.
+# og_preview_img = "/images/sample-image.jpeg"    #Uncomment this to add your own OG preview image or let the python script generate one for you for OG images.
 +++
 
 This post serves as a reference guide to showcase all the various syntax and formatting options available when writing content for this blog.
