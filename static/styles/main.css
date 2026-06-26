@@ -959,9 +959,9 @@ article h1 {
 .toc-title {
     padding: var(--space-sm) var(--space-lg);
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 450;
     font-size: var(--step-0);
-    color: var(--color-text);
+    color: var(--color-text-secondary);
     cursor: pointer;
     user-select: none;
     display: flex;
@@ -972,8 +972,8 @@ article h1 {
 .toc-icon {
     transition: transform 0.3s ease;
     color: var(--color-text-muted);
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
 }
 
 .toc.is-open .toc-icon {
