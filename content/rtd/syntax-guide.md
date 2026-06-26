@@ -7,7 +7,7 @@ description = "A comprehensive sample post demonstrating every unique type of ma
 in_search_index = true
 
 [taxonomies]
-rtd_tags = ["RTD", "docs", "notes"]
+rtd_tags = ["rtd", "markdown", "notes"]
 
 [extra]
 featured = false

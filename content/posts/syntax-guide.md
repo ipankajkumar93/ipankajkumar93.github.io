@@ -9,7 +9,7 @@ description = "A comprehensive sample post demonstrating every unique type of ma
 in_search_index = true
 
 [taxonomies]
-post_tags = ["Post", "sample", "markdown"]
+post_tags = ["post", "sample", "markdown"]
 
 [extra]
 toc = false # Generates Table of Contents for the page if true

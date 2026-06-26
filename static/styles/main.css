@@ -12,6 +12,7 @@
     --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
 
     /* Modular Scale */
+    --step--1: 0.85rem;
     --step-0: 1rem;
     --step-1: 1.25rem;
     --step-2: 1.5625rem;
@@ -296,6 +297,21 @@ h3 {
 
 .filter-heading {
     margin-bottom: 0;
+}
+
+.also-found-header {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+    font-size: var(--step--1);
+    color: var(--color-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cross-tax-heading {
+    margin-top: 0;
+    font-size: var(--step-1);
 }
 
 h4 {

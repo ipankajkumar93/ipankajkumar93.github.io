@@ -3,11 +3,11 @@
 {% block main %}
   {{ section.content | safe }}
 
-  {% set posts_section = get_section(path="posts/_index.md") %}
-  {% set rtd_section = get_section(path="rtd/_index.md") %}
-  {% set travel_section = get_section(path="travel/_index.md") %}
-  
-  {% set all_pages = posts_section.pages | concat(with=rtd_section.pages) | concat(with=travel_section.pages) %}
+  {% set all_pages = [] %}
+  {% for section_name in config.extra.featured_sections %}
+    {% set section_obj = get_section(path=section_name ~ "/_index.md") %}
+    {% set_global all_pages = all_pages | concat(with=section_obj.pages) %}
+  {% endfor %}
   
   {% set has_featured = false %}
   {% for page in all_pages %}

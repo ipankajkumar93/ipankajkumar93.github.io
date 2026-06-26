@@ -7,7 +7,7 @@ description = "A comprehensive sample post demonstrating every unique type of ma
 in_search_index = true
 
 [taxonomies]
-travel_tags = ["travel", "world", "explore"]
+travel_tags = ["travel", "markdown", "explore"]
 
 [extra]
 featured = false

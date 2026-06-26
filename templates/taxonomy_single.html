@@ -34,4 +34,44 @@
         </li>
       {% endfor %}
     </ul>
+
+    {%- set current_tax_name = taxonomy.name %}
+    {%- set current_term = term.name %}
+    {%- set_global rendered_also_found = false %}
+    
+    {%- for tax in config.taxonomies %}
+      {%- if tax.name != current_tax_name %}
+        {%- set other_taxonomy = get_taxonomy(kind=tax.name, fail_on_missing=false) %}
+        {%- if other_taxonomy %}
+          {%- set_global found_term = false %}
+          {%- for t in other_taxonomy.items %}
+            {%- if t.name == current_term %}
+              {%- set_global found_term = t %}
+            {%- endif %}
+          {%- endfor %}
+          
+          {%- if found_term %}
+            {%- if not rendered_also_found %}
+              <div class="also-found-header">Also found in</div>
+              {%- set_global rendered_also_found = true %}
+            {%- endif %}
+            <h3 class="filter-heading cross-tax-heading">{{ tax.name | replace(from="_tags", to="") | title }}</h3>
+            <ul class="blog-posts">
+              {%- for page in found_term.pages %}
+                <li>
+                  <span>
+                    <i>
+                      <time datetime='{{ page.date | date(format='%+') }}'>
+                        {{ page.date | date(format=config.extra.date_format) }}
+                      </time>
+                    </i>
+                  </span>
+                  <a href="{{ page.permalink }}">{{ page.title }}</a>
+                </li>
+              {%- endfor %}
+            </ul>
+          {%- endif %}
+        {%- endif %}
+      {%- endif %}
+    {%- endfor %}
 {% endblock %}

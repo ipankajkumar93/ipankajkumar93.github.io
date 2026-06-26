@@ -34,7 +34,9 @@ enabled = true
 light_theme = "github-light-default"
 dark_theme = "github-dark-default"
 
+
 [extra]
+featured_sections = ["posts", "rtd", "travel"]
 date_format="%d %b, %Y"
 favicon = "/favicon.svg"
 email = "ipankaj.singh10+website@gmail.com"
