@@ -16,7 +16,7 @@
       <div class="filter-header">
         <h1 class="filter-heading">Filtering for "<span class="text-accent">{{ term.name }}</span>"</h1>
         <a href="{{ back_url }}" class="filter-clear" aria-label="Clear filter">
-          Clear <i data-feather="x" style="width: 14px; height: 14px;"></i>
+          Clear <i data-feather="x"></i>
         </a>
       </div>
     {%- endif %}
@@ -30,7 +30,7 @@
               </time>
             </i>
           </span>
-          <a href="{{ page.permalink }}">{{ page.title }}</a>
+          <a href="{{ page.permalink }}">{{ page.title }}</a>{% if page.draft %}<span class="draft-tag">DRAFT</span>{% endif %}
         </li>
       {% else %}
         <li>
@@ -80,7 +80,7 @@
                       </time>
                     </i>
                   </span>
-                  <a href="{{ page.permalink }}">{{ page.title }}</a>
+                  <a href="{{ page.permalink }}">{{ page.title }}</a>{% if page.draft %}<span class="draft-tag">DRAFT</span>{% endif %}
                 </li>
               {%- endfor %}
             </ul>

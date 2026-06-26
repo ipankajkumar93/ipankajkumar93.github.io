@@ -324,6 +324,11 @@ h3 {
     transition: all var(--transition-fast);
 }
 
+.filter-clear svg {
+    width: 14px;
+    height: 14px;
+}
+
 .filter-clear:hover {
     color: var(--color-accent);
     background-color: var(--color-accent-subtle);
