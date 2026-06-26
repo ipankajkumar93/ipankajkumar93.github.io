@@ -10,6 +10,7 @@ in_search_index = true
 post_tags = ["Post", "sample", "markdown"]
 
 [extra]
+featured = true
 # og_preview_img = "/images/sample-image.jpeg"    #Uncomment this to add your own OG preview image or let the pythong script generate one for you for OG images.
 +++
 

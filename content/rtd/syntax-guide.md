@@ -1,6 +1,6 @@
 +++
 title = "Markdown Syntax & Shortcodes Guide"
-date = 2026-06-13
+date = 2026-06-11
 type = "rtd" # Other types are also possible like "rtd", "travel", etc.
 slug = "rtd-syntax-guide" # Overrides the URL path for this page (e.g. /posts/syntax-guide/)
 description = "A comprehensive sample post demonstrating every unique type of markdown syntax, HTML element, and Zola shortcode supported on this website."
@@ -10,6 +10,7 @@ in_search_index = true
 rtd_tags = ["RTD", "docs", "notes"]
 
 [extra]
+featured = false
 # og_preview_img = "/images/sample-image.jpeg"    #Uncomment this to add your own OG preview image or let the pythong script generate one for you for OG images.
 +++
 
