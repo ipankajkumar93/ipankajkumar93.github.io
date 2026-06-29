@@ -471,6 +471,7 @@ nav {
 
 .nav-items a {
     font-size: 0.9375rem;
+    font-weight: 500;
     color: var(--color-text-secondary);
     padding: var(--space-xs) var(--space-sm);
     border: 1px solid transparent;
