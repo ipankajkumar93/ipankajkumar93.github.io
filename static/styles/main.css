@@ -1703,20 +1703,14 @@ figcaption {
     align-items: center;
 }
 
-.project-stars::before {
-    content: "★";
+.project-stars svg,
+.project-stars i,
+.project-forks svg,
+.project-forks i {
+    width: 13px;
+    height: 13px;
     color: var(--color-accent);
-    font-weight: 900;
-    transform: scale(1.05);
-    display: inline-block;
-}
-
-.project-forks::before {
-    content: "⑂";
-    color: var(--color-accent);
-    font-weight: 900;
-    transform: scale(1.15);
-    display: inline-block;
+    stroke-width: 3;
 }
 
 .project-desc {
