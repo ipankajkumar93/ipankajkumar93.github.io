@@ -475,7 +475,7 @@ nav {
     padding: var(--space-xs) var(--space-sm);
     border: 1px solid transparent;
     border-radius: var(--radius-sm);
-    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+    transition: all var(--transition-fast);
     text-decoration: none;
 }
 
@@ -483,6 +483,7 @@ nav {
     color: var(--color-accent-hover);
     background-color: var(--color-border);
     border-color: var(--color-accent);
+    transform: translateY(-1.5px);
 }
 
 :root[data-theme="dark"] .nav-items a:hover {
@@ -511,7 +512,7 @@ nav {
     border-color: var(--color-accent);
     color: var(--color-text);
     background-color: var(--color-accent-subtle);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 .search-btn i,
@@ -563,7 +564,7 @@ nav {
     border-color: var(--color-accent);
     color: var(--color-text);
     background-color: var(--color-accent-subtle);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 .theme-toggle i,
@@ -684,9 +685,10 @@ nav {
 }
 
 .search-close:hover {
-    background: var(--color-bg-elevated);
+    background-color: var(--color-accent-subtle);
     color: var(--color-text);
     border-color: var(--color-accent);
+    transform: translateY(-1.5px);
 }
 
 .search-close svg {
@@ -1160,7 +1162,7 @@ a.tag:hover {
     background-color: var(--color-accent-subtle);
     border-color: var(--color-accent);
     color: var(--color-text);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 :root[data-theme="dark"] .tags>a:hover,
@@ -1844,7 +1846,7 @@ footer {
     color: var(--color-text);
     background-color: var(--color-accent-subtle);
     border-color: var(--color-accent);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 .social-icon svg,
@@ -2021,7 +2023,7 @@ main {
     border-color: var(--color-accent);
     color: var(--color-text);
     background-color: var(--color-accent-subtle);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 .back-to-top svg {
@@ -2106,6 +2108,7 @@ main {
         border-color: var(--color-accent);
         color: var(--color-text);
         background-color: var(--color-accent-subtle);
+        transform: translateY(-1.5px);
     }
 
     .mobile-close-btn {
@@ -2130,6 +2133,7 @@ main {
         border-color: var(--color-accent);
         color: var(--color-text);
         background-color: var(--color-accent-subtle);
+        transform: translateY(-1.5px);
     }
 
     .mobile-menu-backdrop {
@@ -2368,7 +2372,7 @@ main {
     color: var(--color-text);
     background-color: var(--color-accent-subtle);
     box-shadow: var(--shadow-sm);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 .pagination-btn.disabled,
