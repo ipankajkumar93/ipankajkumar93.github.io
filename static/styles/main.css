@@ -1842,7 +1842,7 @@ footer {
 
 .social-icon:hover {
     color: var(--color-text);
-    background-color: var(--color-bg-subtle);
+    background-color: var(--color-accent-subtle);
     border-color: var(--color-accent);
     transform: translateY(-1px);
 }
