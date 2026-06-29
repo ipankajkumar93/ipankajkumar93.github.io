@@ -92,7 +92,10 @@
                     {%- set_global is_active = true %}
                 {%- endif %}
 
-                <a href="{{ resolved_url | safe }}" {% if is_active %}class="active"{% endif %}>{{ item.name | safe }}</a>
+                <a href="{{ resolved_url | safe }}" {% if is_active %}class="active"{% endif %}>
+                    {% if item.icon %}<i data-feather="{{ item.icon }}"></i>{% endif %}
+                    {{ item.name | safe }}
+                </a>
                 {%- endfor %}
                 {%- endif -%}
                 <button class="search-btn" aria-label="Search (Ctrl+K)">

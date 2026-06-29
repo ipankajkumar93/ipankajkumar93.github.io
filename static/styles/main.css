@@ -471,6 +471,9 @@ nav {
 }
 
 .nav-items a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 0.9375rem;
     font-weight: 500;
     color: var(--color-text-secondary);
@@ -479,6 +482,11 @@ nav {
     border-radius: var(--radius-sm);
     transition: all var(--transition-fast);
     text-decoration: none;
+}
+
+.nav-items a svg {
+    width: 14px;
+    height: 14px;
 }
 
 .nav-items a:hover {
