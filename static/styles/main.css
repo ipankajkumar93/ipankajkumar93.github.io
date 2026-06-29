@@ -345,7 +345,7 @@ h3 {
 }
 
 .filter-clear:hover {
-    color: var(--color-accent);
+    color: var(--color-text);
     background-color: var(--color-accent-subtle);
     border-color: var(--color-accent);
     text-decoration: none;
@@ -1159,14 +1159,13 @@ a.tag {
 a.tag:hover {
     background-color: var(--color-accent-subtle);
     border-color: var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-text);
     transform: translateY(-1px);
 }
 
 :root[data-theme="dark"] .tags>a:hover,
 :root[data-theme="dark"] a.tag:hover {
     border-color: var(--color-accent-hover);
-    color: var(--color-accent-hover);
 }
 
 /* Section Tags (bottom of section pages) */
@@ -2105,7 +2104,7 @@ main {
     
     .mobile-menu-btn:hover {
         border-color: var(--color-accent);
-        color: var(--color-accent);
+        color: var(--color-text);
         background-color: var(--color-accent-subtle);
     }
 
@@ -2129,7 +2128,7 @@ main {
     .mobile-close-btn:hover,
     .mobile-close-btn:active {
         border-color: var(--color-accent);
-        color: var(--color-accent);
+        color: var(--color-text);
         background-color: var(--color-accent-subtle);
     }
 
