@@ -158,8 +158,8 @@ Admonitions are custom Zola shortcodes used to highlight important information, 
 This is a standard note admonition. Use it to provide supplementary context or tips.
 {% end %}
 
-{% admonition(kind="Info") %}
-This is an info admonition. Use it to highlight critical information that the reader must not miss!
+{% admonition(kind="Important") %}
+This is an important admonition. Use it to highlight critical information that the reader must not miss!
 {% end %}
 
 ---

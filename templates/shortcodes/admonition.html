@@ -1,4 +1,18 @@
-<blockquote class="admonition {{ kind | lower }}">
-    <strong class="admonition-header">{{ kind | upper }}</strong>
-    <p>{{ body | markdown | safe }}</p>
+{% set k = kind | lower %}
+<blockquote class="admonition {{ k }}">
+    <p class="admonition-header">
+        {% if k == "note" %}
+            <i data-feather="info"></i>
+        {% elif k == "tip" %}
+            <i data-feather="zap"></i>
+        {% elif k == "important" %}
+            <i data-feather="alert-circle"></i>
+        {% elif k == "warning" %}
+            <i data-feather="alert-triangle"></i>
+        {% elif k == "caution" %}
+            <i data-feather="x-octagon"></i>
+        {% endif %}
+        {{ kind | title }}
+    </p>
+    {{ body | markdown | safe }}
 </blockquote>
