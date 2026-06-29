@@ -2311,7 +2311,7 @@ main {
     font-weight: 600;
     font-family: var(--font-mono);
     letter-spacing: 0.05em;
-    color: var(--color-accent);
+    color: var(--color-text);
     background-color: var(--color-tag-bg);
     border: 1px dashed var(--color-accent);
     border-radius: var(--radius-sm);
