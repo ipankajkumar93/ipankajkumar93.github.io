@@ -34,15 +34,22 @@
     --color-border: #E7E5E4;
     --color-border-subtle: #F0EEEC;
 
-    /* Admonition Colors */
-    --color-note-bg: #EFF6FF;
-    --color-note-border: #3B82F6;
-    --color-warning-bg: #FEF2F2;
-    --color-warning-border: #EF4444;
-    --color-info-bg: #EBF3FF;
-    --color-info-border: #2870C2;
-    --color-tip-bg: #F0FDF4;
-    --color-tip-border: #22C55E;
+    /* Admonition Colors — GitHub Alerts */
+    --color-note-border: #0969da;
+    --color-note-bg: #cceaff;
+    --color-note-text: #0550ae;
+    --color-tip-border: #1a7f37;
+    --color-tip-bg: #c4f5d6;
+    --color-tip-text: #116329;
+    --color-important-border: #8250df;
+    --color-important-bg: #dedeff;
+    --color-important-text: #6e40c9;
+    --color-warning-border: #9a6700;
+    --color-warning-bg: #fced9f;
+    --color-warning-text: #7d4e00;
+    --color-caution-border: #cf222e;
+    --color-caution-bg: #fad6d4;
+    --color-caution-text: #a40e26;
 
     /* Accent — Cobalt Blue */
     --color-accent: #2870C2;
@@ -123,14 +130,21 @@
     --color-border: #292524;
     --color-border-subtle: #1C1917;
 
-    --color-note-bg: #172554;
-    --color-note-border: #60A5FA;
-    --color-warning-bg: #450A0A;
-    --color-warning-border: #F87171;
-    --color-info-bg: #0A1E3D;
-    --color-info-border: #5A9FDE;
-    --color-tip-bg: #052E16;
-    --color-tip-border: #4ADE80;
+    --color-note-border: #1f6feb;
+    --color-note-bg: #0d2d47;
+    --color-note-text: #79c0ff;
+    --color-tip-border: #238636;
+    --color-tip-bg: #0a2e18;
+    --color-tip-text: #56d364;
+    --color-important-border: #8957e5;
+    --color-important-bg: #21143d;
+    --color-important-text: #d2a8ff;
+    --color-warning-border: #9e6a03;
+    --color-warning-bg: #2f2300;
+    --color-warning-text: #e3b341;
+    --color-caution-border: #da3633;
+    --color-caution-bg: #2d0b0b;
+    --color-caution-text: #ff7b72;
 
     --color-accent: #5A9FDE;
     --color-accent-hover: #7AB8E8;
@@ -1318,64 +1332,86 @@ blockquote p:last-child {
 }
 
 /* --------------------------------------------------------------------------
-   Admonitions
+   Admonitions — GitHub-style Alerts
    -------------------------------------------------------------------------- */
 .admonition {
     margin: var(--space-xl) 0;
-    padding: var(--space-lg);
+    padding: var(--space-md) var(--space-lg);
     border-radius: var(--radius-md);
-    border-left: 4px solid var(--color-border);
-    background-color: var(--color-bg-subtle);
+    border-left: 3px solid var(--color-border);
+    background-color: transparent;
+    font-style: normal;
 }
 
 .admonition .admonition-header {
     display: flex;
     align-items: center;
+    gap: 0.5em;
     font-weight: 600;
     font-size: 0.9375rem;
-    margin-bottom: var(--space-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
+    margin-bottom: var(--space-xs);
+    text-transform: none;
+    letter-spacing: normal;
 }
 
+.admonition .admonition-header svg {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+}
+
+.admonition p:last-child {
+    margin-bottom: 0;
+}
+
+/* Note — Blue */
 .admonition.note {
     background-color: var(--color-note-bg);
     border-color: var(--color-note-border);
 }
 
-:root[data-theme="dark"] .admonition.note {
-    background-color: var(--color-note-bg);
-    border-color: var(--color-note-border);
+.admonition.note .admonition-header {
+    color: var(--color-note-text);
 }
 
-.admonition.warning {
-    background-color: var(--color-warning-bg);
-    border-color: var(--color-warning-border);
-}
-
-:root[data-theme="dark"] .admonition.warning {
-    background-color: var(--color-warning-bg);
-    border-color: var(--color-warning-border);
-}
-
-.admonition.info {
-    background-color: var(--color-info-bg);
-    border-color: var(--color-info-border);
-}
-
-:root[data-theme="dark"] .admonition.info {
-    background-color: var(--color-info-bg);
-    border-color: var(--color-info-border);
-}
-
+/* Tip — Green */
 .admonition.tip {
     background-color: var(--color-tip-bg);
     border-color: var(--color-tip-border);
 }
 
-:root[data-theme="dark"] .admonition.tip {
-    background-color: var(--color-tip-bg);
-    border-color: var(--color-tip-border);
+.admonition.tip .admonition-header {
+    color: var(--color-tip-text);
+}
+
+/* Important — Purple */
+.admonition.important {
+    background-color: var(--color-important-bg);
+    border-color: var(--color-important-border);
+}
+
+.admonition.important .admonition-header {
+    color: var(--color-important-text);
+}
+
+/* Warning — Amber */
+.admonition.warning {
+    background-color: var(--color-warning-bg);
+    border-color: var(--color-warning-border);
+}
+
+.admonition.warning .admonition-header {
+    color: var(--color-warning-text);
+}
+
+/* Caution — Red */
+.admonition.caution {
+    background-color: var(--color-caution-bg);
+    border-color: var(--color-caution-border);
+}
+
+.admonition.caution .admonition-header {
+    color: var(--color-caution-text);
 }
 
 /* --------------------------------------------------------------------------
