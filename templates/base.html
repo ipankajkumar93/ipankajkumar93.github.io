@@ -76,13 +76,23 @@
                 </button>
                 {%- if config.extra.main_menu %}
                 {%- for item in config.extra.main_menu %}
+                
                 {%- if item.url == "/" %}
-                <a href="{{ config.base_url | safe }}">{{ item.name | safe }}</a>
+                    {%- set resolved_url = config.base_url %}
                 {%- elif item.url is matching("https?://") %}
-                <a href="{{ item.url | safe }}">{{ item.name | safe }}</a>
+                    {%- set resolved_url = item.url %}
                 {%- else %}
-                <a href="{{ get_url(path=item.url ) | safe }}">{{ item.name | safe }}</a>
+                    {%- set resolved_url = get_url(path=item.url) %}
                 {%- endif %}
+
+                {%- set_global is_active = false %}
+                {%- if current_url and item.url == "/" and current_url == resolved_url %}
+                    {%- set_global is_active = true %}
+                {%- elif current_url and item.url != "/" and current_url is starting_with(resolved_url) %}
+                    {%- set_global is_active = true %}
+                {%- endif %}
+
+                <a href="{{ resolved_url | safe }}" {% if is_active %}class="active"{% endif %}>{{ item.name | safe }}</a>
                 {%- endfor %}
                 {%- endif -%}
                 <button class="search-btn" aria-label="Search (Ctrl+K)">

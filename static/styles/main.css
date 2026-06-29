@@ -480,15 +480,14 @@ nav {
 }
 
 .nav-items a:hover {
-    color: var(--color-accent-hover);
-    background-color: var(--color-border);
+    color: var(--color-text);
+    background-color: var(--color-accent-subtle);
     border-color: var(--color-accent);
     transform: translateY(-1.5px);
 }
 
-:root[data-theme="dark"] .nav-items a:hover {
-    color: var(--color-link);
-    background-color: var(--color-bg-subtle);
+.nav-items a.active {
+    color: var(--color-text);
 }
 
 /* Search Button */
