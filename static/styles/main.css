@@ -509,7 +509,7 @@ nav {
 
 .search-btn:hover {
     border-color: var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-text);
     background-color: var(--color-accent-subtle);
     transform: translateY(-1px);
 }
@@ -561,7 +561,7 @@ nav {
 
 .theme-toggle:hover {
     border-color: var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-text);
     background-color: var(--color-accent-subtle);
     transform: translateY(-1px);
 }
@@ -2020,7 +2020,7 @@ main {
 
 .back-to-top:hover {
     border-color: var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-text);
     background-color: var(--color-accent-subtle);
     transform: translateY(-1px);
 }
@@ -2487,6 +2487,12 @@ main:has(.page-404-content) {
     height: 16px;
     vertical-align: middle;
     margin-right: 4px;
+    transition: color var(--transition-fast);
+}
+
+.page-404-content a:hover i,
+.page-404-content a:hover svg {
+    color: var(--color-text);
 }
 
 /* --------------------------------------------------------------------------
