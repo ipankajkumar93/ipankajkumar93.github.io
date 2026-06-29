@@ -96,6 +96,10 @@
     --content-width: 860px;
     --header-height: 80px;
 
+    /* Icons */
+    --icon-stroke-normal: 2;
+    --icon-stroke-bold: 3;
+
     /* Transitions */
     --transition-fast: 150ms ease;
     --transition-base: 250ms ease;
@@ -1710,7 +1714,7 @@ figcaption {
     width: 13px;
     height: 13px;
     color: var(--color-accent);
-    stroke-width: 3;
+    stroke-width: var(--icon-stroke-bold);
 }
 
 .project-desc {
