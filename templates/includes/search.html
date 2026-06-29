@@ -24,6 +24,21 @@
 
     let searchIndex = null;
     let debounceTimer = null;
+    let typeInterval = null;
+    const fullPlaceHolder = "Search posts, projects, travel…";
+
+    function typePlaceHolder() {
+        searchInput.setAttribute('placeholder', '');
+        let i = 0;
+        clearInterval(typeInterval);
+        typeInterval = setInterval(() => {
+            searchInput.setAttribute('placeholder', fullPlaceHolder.substring(0, i + 1));
+            i++;
+            if (i >= fullPlaceHolder.length) {
+                clearInterval(typeInterval);
+            }
+        }, 45);
+    }
 
     // Escape all 5 HTML special characters to prevent XSS
     function sanitize(str) {
@@ -48,6 +63,8 @@
         searchInput.value = '';
         searchModal.classList.add('active');
         document.body.style.overflow = 'hidden';
+        
+        typePlaceHolder();
 
         if (window.__searchLoaded && window.__searchLoaded()) {
             initSearchIndex();
