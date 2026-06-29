@@ -1,18 +1,18 @@
-{% set k = kind | lower %}
-<blockquote class="admonition {{ k }}">
+{% set type = kind | lower %}
+<aside class="admonition {{ type }}" {% if type == "warning" or type == "caution" %}role="alert"{% else %}role="note"{% endif %}>
     <p class="admonition-header">
-        {% if k == "note" %}
+        {% if type == "note" %}
             <i data-feather="info"></i>
-        {% elif k == "tip" %}
+        {% elif type == "tip" %}
             <i data-feather="zap"></i>
-        {% elif k == "important" %}
+        {% elif type == "important" %}
             <i data-feather="alert-circle"></i>
-        {% elif k == "warning" %}
+        {% elif type == "warning" %}
             <i data-feather="alert-triangle"></i>
-        {% elif k == "caution" %}
+        {% elif type == "caution" %}
             <i data-feather="x-octagon"></i>
         {% endif %}
         {{ kind | title }}
     </p>
     {{ body | markdown | safe }}
-</blockquote>
+</aside>
