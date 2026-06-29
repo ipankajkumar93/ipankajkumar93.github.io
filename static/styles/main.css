@@ -687,7 +687,7 @@ nav {
 }
 
 .search-empty-state {
-    padding: var(--space-xl) var(--space-md);
+    padding: var(--space-md);
     text-align: center;
     color: var(--color-text-muted);
     font-size: 0.9375rem;
@@ -728,8 +728,10 @@ nav {
     cursor: pointer;
 }
 
-.search-result-item:hover {
+.search-result-item:hover,
+.search-result-item:focus {
     background-color: var(--color-border);
+    outline: none;
 }
 
 /* Note: dark-mode hover resolves to the same token — no override needed */
@@ -740,7 +742,8 @@ nav {
     color: var(--color-text);
 }
 
-.search-result-item:hover .search-result-title {
+.search-result-item:hover .search-result-title,
+.search-result-item:focus .search-result-title {
     color: var(--color-link);
 }
 
