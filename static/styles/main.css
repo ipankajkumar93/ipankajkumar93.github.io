@@ -330,7 +330,7 @@ h3 {
     gap: 0.25rem;
     font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--color-text-muted);
+    color: var(--color-text-secondary);
     background-color: var(--color-bg-elevated);
     border: 1px solid var(--color-accent-muted);
     padding: 0.25rem 0.75rem;
@@ -345,10 +345,11 @@ h3 {
 }
 
 .filter-clear:hover {
-    color: var(--color-accent);
+    color: var(--color-text);
     background-color: var(--color-accent-subtle);
     border-color: var(--color-accent);
     text-decoration: none;
+    transform: translateY(-1.5px);
 }
 
 .text-accent {
@@ -470,24 +471,33 @@ nav {
 }
 
 .nav-items a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 0.9375rem;
+    font-weight: 500;
     color: var(--color-text-secondary);
     padding: var(--space-xs) var(--space-sm);
     border: 1px solid transparent;
     border-radius: var(--radius-sm);
-    transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+    transition: all var(--transition-fast);
     text-decoration: none;
 }
 
-.nav-items a:hover {
-    color: var(--color-accent-hover);
-    background-color: var(--color-border);
-    border-color: var(--color-accent);
+.nav-items a svg {
+    width: 14px;
+    height: 14px;
 }
 
-:root[data-theme="dark"] .nav-items a:hover {
-    color: var(--color-link);
-    background-color: var(--color-bg-subtle);
+.nav-items a:hover {
+    color: var(--color-text);
+    background-color: var(--color-accent-subtle);
+    border-color: var(--color-accent);
+    transform: translateY(-1.5px);
+}
+
+.nav-items a.active {
+    color: var(--color-text);
 }
 
 /* Search Button */
@@ -511,7 +521,7 @@ nav {
     border-color: var(--color-accent);
     color: var(--color-text);
     background-color: var(--color-accent-subtle);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 .search-btn i,
@@ -563,7 +573,7 @@ nav {
     border-color: var(--color-accent);
     color: var(--color-text);
     background-color: var(--color-accent-subtle);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 .theme-toggle i,
@@ -684,9 +694,10 @@ nav {
 }
 
 .search-close:hover {
-    background: var(--color-bg-elevated);
+    background-color: var(--color-accent-subtle);
     color: var(--color-text);
     border-color: var(--color-accent);
+    transform: translateY(-1.5px);
 }
 
 .search-close svg {
@@ -1159,14 +1170,13 @@ a.tag {
 a.tag:hover {
     background-color: var(--color-accent-subtle);
     border-color: var(--color-accent);
-    color: var(--color-accent);
-    transform: translateY(-1px);
+    color: var(--color-text);
+    transform: translateY(-1.5px);
 }
 
 :root[data-theme="dark"] .tags>a:hover,
 :root[data-theme="dark"] a.tag:hover {
     border-color: var(--color-accent-hover);
-    color: var(--color-accent-hover);
 }
 
 /* Section Tags (bottom of section pages) */
@@ -1843,9 +1853,9 @@ footer {
 
 .social-icon:hover {
     color: var(--color-text);
-    background-color: var(--color-bg-subtle);
+    background-color: var(--color-accent-subtle);
     border-color: var(--color-accent);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 .social-icon svg,
@@ -2022,7 +2032,7 @@ main {
     border-color: var(--color-accent);
     color: var(--color-text);
     background-color: var(--color-accent-subtle);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 .back-to-top svg {
@@ -2105,8 +2115,9 @@ main {
     
     .mobile-menu-btn:hover {
         border-color: var(--color-accent);
-        color: var(--color-accent);
+        color: var(--color-text);
         background-color: var(--color-accent-subtle);
+        transform: translateY(-1.5px);
     }
 
     .mobile-close-btn {
@@ -2129,8 +2140,9 @@ main {
     .mobile-close-btn:hover,
     .mobile-close-btn:active {
         border-color: var(--color-accent);
-        color: var(--color-accent);
+        color: var(--color-text);
         background-color: var(--color-accent-subtle);
+        transform: translateY(-1.5px);
     }
 
     .mobile-menu-backdrop {
@@ -2308,7 +2320,7 @@ main {
     font-weight: 600;
     font-family: var(--font-mono);
     letter-spacing: 0.05em;
-    color: var(--color-accent);
+    color: var(--color-text);
     background-color: var(--color-tag-bg);
     border: 1px dashed var(--color-accent);
     border-radius: var(--radius-sm);
@@ -2352,7 +2364,7 @@ main {
     background-color: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    color: var(--color-text);
+    color: var(--color-accent);
     text-decoration: none;
     font-weight: 500;
     font-size: 0.9375rem;
@@ -2364,11 +2376,12 @@ main {
 }
 
 .pagination-btn:hover:not(.disabled),
-.pagination-number:hover:not(.active) {
+.pagination-number:hover:not(.disabled) {
     border-color: var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-text);
+    background-color: var(--color-accent-subtle);
     box-shadow: var(--shadow-sm);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
 }
 
 .pagination-btn.disabled,
@@ -2399,7 +2412,8 @@ main {
 
 .pagination-number.active {
     border-color: var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-text);
+    background-color: var(--color-accent-subtle);
     font-weight: 700;
     cursor: default;
 }
