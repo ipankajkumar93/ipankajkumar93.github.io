@@ -12,6 +12,7 @@ echo ">>> Generating OG images..."
 uv run scripts/generate_og_images.py
 
 echo ">>> Synchronizing OG images to public directory..."
+mkdir -p public/images/og
 cp -a static/images/og/* public/images/og/ || true
 
 echo ">>> Done."
