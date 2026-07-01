@@ -1,15 +1,12 @@
 {
-  "static/images/og/home.png": "aa5c787321ec7da5",
-  "static/images/og/contact.png": "1716b191234e7e56",
-  "static/images/og/services.png": "3d4d57d8ac84475d",
-  "static/images/og/sitemap.png": "188783cbebbe98f1",
-  "static/images/og/posts.png": "7a3a549292fe9fcb",
-  "static/images/og/projects.png": "744c4ac0b68a474b",
-  "static/images/og/rtd.png": "6b88303c8366f754",
-  "static/images/og/travel.png": "abce97fa1741b492",
-  "static/images/og/rtd/rtd-syntax-guide.png": "f64149ad78378601",
-  "static/images/og/travel/travel-syntax-guide.png": "5f7be01cbc0d6c9c",
-  "static/images/og/topics.png": "7f4062474be3f86a",
-  "static/images/og/posts/highly-available-pi-hole-dns-cluster-with-keepalived.png": "0488700add33ef9b",
-  "static/images/og/posts/post-syntax-guide.png": "be9648b222bac670"
+  "static/images/og/home.png": "601df5d39dbcbc9a",
+  "static/images/og/contact.png": "62750ec7be0d8407",
+  "static/images/og/services.png": "8e9462264f8aa46d",
+  "static/images/og/sitemap.png": "854f5a331a7a1505",
+  "static/images/og/topics.png": "cc571029e36784c8",
+  "static/images/og/posts.png": "33b40fc6c13c1b2d",
+  "static/images/og/projects.png": "ab407c22636345fe",
+  "static/images/og/rtd.png": "4af5b2ee715c325a",
+  "static/images/og/travel.png": "b53424362bd1ee6d",
+  "static/images/og/posts/highly-available-pi-hole-dns-cluster-with-keepalived.png": "6f1336ffdbc91d5f"
 }

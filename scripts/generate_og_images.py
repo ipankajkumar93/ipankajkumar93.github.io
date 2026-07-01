@@ -20,7 +20,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-CACHE_VERSION = 1
+CACHE_VERSION = 4
 
 # Configuration
 CONFIG = {
@@ -447,6 +447,13 @@ class OGImageGenerator:
         # Save
         output_path.parent.mkdir(parents=True, exist_ok=True)
         img.convert("RGB").save(output_path, "PNG", optimize=True)
+
+        # Also copy to public folder if it exists so deployments get the latest image immediately
+        public_dir = self.project_root / "public"
+        if public_dir.exists():
+            public_output = public_dir / "images" / "og" / output_path.relative_to(self.output_dir)
+            public_output.parent.mkdir(parents=True, exist_ok=True)
+            img.convert("RGB").save(public_output, "PNG", optimize=True)
 
     def process_posts(self) -> tuple[int, int, int]:
         """Process all posts and generate missing OG images."""
