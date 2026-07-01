@@ -12,6 +12,7 @@ Visit at [pankajkumar.xyz](https://pankajkumar.xyz)
 - I have enhanced it further to meet my needs with some added functionality
     - Global Search modal
     - Back to Top button
+    - Topics page for global tags
     - Navigation menu mobile responsive.
     - AJAX Pagination
     - Other UI changes for better user experience
