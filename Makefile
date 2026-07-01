@@ -16,8 +16,9 @@ og-images:
 	@uv run scripts/generate_og_images.py
 
 # Build the site using zola
-build: og-images
+build:
 	$(ZOLA) build
+	$(MAKE) og-images
 
 # Update project metadata from GitHub (Currently disabled)
 # projects:

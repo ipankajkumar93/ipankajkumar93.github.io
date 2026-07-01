@@ -20,6 +20,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
+CACHE_VERSION = 1
+
 # Configuration
 CONFIG = {
     "author": "Pankaj Kumar",
@@ -38,8 +40,6 @@ CONFIG = {
     "author_color": (228, 228, 231), # Zinc 200
     "domain_color": (161, 161, 170), # Zinc 400
 }
-
-CACHE_VERSION = 1
 
 
 class OGImageGenerator:
@@ -486,12 +486,6 @@ class OGImageGenerator:
                 # tomllib parses bare TOML dates as datetime.date objects
                 date_str = date_val.isoformat() if hasattr(date_val, 'isoformat') else str(date_val)
                 
-                # Extract body for read time
-                match = re.match(r"^\+\+\+\s*\n(.*?)\n\+\+\+", content, re.DOTALL)
-                body = content[match.end():] if match else content
-                word_count = len(re.findall(r'\w+', body))
-                read_time = max(1, round(word_count / 200))
-                
                 # Zola uses the slug from frontmatter if it exists, otherwise it defaults to the filename
                 slug = fm.get("slug")
                 if not slug:
@@ -499,6 +493,29 @@ class OGImageGenerator:
                 
                 # Get the relative path from the content directory to preserve subfolders
                 rel_path = md_file.relative_to(self.project_root / "content")
+                
+                # Try to extract the exact reading time from Zola's generated HTML
+                read_time = 0
+                public_html = self.project_root / "public" / rel_path.parent / slug / "index.html"
+                if public_html.exists():
+                    try:
+                        html_content = public_html.read_text(errors='ignore')
+                        match = re.search(r'<div class="reading-time">\s*<i>(\d+)\s+minute', html_content)
+                        if match:
+                            read_time = int(match.group(1))
+                    except Exception:
+                        pass
+                
+                # Fallback to an approximation if the HTML hasn't been generated yet
+                if not read_time:
+                    match = re.match(r"^\+\+\+\s*\n(.*?)\n\+\+\+", content, re.DOTALL)
+                    body = content[match.end():] if match else content
+                    body_clean = re.sub(r'```.*?```', '', body, flags=re.DOTALL)
+                    body_clean = re.sub(r'{%.*?%}', '', body_clean, flags=re.DOTALL)
+                    body_clean = re.sub(r'<[^>]+>', '', body_clean)
+                    word_count = len(re.findall(r'\w+', body_clean))
+                    read_time = max(1, int(word_count / 200) + (1 if word_count % 200 > 0 else 0))
+                
                 output_path = self.output_dir / rel_path.parent / f"{slug}.png"
 
                 # Check cache
