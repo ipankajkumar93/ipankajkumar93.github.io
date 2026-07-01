@@ -914,7 +914,7 @@ ul.blog-posts li:has(+ li:hover) {
     align-items: center;
     justify-content: center;
     padding: 0.6rem 0.8rem;
-    background-color: var(--color-bg);
+    background-color: var(--color-bg-subtle);
     border: 1px solid var(--color-border);
     border-radius: 6px;
     color: var(--color-text-secondary);
@@ -926,7 +926,8 @@ ul.blog-posts li:has(+ li:hover) {
 
 .topic-pill:hover {
     border-color: var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-text);
+    background-color: var(--color-accent-subtle);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px var(--color-shadow);
 }
