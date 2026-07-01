@@ -978,16 +978,6 @@ article, .post-content {
         margin-left: auto;
         margin-right: auto;
     }
-
-    .table-responsive-wrapper,
-    pre {
-        position: relative;
-        min-width: 100%;
-        width: max-content;
-        max-width: min(var(--max-width), calc(100vw - 4rem));
-        left: 50%;
-        transform: translateX(-50%);
-    }
 }
 
 /* Base rule (all screen sizes) — critical for mobile horizontal scroll */
