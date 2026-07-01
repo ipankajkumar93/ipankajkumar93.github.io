@@ -1,6 +1,7 @@
 // ── Helpers ────────────────────────────────────────────────────────────────
 function replaceFeather() {
     if (typeof feather !== 'undefined') feather.replace();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 // ── Theme Toggle ────────────────────────────────────────────────────────────

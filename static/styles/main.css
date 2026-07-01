@@ -1714,7 +1714,7 @@ figcaption {
     width: 13px;
     height: 13px;
     color: var(--color-accent);
-    stroke-width: var(--icon-stroke-bold);
+    stroke-width: var(--icon-stroke-normal);
 }
 
 .project-desc {

@@ -48,6 +48,7 @@
         })();
     </script>
     <script src="{{ get_url(path='js/feather.min.js', trailing_slash=false, cachebust=true) | safe }}" defer></script>
+    <script src="{{ get_url(path='js/lucide.min.js', trailing_slash=false, cachebust=true) | safe }}" defer></script>
     <script>
         // Only load Umami analytics on production
         if (location.hostname === 'pankajkumar.xyz' || location.hostname === 'www.pankajkumar.xyz') {
@@ -93,7 +94,13 @@
                 {%- endif %}
 
                 <a href="{{ resolved_url | safe }}" {% if is_active %}class="active"{% endif %}>
-                    {% if item.icon %}<i data-feather="{{ item.icon }}"></i>{% endif %}
+                    {% if item.icon %}
+                        {% if item.icon_pack is defined and item.icon_pack == "lucide" %}
+                            <i data-lucide="{{ item.icon }}"></i>
+                        {% else %}
+                            <i data-feather="{{ item.icon }}"></i>
+                        {% endif %}
+                    {% endif %}
                     {{ item.name | safe }}
                 </a>
                 {%- endfor %}
