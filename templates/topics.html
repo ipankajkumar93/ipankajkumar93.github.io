@@ -1,15 +1,8 @@
-{% extends "base.html" %}
+{% extends "page-header.html" %}
 
 {% block title %}{{ page.title }} | {{ super() }}{% endblock %}
 
-{% block main %}
-  <div class="page-header" style="text-align: center;">
-      <h1 class="page-title">{{ page.title }}</h1>
-      {% if page.description %}
-      <p class="page-description">{{ page.description }}</p>
-      {% endif %}
-  </div>
-
+{% block page_content %}
   {% set_global tag_links = [] %}
   {% set_global seen_tags = [] %}
 
@@ -34,4 +27,4 @@
       </a>
     {% endfor %}
   </div>
-{% endblock %}
+{% endblock page_content %}

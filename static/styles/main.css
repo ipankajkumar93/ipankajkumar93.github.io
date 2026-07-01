@@ -2612,12 +2612,12 @@ table.in-wrapper {
     position: relative;
     display: flex;
     align-items: center;
-    background: var(--color-bg-elevated);
+    background: var(--color-bg-subtle);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     padding: var(--space-md);
     text-decoration: none;
-    color: var(--color-text);
+    color: var(--color-text-secondary);
     transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     min-height: 4rem;
 }
@@ -2626,6 +2626,8 @@ table.in-wrapper {
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
     border-color: var(--color-accent);
+    background-color: var(--color-accent-subtle);
+    color: var(--color-text);
 }
 
 .sitemap-item-title {
@@ -2636,11 +2638,11 @@ table.in-wrapper {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    color: var(--color-text);
+    color: var(--color-text-secondary);
 }
 
 .sitemap-item-card:hover .sitemap-item-title {
-    color: var(--color-accent);
+    color: var(--color-text);
 }
 
 .sitemap-item-badge {

@@ -1,13 +1,8 @@
-{% extends "base.html" %}
+{% extends "page-header.html" %}
 
 {% block title %}Sitemap - {{ config.title }}{% endblock %}
 
-{% block main %}
-<div class="page-header sitemap-header">
-    <h1 class="page-title">Sitemap</h1>
-    <p class="page-subtitle">Index of all pages, posts and articles published by {{ config.title }}</p>
-</div>
-
+{% block page_content %}
 <div class="sitemap-items-grid">
     {% set root = get_section(path="_index.md") %}
 
@@ -112,4 +107,4 @@
         {% endfor %}
     {% endfor %}
 </div>
-{% endblock %}
+{% endblock page_content %}
