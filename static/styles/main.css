@@ -1,7 +1,3 @@
-/* ==========================================================================
-   Soft Terminal — A clean, modern aesthetic for pankajkumar.xyz
-   ========================================================================== */
-
 /* --------------------------------------------------------------------------
    CSS Custom Properties
    -------------------------------------------------------------------------- */
@@ -2636,6 +2632,7 @@ table.in-wrapper {
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     color: var(--color-text-secondary);
