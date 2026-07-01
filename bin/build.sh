@@ -11,4 +11,7 @@ zola build
 echo ">>> Generating OG images..."
 uv run scripts/generate_og_images.py
 
+echo ">>> Synchronizing OG images to public directory..."
+cp -a static/images/og/* public/images/og/ || true
+
 echo ">>> Done."
