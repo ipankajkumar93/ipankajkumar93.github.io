@@ -899,6 +899,38 @@ ul.blog-posts li:has(+ li:hover) {
     border-bottom-color: transparent;
 }
 
+/* --------------------------------------------------------------------------
+   Topics UI
+   -------------------------------------------------------------------------- */
+.topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.8rem;
+    margin-top: 3rem;
+}
+
+.topic-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 0.8rem;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    transition: all var(--transition-base);
+}
+
+.topic-pill:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--color-shadow);
+}
+
 :root[data-theme="dark"] ul.blog-posts li:hover {
     background-color: var(--color-border);
 }

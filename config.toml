@@ -58,6 +58,11 @@ url = "@/posts/_index.md"
 icon = "file-text"
 
 [[extra.main_menu]]
+name = "Topics"
+url = "@/topics.md"
+icon = "hash"
+
+[[extra.main_menu]]
 name = "Projects"
 url = "@/projects/_index.md"
 icon = "code"
