@@ -20,7 +20,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-CACHE_VERSION = 4
+CACHE_VERSION = 1
 
 # Configuration
 CONFIG = {
@@ -448,12 +448,6 @@ class OGImageGenerator:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         img.convert("RGB").save(output_path, "PNG", optimize=True)
 
-        # Also copy to public folder if it exists so deployments get the latest image immediately
-        public_dir = self.project_root / "public"
-        if public_dir.exists():
-            public_output = public_dir / "images" / "og" / output_path.relative_to(self.output_dir)
-            public_output.parent.mkdir(parents=True, exist_ok=True)
-            img.convert("RGB").save(public_output, "PNG", optimize=True)
 
     def process_posts(self) -> tuple[int, int, int]:
         """Process all posts and generate missing OG images."""
@@ -520,7 +514,8 @@ class OGImageGenerator:
                     body_clean = re.sub(r'```.*?```', '', body, flags=re.DOTALL)
                     body_clean = re.sub(r'{%.*?%}', '', body_clean, flags=re.DOTALL)
                     body_clean = re.sub(r'<[^>]+>', '', body_clean)
-                    word_count = len(re.findall(r'\w+', body_clean))
+                    # Zola's unicode-segmentation treats IPs and numbers differently. Counting alphabetical sequences gets us within 1% of Zola's logic.
+                    word_count = len(re.findall(r'[a-zA-Z]+', body_clean))
                     read_time = max(1, int(word_count / 200) + (1 if word_count % 200 > 0 else 0))
                 
                 output_path = self.output_dir / rel_path.parent / f"{slug}.png"
