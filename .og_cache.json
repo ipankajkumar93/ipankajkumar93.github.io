@@ -1,13 +1,14 @@
 {
-  "static/images/og/home.png": "14d793ac710730c0",
-  "static/images/og/contact.png": "1ab678f13dd8feb2",
-  "static/images/og/services.png": "05b97957db016462",
-  "static/images/og/talks.png": "011fc0bf12d0af7f",
-  "static/images/og/posts.png": "a5294ade4228e729",
-  "static/images/og/projects.png": "6de35e92fc4b3f33",
-  "static/images/og/rtd.png": "7779240c550326db",
-  "static/images/og/travel.png": "1e615eee3f941029",
-  "static/images/og/posts/post-syntax-guide.png": "380205d9ac7376dc",
-  "static/images/og/rtd/rtd-syntax-guide.png": "78445076b1f3945b",
-  "static/images/og/travel/travel-syntax-guide.png": "b69f42785639fe02"
+  "static/images/og/home.png": "64289746c4e92872",
+  "static/images/og/contact.png": "e52eeca2bbcf8fe2",
+  "static/images/og/services.png": "6442b62c53d35a15",
+  "static/images/og/sitemap.png": "ab61dd0adb2b1692",
+  "static/images/og/posts.png": "0d346df135bdd99f",
+  "static/images/og/projects.png": "0aed7ea6bb3c766e",
+  "static/images/og/rtd.png": "62886a0713a56961",
+  "static/images/og/travel.png": "8ee3300b475ccc1d",
+  "static/images/og/posts/post-syntax-guide.png": "12a0bbe586a3ff8e",
+  "static/images/og/rtd/rtd-syntax-guide.png": "f64149ad78378601",
+  "static/images/og/travel/travel-syntax-guide.png": "5f7be01cbc0d6c9c",
+  "static/images/og/topics.png": "c83333fca53fb7d1"
 }

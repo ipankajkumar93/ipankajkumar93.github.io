@@ -6,11 +6,13 @@
 <div class="section-header">
   <h1>{{ page.title }}</h1>
   {% if page.description %}
-  <p class="section-description">{{ page.description | markdown(inline=true) | safe }}</p>
+  <p class="section-description">{{ page.description | replace(from="{{ config.title }}", to=config.title) | markdown(inline=true) | safe }}</p>
   {% endif %}
 </div>
 
 <div class="post-content">
+  {% block page_content %}
   {{ page.content | safe }}
+  {% endblock page_content %}
 </div>
 {% endblock %}

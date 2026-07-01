@@ -96,7 +96,7 @@ class OGImageGenerator:
                     
         except Exception as e:
             print(f"Warning: Could not load site config: {e}")
-            self.cat_map = {"posts": "Post", "rtd": "RTD", "travel": "Travel"}
+            self.cat_map = {}
 
     def _get_footer_items(self) -> str:
         """Get menu items from already-loaded site config, excluding Home and Contact, in lowercase."""
@@ -107,7 +107,7 @@ class OGImageGenerator:
             return "   •   ".join(items)
         except Exception as e:
             print(f"Warning: Could not parse footer items: {e}")
-            return "posts   •   projects   •   services   •   talks   •   rtd   •   travel"
+            return ""
 
     def _load_fonts(self):
         """Load fonts with fallbacks."""
@@ -473,7 +473,7 @@ class OGImageGenerator:
                     continue
 
                 # Skip if custom og_preview_img is set
-                if fm.get("og_preview_img"):
+                if fm.get("og_preview_img") or fm.get("draft"):
                     skipped_custom += 1
                     continue
 
@@ -566,7 +566,7 @@ class OGImageGenerator:
 
             content = md_file.read_text()
             fm = self._parse_frontmatter(content)
-            if not fm:
+            if not fm or fm.get("draft"):
                 continue
 
             title = fm.get("title", cat_name.capitalize())
