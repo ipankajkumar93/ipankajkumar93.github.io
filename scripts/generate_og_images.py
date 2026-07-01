@@ -473,7 +473,7 @@ class OGImageGenerator:
                     continue
 
                 # Skip if custom og_preview_img is set
-                if fm.get("og_preview_img"):
+                if fm.get("og_preview_img") or fm.get("draft"):
                     skipped_custom += 1
                     continue
 
@@ -566,7 +566,7 @@ class OGImageGenerator:
 
             content = md_file.read_text()
             fm = self._parse_frontmatter(content)
-            if not fm:
+            if not fm or fm.get("draft"):
                 continue
 
             title = fm.get("title", cat_name.capitalize())

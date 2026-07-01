@@ -68,10 +68,10 @@ name = "Services"
 url = "@/services.md"
 icon = "server"
 
-[[extra.main_menu]]
-name = "Talks"
-url = "@/talks.md"
-icon = "mic"
+# [[extra.main_menu]]
+# name = "Talks"
+# url = "@/talks.md"
+# icon = "mic"
 
 [[extra.main_menu]]
 name = "RTD"
