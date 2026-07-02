@@ -9,7 +9,7 @@ description = "A highly available Pi-hole DNS setup using keepalived and VRRP - 
 in_search_index = true
 
 [taxonomies]
-post_tags = ["post", "pi-hole", "keepalived", "dns", "high-availability", "vrrp", "raspberry-pi", "home-lab"]
+post_tags = ["post", "pi-hole", "keepalived", "dns", "raspberry-pi", "home-lab"]
 
 [extra]
 toc = true # Generates Table of Contents for the page if true
@@ -95,11 +95,14 @@ The dedicated `keepalived_script` user is used to run health-check scripts with 
 
 Each node runs **two VRRP instances** - one where it's the preferred master, and one where it's a pure backup. This is what creates the active-active effect: both VIPs are "live" somewhere on the network at all times, and each node is actively serving one of them.
 
+{% admonition(kind="important") %}
+**Change the `auth_pass` value** on both configs mentioned below to a unique shared secret before deploying. You can generate one with `openssl rand -base64 6`.
+{% end %}
 ### Node 1
 
 `/etc/keepalived/keepalived.conf`
 
-```conf
+```bash
 global_defs {
     router_id DNS1
     enable_script_security
@@ -180,7 +183,7 @@ vrrp_instance DNS_VIP2 {
 
 Node 2's config is a mirror image: it's the preferred owner of VIP2 and the backup for VIP1.
 
-```conf
+```bash
 global_defs {
     router_id DNS2
     enable_script_security
@@ -260,10 +263,6 @@ vrrp_instance DNS_VIP2 {
 - **`nopreempt` vs `preempt_delay`** - these are mutually exclusive per instance. The preferred-owner instance uses `preempt_delay` so it reclaims its VIP automatically after recovering (with a grace period to avoid flapping). The backup instance uses `nopreempt` so it never snatches the VIP away from a healthy peer.
 - **Unicast, not multicast** - `unicast_src_ip` / `unicast_peer` sends VRRP advertisements directly between the two nodes rather than relying on multicast, which can be unreliable on consumer routers/switches with IGMP snooping enabled.
 
-
-{% admonition(kind="important") %}
-**Change the `auth_pass` value** on both configs to a unique shared secret before deploying. You can generate one with `openssl rand -base64 6`.
-{% end %}
 
 ---
 
