@@ -1476,7 +1476,7 @@ td {
 }
 
 tr:hover td {
-    background-color: var(--color-bg-subtle);
+    background-color: var(--color-accent-subtle);
 }
 
 /* --------------------------------------------------------------------------
@@ -1660,7 +1660,7 @@ figcaption {
     display: flex;
     flex-direction: column;
     padding: var(--space-lg);
-    background-color: var(--color-bg-elevated);
+    background-color: var(--color-bg-subtle);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     transition: all var(--transition-fast);
@@ -1674,8 +1674,6 @@ figcaption {
 
 .project-card.featured {
     position: relative;
-    border-color: var(--color-accent-brand);
-    border-width: 2px;
 }
 
 .project-card.featured::after {
@@ -1758,8 +1756,12 @@ figcaption {
     font-family: var(--font-mono);
     color: var(--color-text-muted);
     padding: var(--space-xs) var(--space-sm);
-    background-color: var(--color-bg-subtle);
+    background-color: var(--color-bg-elevated);
     border-radius: var(--radius-sm);
+}
+
+:root[data-theme="dark"] .project-lang {
+    background-color: var(--color-border);
 }
 
 .project-links {
