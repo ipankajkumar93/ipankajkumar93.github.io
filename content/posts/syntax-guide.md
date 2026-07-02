@@ -1,12 +1,12 @@
 +++
 draft = true
+slug = "post-syntax-guide" # Overrides the URL path for this page (e.g. /posts/syntax-guide/)
+type = "post" # Other types are also possible like "rtd", "travel", etc.
+in_search_index = true
 title = "Markdown Syntax & Shortcodes Guide."
+description = "A comprehensive sample post demonstrating every unique type of markdown syntax, HTML element, and Zola shortcode supported on this website."
 date = 2026-06-13
 updated = 2026-06-26
-type = "post" # Other types are also possible like "rtd", "travel", etc.
-slug = "post-syntax-guide" # Overrides the URL path for this page (e.g. /posts/syntax-guide/)
-description = "A comprehensive sample post demonstrating every unique type of markdown syntax, HTML element, and Zola shortcode supported on this website."
-in_search_index = true
 
 [taxonomies]
 post_tags = ["post", "sample", "markdown"]

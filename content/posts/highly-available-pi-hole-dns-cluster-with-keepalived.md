@@ -1,20 +1,20 @@
 +++
 draft = false
-title = "Setting Up a Highly Available Pi-hole DNS Cluster with Keepalived"
-date = 2026-07-01
-# updated = 2026-07-01
-type = "post" # Other types are also possible like "rtd", "travel", etc.
 slug = "highly-available-pi-hole-dns-cluster-with-keepalived" # Overrides the URL path for this page 
-description = "A highly available Pi-hole DNS setup using keepalived and VRRP - automatic failover between two nodes with floating virtual IPs, so your network never loses DNS."
+type = "post" # Other types are also possible like "rtd", "travel", etc.
 in_search_index = true
-
-[taxonomies]
-post_tags = ["post", "pi-hole", "keepalived", "dns", "raspberry-pi", "home-lab"]
+title = "Setting Up a Highly Available Pi-hole DNS Cluster with Keepalived"
+description = "A highly available Pi-hole DNS setup using keepalived and VRRP - automatic failover between two nodes with floating virtual IPs, so your network never loses DNS."
+date = 2026-07-01
+updated = 2026-07-02
 
 [extra]
 toc = true # Generates Table of Contents for the page if true
 featured = true
 # og_preview_img = "/images/sample-image.jpeg"    #Uncomment this to add your own OG preview image or let the python script generate one for you for OG images.
+
+[taxonomies]
+post_tags = ["post", "pi-hole", "keepalived", "dns", "raspberry-pi", "home-lab"]
 +++
 
 ## Background
