@@ -961,6 +961,7 @@ ul.blog-posts li a:hover {
 article, .post-content {
     line-height: 1.75;
     color: var(--color-text-secondary);
+    text-wrap: pretty;
 }
 
 .post-content > *:first-child {
@@ -1304,7 +1305,7 @@ pre .line-number {
     align-self: start;
     margin-top: var(--space-sm);
     margin-right: var(--space-sm);
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
     z-index: var(--z-dropdown);
     display: flex;
     align-items: center;
@@ -2248,6 +2249,11 @@ main {
         gap: var(--space-xs);
     }
 
+    ul.blog-posts li a {
+        font-size: 1.1rem;
+        text-wrap: pretty;
+    }
+
     ul.blog-posts li span:not(.draft-tag):not(.category-badge) {
         flex: none;
     }
@@ -2283,14 +2289,15 @@ main {
 @media screen and (max-width: 480px) {
     h1 { font-size: var(--step-3); }
 
-    article h1 { font-size: var(--step-2); }
+    article h1 { 
+        font-size: var(--step-3); 
+        text-wrap: balance;
+    }
 
     .theme-toggle {
         width: 36px;
         height: 36px;
     }
-
-    article h1 { font-size: var(--step-1); }
 }
 
 /* --------------------------------------------------------------------------
