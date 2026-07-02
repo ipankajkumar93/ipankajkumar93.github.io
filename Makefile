@@ -26,4 +26,19 @@ build:
 # 	@uv run scripts/fetch_all_github_projects.py ipankajkumar93 > content/projects/data.toml
 # 	@echo "Successfully updated content/projects/data.toml"
 
-.PHONY: all preview build og-images
+# Content creation targets
+ifeq ($(firstword $(MAKECMDGOALS)),$(filter $(firstword $(MAKECMDGOALS)),rtd post travel))
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(RUN_ARGS):;@:)
+endif
+
+rtd:
+	@./bin/rtd $(RUN_ARGS)
+
+post:
+	@./bin/post $(RUN_ARGS)
+
+travel:
+	@./bin/travel $(RUN_ARGS)
+
+.PHONY: all preview build og-images rtd post travel

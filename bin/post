@@ -3,7 +3,7 @@ set -e
 
 INPUT="$*"
 if [ -z "$INPUT" ]; then
-    echo "Usage: make rtd <Title>[, <Description>]"
+    echo "Usage: make post <Title>[, <Description>]"
     exit 1
 fi
 
@@ -20,7 +20,7 @@ SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | tr -s ' ' '-' | tr -cd 'a-z0
 # Remove leading/trailing hyphens
 SLUG=$(echo "$SLUG" | sed -e 's/^\-//' -e 's/\-$//')
 
-FILE_PATH="content/rtd/${SLUG}.md"
+FILE_PATH="content/posts/${SLUG}.md"
 CURRENT_DATE=$(date +"%Y-%m-%d")
 
 # Check if file already exists
@@ -34,7 +34,7 @@ cat <<EOL > "$FILE_PATH"
 +++
 draft = true # Set this to false when you're ready to publish the article to production
 slug = "$SLUG"
-type = "rtd"
+type = "post"
 in_search_index = true
 title = "$TITLE"
 description = "$DESC"
@@ -47,7 +47,7 @@ featured = false
 # og_preview_img = "/images/sample-image.jpeg" # Uncomment to specify a custom OG preview image, otherwise the build script will auto-generate one.
 
 [taxonomies]
-rtd_tags = []
+post_tags = []
 +++
 
 EOL
